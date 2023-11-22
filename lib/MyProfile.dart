@@ -54,20 +54,18 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
-  Widget imageWidget(PickedFile? _imageFile) {
-    return Center(
-      child: Image.file(File(_imageFile!.path)),
-    );
-  }
-
   Widget imageProfile() {
     return Center(
         child: Stack(
             children: <Widget>[
+              (_imageFile==null) ? CircleAvatar(
+                  radius: 80,
+                  backgroundImage: AssetImage('assets/profile.png')
+              ) :
               CircleAvatar(
                 radius: 80,
-                backgroundImage: AssetImage('assets/profile.png') ,
-              ),
+                backgroundImage: FileImage(File(_imageFile!.path)),
+              ) ,
               Positioned(
                   bottom:20,
                   right: 20,
