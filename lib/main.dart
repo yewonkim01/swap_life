@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/page.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'dart:core';
 import 'MyProfile.dart';
+import 'package:swap_life/show_login.dart';
+
 FocusNode fnode=new FocusNode();
 
-void main() => runApp(MyApp());
+void main() {
+  KakaoSdk.init(nativeAppKey: 'e7a7bba0f8d93f336d1343d3f47222ae',
+  );
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -14,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primaryColor: Colors.blueGrey[200]),
       initialRoute: '/',
       routes: {
-        '/': (context) => MyHome(),
+        '/': (context) => ShowLogin(),
         '/myHome': (context) => MyHome(),
         '/myProfile' : (context) => MyProfile(),
         TodoScreen.routeName: (context) => TodoScreen(),
