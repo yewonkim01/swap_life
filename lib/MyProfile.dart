@@ -54,36 +54,34 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
-  Widget imageWidget(PickedFile? _imageFile) {
-    return Center(
-      child: Image.file(File(_imageFile!.path)),
-    );
-  }
-
   Widget imageProfile() {
     return Center(
-        child: Stack(
-            children: <Widget>[
-              CircleAvatar(
-                radius: 80,
-                backgroundImage: AssetImage('assets/profile.png') ,
+      child: Stack(
+        children: <Widget>[
+          (_imageFile==null) ? CircleAvatar(
+              radius: 80,
+              backgroundImage: AssetImage('assets/profile.png')
+          ) :
+          CircleAvatar(
+            radius: 80,
+            backgroundImage: FileImage(File(_imageFile!.path)),
+          ) ,
+          Positioned(
+            bottom:20,
+            right: 20,
+            child: InkWell(
+              onTap:() {
+                showModalBottomSheet(context: context, builder: ((builder)=> bottomSheet()));
+              },
+              child: Icon(
+                Icons.camera_alt,
+                color: Colors.grey,
+                size:40,
               ),
-              Positioned(
-                  bottom:20,
-                  right: 20,
-                  child: InkWell(
-                      onTap:() {
-                        showModalBottomSheet(context: context, builder: ((builder)=> bottomSheet()));
-                      },
-                      child: Icon(
-                        Icons.camera_alt,
-                        color: Colors.grey,
-                        size:40,
-                      ),
-                  ),
-              ),
-            ],
-        ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -92,22 +90,22 @@ class _MyProfileState extends State<MyProfile> {
       controller: _nameController,
       maxLength: 10,
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.grey,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide:  BorderSide(
+              color: Colors.black,
+            ),
+          ),
+          prefixIcon: Icon(
+            Icons.person,
             color: Colors.grey,
           ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide:  BorderSide(
-            color: Colors.black,
-          ),
-        ),
-        prefixIcon: Icon(
-          Icons.person,
-          color: Colors.grey,
-        ),
-        labelText: 'Name',
-        hintText: 'Input your name'
+          labelText: 'Name',
+          hintText: 'Input your name'
       ),
     );
   }
@@ -294,4 +292,3 @@ class MBTITile extends StatelessWidget {
     );
   }
 }
-

@@ -71,7 +71,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () {},icon: Icon(Icons.cloud_outlined)),
-        iconTheme: IconThemeData(color: Colors.green),
+        iconTheme: IconThemeData(color: Colors.deepPurple),
         title: Text("Swap Life"),
         centerTitle: true,
         backgroundColor:Colors.white,
@@ -79,7 +79,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
         elevation: 0.0,
       ),
       bottomNavigationBar: TabBar(
-        indicatorColor: Colors.green,
+        indicatorColor: Colors.deepPurple,
         labelColor: Colors.black,
         overlayColor: MaterialStatePropertyAll(Colors.white70),
         controller: _tabController,
@@ -87,21 +87,21 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
           Tab(
             icon: Icon(
               _selectedIndex == 0 ? Icons.swap_horizontal_circle : Icons.swap_horizontal_circle_outlined,
-              color: Colors.green,
+              color: Colors.deepPurple,
             ),
             text: "Friend",
           ),
             Tab(
               icon: Icon(
               _selectedIndex == 1 ? Icons.home : Icons.home_outlined,
-                color: Colors.green,
+                color: Colors.deepPurple,
               ),
           text: "Home",
             ),
           Tab(
             icon: Icon(
               _selectedIndex == 2 ? Icons.person : Icons.person_outline,
-              color: Colors.green,
+              color: Colors.deepPurple,
             ),
             text: "Profile",
           ),
@@ -151,7 +151,7 @@ class _TodoScreenState extends State<TodoScreen> {
       appBar: AppBar(
         title: Text("My Checklist"),
         centerTitle: true,
-        backgroundColor:Colors.green,
+        backgroundColor:Colors.deepPurple,
         foregroundColor: Colors.white,
       ),
       body: Column(
@@ -165,7 +165,7 @@ class _TodoScreenState extends State<TodoScreen> {
                     focusNode: fnode,
                     controller: textEditingController,
                     cursorColor: Colors.grey,
-                    decoration: InputDecoration(labelText: "Add a new task",labelStyle:TextStyle(color:fnode.hasFocus? Colors.green : Colors.grey),focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.green)))  ,
+                    decoration: InputDecoration(labelText: "Add a new task",labelStyle:TextStyle(color:fnode.hasFocus? Colors.deepPurple : Colors.grey),focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.deepPurple)))  ,
                   ),
                 ),
                 IconButton(
@@ -185,7 +185,7 @@ class _TodoScreenState extends State<TodoScreen> {
                 return ListTile(
                   leading: Checkbox(
                     activeColor: Colors.white,
-                    checkColor: Colors.green,
+                    checkColor: Colors.deepPurple,
                     value: todoList[index].isCompleted,
                     onChanged: (value) {
                       toggleTodoItem(index);
