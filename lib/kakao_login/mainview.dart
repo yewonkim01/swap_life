@@ -1,3 +1,4 @@
+//김진영 작성//
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swap_life/kakao_login/firebase_auth_remote_data.dart';
 import 'login.dart';
@@ -10,8 +11,6 @@ class MainViewModel {
   kakao.User? user;
 
   MainViewModel(this._socialLogin);
-
-  List<String> scopes = [];
 
   Future login() async {
     isLogined = await _socialLogin.login();

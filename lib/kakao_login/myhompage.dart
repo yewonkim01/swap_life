@@ -1,6 +1,8 @@
+//김진영 작성//
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:swap_life/MyProfile.dart';
 import 'login.dart';
 import 'package:swap_life/kakao_login/mainview.dart';
 
@@ -49,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ]
                 );
               }
-              return MyHome();
+              return const MyProfile();
             }
         ),
       ),

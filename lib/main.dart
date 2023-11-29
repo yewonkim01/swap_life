@@ -6,31 +6,36 @@ import 'package:swap_life/kakao_login/myhompage.dart';
 import 'dart:core';
 import 'MyProfile.dart';
 import 'TodoScreen.dart';
+import 'firestore/service.dart';
+import 'shared/shared.dart';
 
-void main() async {
-  KakaoSdk.init(nativeAppKey: 'e7a7bba0f8d93f336d1343d3f47222ae',
-  );
+void main() async{
+  var services = HttpServices();
+  var controller = TodoController(services);
+  KakaoSdk.init(nativeAppKey: 'e7a7bba0f8d93f336d1343d3f47222ae',);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options : DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+
+  runApp(MyApp(controller: controller));
 }
 
 class MyApp extends StatelessWidget {
-  @override
-  const MyApp({Key? key}) : super(key:key);
+  final TodoController controller;
+  MyApp({required this.controller});
 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Swap Life',
       theme: ThemeData(primaryColor: Colors.blueGrey[200]),
       initialRoute: '/',
       routes: {
-        '/': (context) => MyHomePage(),
-        '/myHome': (context) => MyHome(),
+        '/': (context) => const MyHomePage(),
+        '/myHome': (context) => MyHome(controller: controller),
         '/myProfile' : (context) => MyProfile(),
-        '/todo': (context) => TodoScreen(),
+        '/todoScreen': (context) => TodoScreen(controller: controller),
       },
       debugShowCheckedModeBanner: false,
     );//상태값 변하므로 Stateful위젯 사용
@@ -38,6 +43,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHome extends StatefulWidget {
+  final TodoController controller;
+  MyHome({required this.controller});
+
   @override
   _MyHomeState createState() => _MyHomeState();
 }
@@ -69,7 +77,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     if(_selectedIndex==0) {
       bodyWidget = tabContainer(context, Colors.white, "Friend's List");
     } else if(_selectedIndex == 1) {
-      bodyWidget = TodoScreen();
+      bodyWidget = TodoApp(controller: widget.controller);
     } else {
       bodyWidget= MyProfile();
     }

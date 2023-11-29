@@ -165,6 +165,14 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
+  //Logout 진영//
+  Widget Logout(){
+    return TextButton(
+      onPressed: () => Logout(),
+      child: Text("Logout"),
+    );
+  }
+
   Widget bottomSheet() {
     return Container(
         height:100,
