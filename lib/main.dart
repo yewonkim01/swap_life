@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primaryColor: Colors.blueGrey[200]),
       initialRoute: '/',
       routes: {
-        '/': (context) => const MyHomePage(),
+        '/': (context) => MyHomePage(controller: controller),
         '/myHome': (context) => MyHome(controller: controller),
         '/myProfile' : (context) => MyProfile(),
         '/todoScreen': (context) => TodoScreen(controller: controller),
@@ -76,9 +76,11 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     Widget bodyWidget;
     if(_selectedIndex==0) {
       bodyWidget = tabContainer(context, Colors.white, "Friend's List");
-    } else if(_selectedIndex == 1) {
-      bodyWidget = TodoApp(controller: widget.controller);
-    } else {
+      }
+    else if(_selectedIndex == 1) {
+      bodyWidget = TodoScreen(controller: widget.controller);
+    }
+    else {
       bodyWidget= MyProfile();
     }
 

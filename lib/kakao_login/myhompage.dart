@@ -2,13 +2,14 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:swap_life/MyProfile.dart';
+import '../main.dart';
+import '../shared/todo_controller.dart';
 import 'login.dart';
 import 'package:swap_life/kakao_login/mainview.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
+  const MyHomePage({Key? key, required this.controller}) : super(key: key);
+  final TodoController controller;
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -51,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ]
                 );
               }
-              return const MyProfile();
+              return MyHome(controller: widget.controller);
             }
         ),
       ),

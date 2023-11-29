@@ -3,6 +3,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/src/painting/image_provider.dart';
 import 'dart:io';
 import 'dart:core';
+import 'package:swap_life/kakao_login/mainview.dart';
+import 'kakao_login/login.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
@@ -164,15 +166,17 @@ class _MyProfileState extends State<MyProfile> {
       ),
     );
   }
+  final viewModel = MainViewModel(KakaoLogin());
 
   //Logout 진영//
   Widget Logout(){
     return TextButton(
-      onPressed: () => Logout(),
+      onPressed: () => viewModel.logout(),
       child: Text("Logout"),
     );
   }
 
+  //예선 작성//
   Widget bottomSheet() {
     return Container(
         height:100,
