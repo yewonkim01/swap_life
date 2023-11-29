@@ -1,16 +1,16 @@
 # swap_life
 
-A new Flutter project.
+MyProfile
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## 수정 필요
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. My MBTI Report 버튼 작동
+2. 프로필 사진 오류수정
+   CircleAvatar(
+                radius: 80,
+                backgroundImage: _imageFile != null
+                    ? imageWidget(_imageFile!)
+                    : AssetImage('assets/profile.png') ,
+              ),
+3. 색상 변경
