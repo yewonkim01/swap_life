@@ -4,18 +4,21 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'dart:core';
 import 'MyProfile.dart';
 import 'TodoScreen.dart';
-import 'package:swap_life/show_login.dart';
+import 'show_login.dart';
+import 'firestore/service.dart';
+import 'shared/shared.dart';
 
-FocusNode fnode=new FocusNode();
-
-void main() {
-  KakaoSdk.init(nativeAppKey: 'e7a7bba0f8d93f336d1343d3f47222ae',
-  );
-
-  runApp(MyApp());
+void main() async{
+  var services = HttpServices();
+  var controller = TodoController(services);
+  KakaoSdk.init(nativeAppKey: 'e7a7bba0f8d93f336d1343d3f47222ae',);
+  runApp(MyApp(controller: controller));
 }
 
 class MyApp extends StatelessWidget {
+  final TodoController controller;
+  MyApp({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,9 +27,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => ShowLogin(),
-        '/myHome': (context) => MyHome(),
+        '/myHome': (context) => MyHome(controller: controller),
         '/myProfile' : (context) => MyProfile(),
-        '/todo': (context) => TodoScreen(),
+        '/todoScreen': (context) => TodoScreen(controller: controller),
       },
       debugShowCheckedModeBanner: false,
     );//상태값 변하므로 Stateful위젯 사용
@@ -34,6 +37,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHome extends StatefulWidget {
+  final TodoController controller;
+  MyHome({required this.controller});
+
   @override
   _MyHomeState createState() => _MyHomeState();
 }
@@ -65,7 +71,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     if(_selectedIndex==0) {
       bodyWidget = tabContainer(context, Colors.white, "Friend's List");
     } else if(_selectedIndex == 1) {
-      bodyWidget = TodoScreen();
+      bodyWidget = TodoApp(controller: widget.controller);
     } else {
       bodyWidget= MyProfile();
     }
