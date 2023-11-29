@@ -25,6 +25,7 @@ exports.createCustomToken = functions.https.onRequest(async (request, response) 
   const uid = user.uid;
   const updateParams = {
     email: user.email,
+    photoURL: user.photoURL,
     displayName: user.displayName,
   };
 
