@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/src/painting/image_provider.dart';
-import 'dart:io';
 import 'dart:core';
 
 class TodoItem {

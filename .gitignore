@@ -42,3 +42,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+#버전 관리 안함 - 진영
+google-services.json
+firebase_options.dart
