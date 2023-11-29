@@ -34,6 +34,9 @@ dependencies:
   kakao_flutter_sdk: ^1.7.0
   kakao_flutter_sdk_user:
   logger: ^2.0.2+1
+  #json_annotation:
+  #firebase_core:
+  #cloud_firestore:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

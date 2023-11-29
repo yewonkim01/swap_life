@@ -1,101 +1,87 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
+import 'shared/shared.dart';
 
-class TodoItem {
-  String title; // 할 일 항목의 제목
-  bool isCompleted;// 할 일 항목의 완료 상태
+class TodoScreen extends StatefulWidget{
+  final TodoController controller;
+  const TodoScreen({Key? key, required this.controller}) : super(key:key);
 
-  TodoItem({required this.title, this.isCompleted = false});
-}
-
-class TodoScreen extends StatefulWidget {
-  static const routeName = '/todo';
   @override
   _TodoScreenState createState() => _TodoScreenState();
 }
 
 class _TodoScreenState extends State<TodoScreen> {
-  final List<TodoItem> todoList = [];
-  TextEditingController textEditingController = TextEditingController();
-  FocusNode fnode = FocusNode();
+  List<Todo>? todo;
+  bool isLoading = false;
+
+  void _getTodo() async {
+    var newTodo = await widget.controller.fetchTodo();
+    setState(() {
+      todo = newTodo;
+    });
+  }
+
+  void updateTodo(Todo todoItem, bool isCompleted) async {
+    bool success = await widget.controller.updateTodo(todoItem, isCompleted);
+    setState(() {
+      if(!success) {
+        todoItem.completed = !isCompleted;
+      }
+    });
+  }
+
+  void initState() {
+    super.initState();
+    widget.controller.onSync.listen((bool syncState) => setState(() {isLoading = syncState;}));
+  }
+
+  Widget get body => isLoading
+      ? CircularProgressIndicator()
+      : ListView.builder(
+        key:Key('list-view'),
+        itemCount: todo?.length ?? 1,
+        itemBuilder: (ctx, idx) {
+          if(todo != null ) {
+            return CheckboxListTile(
+              key: ValueKey("todo-$idx"),
+              onChanged: (bool? val) => updateTodo(todo![idx], val!),
+              value: todo![idx].completed,
+              title: Text(todo![idx].title),
+              subtitle: Text(
+                "todo num: $idx",
+                key: ValueKey("todo-$idx-subtitle"),
+              ),
+            );
+          } else {
+            return Text("Tap button to fetch todos");
+          }
+        }
+  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Checklist"),
-        centerTitle: true,
-        backgroundColor:Colors.deepPurple,
-        foregroundColor: Colors.white,
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    focusNode: fnode,
-                    controller: textEditingController,
-                    cursorColor: Colors.grey,
-                    decoration: InputDecoration(labelText: "Add a new task",labelStyle:TextStyle(color:fnode.hasFocus? Colors.deepPurple : Colors.grey),focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.deepPurple)))  ,
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    addTodoItem(textEditingController.text);
-                    textEditingController.clear();
-                  },
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: todoList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Checkbox(
-                    activeColor: Colors.white,
-                    checkColor: Colors.deepPurple,
-                    value: todoList[index].isCompleted,
-                    onChanged: (value) {
-                      toggleTodoItem(index);
-                    },
-                  ),
-                  title: Text(todoList[index].title),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      deleteTodoItem(index);
-                    },
-                  ),
-                );
-              },
+        title: Text('HTTP Todos'),
+        actions: <Widget>[
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Text(
+                widget.controller.getCompletedTodo().toString(),
+                key: ValueKey("counter"),
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
             ),
           ),
         ],
       ),
+      body: Center(child: body),
+      floatingActionButton: FloatingActionButton(
+        key: Key("get-todos-button"),
+        onPressed: () => _getTodo(),
+        child: Icon(Icons.add),
+      ),
     );
-  }
-
-  void addTodoItem(String title) {
-    setState(() {
-      todoList.add(TodoItem(title: title, isCompleted: false));
-    });
-  }
-
-  void deleteTodoItem(int index) {
-    setState(() {
-      todoList.removeAt(index);
-    });
-  }
-
-  void toggleTodoItem(int index) {
-    setState(() {
-      todoList[index].isCompleted = !todoList[index].isCompleted;
-    });
   }
 }
