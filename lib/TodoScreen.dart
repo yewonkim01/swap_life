@@ -20,6 +20,7 @@ class TodoScreen extends StatefulWidget {
 class _TodoScreenState extends State<TodoScreen> {
   final List<TodoItem> todoList = [];
   TextEditingController textEditingController = TextEditingController();
+  FocusNode fnode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
