@@ -33,7 +33,7 @@ class _MyProfileState extends State<MyProfile> {
       appBar: AppBar(
         title: Text('Edit Profile',style: TextStyle(fontWeight: FontWeight.bold),),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: ListView(
           shrinkWrap: true,

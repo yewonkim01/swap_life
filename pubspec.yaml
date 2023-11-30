@@ -1,6 +1,6 @@
 name: swap_life
 description: A new Flutter project.
-# The following line prevents the package from being accidentally published to
+# The following line prevents the package from being accidentally published todart pub global activate flutterfire_cli
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -32,7 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   kakao_flutter_sdk: ^1.7.0
-  kakao_flutter_sdk_user:
+  kakao_flutter_sdk_user: ^1.7.0
   logger: ^2.0.2+1
   #json_annotation:
   #firebase_core:

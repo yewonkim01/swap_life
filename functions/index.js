@@ -11,7 +11,7 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const auth = require("firebase-auth");
 
-var serviceAccount = require("./swap-life-firebase-adminsdk-t5uz0-9edc379f1e.json");
+var serviceAccount = require("./swap-life-firebase-adminsdk-t5uz0-aefe6ffd6b.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -22,7 +22,7 @@ admin.initializeApp({
 exports.createCustomToken = functions.https.onRequest(async (request, response) => {
   const user = request.body;
 
-  const uid = user.uid;
+  const uid = `kakao: ${user.uid}`;
   const updateParams = {
     email: user.email,
     photoURL: user.photoURL,

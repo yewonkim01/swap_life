@@ -75,6 +75,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     Widget bodyWidget;
     if(_selectedIndex==0) {
+      //추후 친구 chech list받아오는 함수 연결
       bodyWidget = tabContainer(context, Colors.white, "Friend's List");
       }
     else if(_selectedIndex == 1) {
