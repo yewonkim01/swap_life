@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/src/painting/image_provider.dart';
@@ -20,9 +21,16 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen> {
+  FirebaseFirestore firestore=FirebaseFirestore.instance;
   final List<TodoItem> todoList = [];
   TextEditingController textEditingController = TextEditingController();
   FocusNode fnode = FocusNode();
+  String postTitle="";
+
+  void saveList() async {
+    final checkList = firestore;
+    await checkList.collection("checklist").doc('my_checklist').update({"MyChecklist":postTitle});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +52,28 @@ class _TodoScreenState extends State<TodoScreen> {
                     focusNode: fnode,
                     controller: textEditingController,
                     cursorColor: Colors.grey,
-                    decoration: InputDecoration(labelText: "Add a new task",labelStyle:TextStyle(color:fnode.hasFocus? Colors.deepPurple : Colors.grey),focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.deepPurple)))  ,
+                    decoration: InputDecoration(
+                        labelText: "Add a new task",
+                        labelStyle:TextStyle(
+                            color:fnode.hasFocus? Colors.deepPurple : Colors.grey),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.deepPurple
+                            )
+                        )
+                    )  ,
+                      onChanged: (value){
+                        setState(() {
+                          postTitle=value;
+                        });
+                      }
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
                     addTodoItem(textEditingController.text);
+                    saveList();
                     textEditingController.clear();
                   },
                 ),
