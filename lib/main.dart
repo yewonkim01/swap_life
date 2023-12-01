@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:swap_life/kakao_login/firebase_options.dart';
@@ -8,6 +9,8 @@ import 'MyProfile.dart';
 import 'TodoScreen.dart';
 import 'firestore/service.dart';
 import 'shared/shared.dart';
+import 'package:swap_life/shared/todo_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async{
   var services = HttpServices();
@@ -21,6 +24,7 @@ void main() async{
   runApp(MyApp(controller: controller));
 }
 
+//예선 작성//
 class MyApp extends StatelessWidget {
   final TodoController controller;
   MyApp({required this.controller});
@@ -42,6 +46,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//예선 작성//
 class MyHome extends StatefulWidget {
   final TodoController controller;
   MyHome({required this.controller});
@@ -95,6 +100,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
         foregroundColor: Colors.black,
         elevation: 0.0,
       ),
+      body: bodyWidget,
       bottomNavigationBar: TabBar(
         indicatorColor: Colors.deepPurple,
         labelColor: Colors.black,
@@ -124,7 +130,6 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
           ),
         ],
       ),
-      body : bodyWidget,
     );
   }
 

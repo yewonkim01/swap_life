@@ -3,7 +3,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/src/painting/image_provider.dart';
 import 'dart:io';
 import 'dart:core';
-import 'package:swap_life/shared/todo_controller.dart';
 
 class TodoItem {
   String title; // 할 일 항목의 제목
@@ -12,14 +11,12 @@ class TodoItem {
   TodoItem({required this.title, this.isCompleted = false});
 }
 
-class TodoScreen extends StatefulWidget {
-  final TodoController controller;
-  TodoScreen({required this.controller});
+class TodoWrite extends StatefulWidget {
   @override
-  _TodoScreenState createState() => _TodoScreenState();
+  _TodoWriteState createState() => _TodoWriteState();
 }
 
-class _TodoScreenState extends State<TodoScreen> {
+class _TodoWriteState extends State<TodoWrite> {
   final List<TodoItem> todoList = [];
   TextEditingController textEditingController = TextEditingController();
   FocusNode fnode = FocusNode();
