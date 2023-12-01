@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/src/painting/image_provider.dart';
@@ -5,6 +6,7 @@ import 'dart:io';
 import 'dart:core';
 import 'package:swap_life/kakao_login/mainview.dart';
 import 'kakao_login/login.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
 //예선 작성//
 class MyProfile extends StatefulWidget {
@@ -18,7 +20,24 @@ class _MyProfileState extends State<MyProfile> {
   PickedFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
   String? _selectedMBTI; //User MBTI
-  TextEditingController _nameController = TextEditingController(); //User Name
+  final TextEditingController _nameController = TextEditingController(); //User Name
+  String? profileName = "";
+  String? intro = "";
+  kakao.User ? user;
+
+  final profile = FirebaseFirestore.instance;
+
+  void saveProfile() async {
+    user = await kakao.UserApi.instance.me();
+    await profile.collection('MyProfile').doc(user!.id.toString()).set(
+        {
+          "profileID": _nameController.text,
+          "MBTI" : _selectedMBTI,
+          "profile_Img": _imageFile,
+          "Introduction": intro,
+        }
+    );
+  }
 
   @override
   void initState() {
@@ -44,7 +63,7 @@ class _MyProfileState extends State<MyProfile> {
             SizedBox(height:30),
             nameTextField(),
             introduction(),
-            SizedBox(height: 80,),
+            SizedBox(height: 40,),
             chooseMBTI(),
             selectedMBTI(),
             if (_selectedMBTI == null)
@@ -52,13 +71,21 @@ class _MyProfileState extends State<MyProfile> {
             else
               SizedBox(height: 10,),
             myReport(),
+            Save(),
             Logout(),
           ],
         ),
       ),
     );
   }
-
+  Widget Save(){
+    return TextButton(
+        onPressed:() {
+          saveProfile();
+        },
+        child: Text("save all")
+    );
+  }
   Widget imageProfile() {
     return Center(
         child: Stack(
@@ -90,32 +117,36 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
-  Widget nameTextField(){
-    return TextFormField(
-      controller: _nameController,
-      maxLength: 10,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey,
-          ),
+  Widget nameTextField()  {
+
+      return TextFormField(
+        controller: _nameController,
+        maxLength: 10,
+        decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.grey,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.black,
+              ),
+            ),
+            prefixIcon: Icon(
+              Icons.person,
+              color: Colors.grey,
+            ),
+            labelText: profileName,
+            hintText: 'Input your name',
+
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide:  BorderSide(
-            color: Colors.black,
-          ),
-        ),
-        prefixIcon: Icon(
-          Icons.person,
-          color: Colors.grey,
-        ),
-        labelText: 'Name',
-        hintText: 'Input your name'
-      ),
-    );
-  }
-  String getName() {
-    return _nameController.text;
+        onChanged: (value) {
+          setState(() {
+            profileName = value;
+          });
+        },
+      );
   }
 
   Widget introduction() {
@@ -124,6 +155,9 @@ class _MyProfileState extends State<MyProfile> {
       decoration: InputDecoration(
         hintText: 'introduction',
       ),
+      onChanged: (value) {
+        intro = value;
+      },
     );
   }
 
