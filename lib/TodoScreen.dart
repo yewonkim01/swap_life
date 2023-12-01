@@ -29,7 +29,8 @@ class _TodoScreenState extends State<TodoScreen> {
 
   void saveList() async {
     final checkList = firestore;
-    await checkList.collection("checklist").doc('my_checklist').update({"MyChecklist":postTitle});
+
+    await checkList.collection("checklist").doc('my_checklist').set({"MyChecklist":postTitle});
   }
 
   @override
