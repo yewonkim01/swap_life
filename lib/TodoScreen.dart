@@ -25,12 +25,14 @@ class _TodoScreenState extends State<TodoScreen> {
   final List<TodoItem> todoList = [];
   TextEditingController textEditingController = TextEditingController();
   FocusNode fnode = FocusNode();
-  String postTitle="";
 
   void saveList() async {
     final checkList = firestore;
 
-    await checkList.collection("checklist").doc('my_checklist').set({"MyChecklist":postTitle});
+    for(int i=0;i<50;i++) {
+      await checkList.collection("checklist").doc('my_checklist').set({"MyChecklist$i":todoList[i].title});
+      i++;
+    }
   }
 
   @override
@@ -65,7 +67,10 @@ class _TodoScreenState extends State<TodoScreen> {
                     )  ,
                       onChanged: (value){
                         setState(() {
-                          postTitle=value;
+                          for(int i=0;i<50;i++) {
+                            todoList[i].title=value;
+                            i++;
+                          }
                         });
                       }
                   ),

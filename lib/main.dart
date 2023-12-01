@@ -84,12 +84,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
       bodyWidget = tabContainer(context, Colors.white, "Friend's List");
       }
     else if(_selectedIndex == 1) {
-      bodyWidget = ListView(
-        children: [
-          //friend 구현한 함수 넣기!
-          TodoScreen(controller: widget.controller),
-        ],
-      );
+      bodyWidget = TodoScreen(controller: widget.controller);
     }
     else {
       bodyWidget= MyProfile();
