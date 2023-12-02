@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'KakaoTalkShare.dart';
+import 'dynamicLink.dart';
 
 class FriendList extends StatefulWidget {
 
@@ -75,7 +76,9 @@ class _FriendListState extends State<FriendList> {
                       barrierDismissible: true,
                         context: context,
                         builder: (context){
-                          return KakaoShareButton();
+                        final d = DynamicLink();
+                        d.buildDynamicLink();
+                        return KakaoShareButton();
                         });
                   },
                   child: Container(

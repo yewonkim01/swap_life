@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_share.dart';
 import 'messageTemplate.dart';
 import 'log.dart';
+import 'dynamicLink.dart';
 
 const String tag = 'SwapLife';
 
@@ -12,7 +13,8 @@ class KakaoShareManager{
   }
 
   void ShareWithKaKaoTalk(BuildContext context) async{
-    TextTemplate template = Template;
+    Uri dynamicLink = await DynamicLink().buildDynamicLink();
+    TextTemplate template = createTemplate(dynamicLink);
     try{
       //카카오톡 공유 uri(메시지를 공유하는 화면으로 이동) 생성
       Uri uri = await ShareClient.instance.shareDefault(template: template);

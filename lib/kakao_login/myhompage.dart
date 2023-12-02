@@ -29,26 +29,28 @@ class _MyHomePageState extends State<MyHomePage> {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding:const EdgeInsets.fromLTRB(0,50,0,300),
-                      child: Container(
-                        child: Image.asset("assets/swap_Life.jpg"),
-                      ),
+                    Spacer(flex: 2),
+                    Container(
+                      //decoration: BoxDecoration(border: Border.all()),
+                      child: Image.asset("assets/swap_Life.jpg", scale: 3),
                     ),
-                  Padding(padding: const EdgeInsets.fromLTRB(0,0,0,100),
-                    child:
+                    Spacer(flex: 2),
                     InkWell(
                       onTap: () async {
                         await viewModel.login();
                         setState(() {});
-                      },
+                    },
                       child: Container(
                         child: Image.asset('assets/kakao_login_pic.png'),
-                      ),
                     ),
                   ),
-                    Text("선녕원"),
-                    Text("version 1.0.0"),
+                    Spacer(flex: 1,),
+                    Container(
+                        child: Text("선녕원"),
+                    ),
+                    Container(
+                      child: Text("version 1.0.0"),
+                    ),
                   ]
                 );
               }
