@@ -5,10 +5,11 @@ import 'package:flutter/src/painting/image_provider.dart';
 import 'dart:io';
 import 'dart:core';
 import 'package:swap_life/shared/todo_controller.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
 class TodoItem {
-  String title; // 할 일 항목의 제목
-  bool isCompleted;// 할 일 항목의 완료 상태
+  String title; //todo 항목
+  bool isCompleted;// 항목의 완료 상태
 
   TodoItem({required this.title, this.isCompleted = false});
 }
@@ -25,7 +26,7 @@ class _TodoScreenState extends State<TodoScreen> {
   final List<TodoItem> todoList = [];
   TextEditingController textEditingController = TextEditingController();
   FocusNode fnode = FocusNode();
-  int i=0; int isnull=0; String? selectedMBTI;
+  int i=0; int isnull=0; String? selectedMBTI; kakao.User ? user;
 
   void saveList() async {
     final checkList = firestore;
@@ -45,7 +46,15 @@ class _TodoScreenState extends State<TodoScreen> {
   void deleteList(index) async {
     final checkList = firestore;
 
-    await checkList.collection("checklist").doc("MyChecklist${index}").delete();
+    await checkList.collection("checklist").doc(user!.id.toString()).delete();
+  }
+
+  void getList() async {
+    user = await kakao.UserApi.instance.me();
+    final checkList = firestore;
+    DocumentSnapshot getprof = await checkList.collection("checklist").doc(user!.id.toString()).get();
+    todoList[i].title = getprof['MyChecklist$i'];
+    selectedMBTI = getprof['MBTI'];
   }
 
   @override
@@ -90,9 +99,10 @@ class _TodoScreenState extends State<TodoScreen> {
                   //button 활성화
                   onChanged: (String? newVal) {
                     setState(() {
-                      selectedMBTI=newVal;
+                      selectedMBTI=newVal!;
                     });
                   },
+                  value: selectedMBTI,
                   items: [
                     'E','I','S','N','T','F','J','P'
                   ].map<DropdownMenuItem<String?>>((String? i) {
@@ -108,6 +118,7 @@ class _TodoScreenState extends State<TodoScreen> {
                     if(isnull==0) {
                       saveList();
                       textEditingController.clear();
+                      getList();
                     }
                     isnull=0;
                   },
@@ -128,7 +139,17 @@ class _TodoScreenState extends State<TodoScreen> {
                       toggleTodoItem(index);
                     },
                   ),
-                  title: Text(todoList[index].title),
+                  title: Row(
+                    children: [
+                      Text(
+                        todoList[index].title,
+                      ),
+                      SizedBox(width: 90,),
+                      Text(
+                          selectedMBTI.toString(),
+                      ),
+                    ],
+                  ),
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
