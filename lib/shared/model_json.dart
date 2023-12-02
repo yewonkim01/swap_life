@@ -1,11 +1,6 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'todo_model.dart';
 
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
+//예선 작성//
 Todo _$TodoFromJson(Map<String, dynamic> json) => Todo(
   json['userId'] as int,
   json['id'] as int,

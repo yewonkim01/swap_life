@@ -44,6 +44,10 @@ dependencies:
   firebase_core: ^2.24.0
   firebase_auth: ^4.15.0
   http: ^1.1.0
+  cloud_firestore: ^4.13.3
+  kakao_flutter_sdk_share: ^1.7.0
+  kakao_flutter_sdk_template: ^1.7.0
+  firebase_dynamic_links: ^5.4.6
 
 dev_dependencies:
   flutter_test:

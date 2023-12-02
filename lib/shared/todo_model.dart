@@ -1,3 +1,4 @@
+//예선 작성//
 import 'package:json_annotation/json_annotation.dart';
 
 part 'model_json.dart';

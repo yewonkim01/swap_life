@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:swap_life/shared/shared.dart';
 
+//예선 작성//
 class HttpServices implements Services {
   Future<List<Todo>> getTodo(int user) async {
     // TODO: implement getTodos

@@ -6,12 +6,14 @@ import 'dart:core';
 import 'package:swap_life/kakao_login/mainview.dart';
 import 'kakao_login/login.dart';
 
+//예선 작성//
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
   @override
   State<MyProfile> createState() => _MyProfileState();
 }
 
+//예선 작성//
 class _MyProfileState extends State<MyProfile> {
   PickedFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
@@ -223,6 +225,7 @@ class _MyProfileState extends State<MyProfile> {
   }
 }
 
+//예선 작성//
 class MBTI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -289,6 +292,7 @@ class MBTI extends StatelessWidget {
   }
 }
 
+//예선 작성//
 class MBTITile extends StatelessWidget {
   final String type;
 

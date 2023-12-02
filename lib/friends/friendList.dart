@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'KakaoTalkShare.dart';
 
 class FriendList extends StatefulWidget {
 
@@ -16,7 +17,7 @@ class _FriendListState extends State<FriendList> {
           alignment: Alignment.bottomLeft,
           width: MediaQuery.of(context).size.width,
           height: 40,
-          child: Text('Friend', style: TextStyle(fontSize: 20)),
+          child: Text('Friend', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         ),
         Container(
           width: MediaQuery.of(context).size.width,
@@ -27,42 +28,67 @@ class _FriendListState extends State<FriendList> {
               top: BorderSide(color: Colors.black26),
             )
           ),
-          child: ListView(
-            scrollDirection: Axis.horizontal,
+          child: Stack(
             children: [
-              Container(
-                width: 80,
-                height: 80,
-                child: Icon(Icons.account_circle, color: Colors.black26,size: 20,),
+              ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    child: Icon(Icons.account_circle, color: Colors.black26,size: 50,),
+                  ),
+                  Container(
+                    width: 80,
+                    height: 80,
+                    child: Icon(Icons.account_circle, color: Colors.black26,size:50),
+                  ),
+                  Container(
+                    width: 80,
+                    height: 80,
+                    child: Icon(Icons.account_circle, color: Colors.black26,size:50),
+                  ),
+                  Container(
+                    width: 80,
+                    height: 80,
+                    child: Icon(Icons.account_circle, color: Colors.black26,size:50),
+                  ),
+                  Container(
+                    width: 80,
+                    height: 80,
+                    child: Icon(Icons.account_circle, color: Colors.black26,size:50),
+                  ),
+                  Container(
+                    width: 80,
+                    height: 80,
+                    child: Icon(Icons.account_circle, color: Colors.black26,size:50),
+                  ),
+                ],
               ),
-              Container(
-                width: 80,
-                height: 80,
-                child: Icon(Icons.account_circle, color: Colors.black26,),
-              ),
-              Container(
-                width: 80,
-                height: 80,
-                child: Icon(Icons.account_circle, color: Colors.black26,),
-              ),
-              Container(
-                width: 80,
-                height: 80,
-                child: Icon(Icons.account_circle, color: Colors.black26,),
-              ),
-              Container(
-                width: 80,
-                height: 80,
-                child: Icon(Icons.account_circle, color: Colors.black26,),
-              ),
-              Container(
-                width: 80,
-                height: 80,
-                child: Icon(Icons.account_circle, color: Colors.black26,),
-              ),
-              Container(
-                width: 80,
-                height: 80,
+              Positioned(
+                left: MediaQuery.of(context).size.width - 40,
+                top: 20,
+                child: GestureDetector(
+                  onTap: (){
+                    showDialog(
+                      barrierColor: Colors.transparent,
+                      barrierDismissible: true,
+                        context: context,
+                        builder: (context){
+                          return KakaoShareButton();
+                        });
+                  },
+                  child: Container(
+                    width: 30,
+                    height: 37,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      border: Border.all(color: Colors.black54)
+                    ),
+                    child: Icon(Icons.add, color: Colors.black87,),
+                  ),
+                ),
               ),
             ],
           ),
