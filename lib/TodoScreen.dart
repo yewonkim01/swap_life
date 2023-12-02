@@ -25,14 +25,27 @@ class _TodoScreenState extends State<TodoScreen> {
   final List<TodoItem> todoList = [];
   TextEditingController textEditingController = TextEditingController();
   FocusNode fnode = FocusNode();
+  int i=0; int isnull=0; String? selectedMBTI;
 
   void saveList() async {
     final checkList = firestore;
+    bool _isnull=false;
 
-    for(int i=0;i<50;i++) {
-      await checkList.collection("checklist").doc('my_checklist').set({"MyChecklist$i":todoList[i].title});
-      i++;
-    }
+    /*while(!_isnull) {
+      if(todoList[i].title != null) {
+        i++;
+      } else {
+          _isnull = true;
+      }
+    }*/
+    await checkList.collection("checklist").add({"MyChecklist$i":todoList[i].title,"MBTI":selectedMBTI});
+    i++;
+  }
+
+  void deleteList(index) async {
+    final checkList = firestore;
+
+    await checkList.collection("checklist").doc("MyChecklist${index}").delete();
   }
 
   @override
@@ -41,8 +54,8 @@ class _TodoScreenState extends State<TodoScreen> {
       appBar: AppBar(
         title: Text("My Checklist"),
         centerTitle: true,
-        backgroundColor:Colors.deepPurple,
-        foregroundColor: Colors.white,
+        backgroundColor:Colors.white,
+        foregroundColor: Colors.black,
       ),
       body: Column(
         children: [
@@ -62,25 +75,41 @@ class _TodoScreenState extends State<TodoScreen> {
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: Colors.deepPurple
-                            )
-                        )
+                            ),
+                        ),
                     )  ,
                       onChanged: (value){
                         setState(() {
-                          for(int i=0;i<50;i++) {
-                            todoList[i].title=value;
-                            i++;
-                          }
+                          todoList[i].title=value;
                         });
                       }
                   ),
+                ),
+                DropdownButton<String?>(
+                  hint: Text('MBTI'),
+                  //button 활성화
+                  onChanged: (String? newVal) {
+                    setState(() {
+                      selectedMBTI=newVal;
+                    });
+                  },
+                  items: [
+                    'E','I','S','N','T','F','J','P'
+                  ].map<DropdownMenuItem<String?>>((String? i) {
+                    return DropdownMenuItem<String?>(
+                      value: i,
+                      child:Text({'E':'E','I':'I','S':'S','N':'N','T':'T','F':'F','J':'J','P':'P'}[i] ?? ''),);
+                  }).toList(),
                 ),
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
                     addTodoItem(textEditingController.text);
-                    saveList();
-                    textEditingController.clear();
+                    if(isnull==0) {
+                      saveList();
+                      textEditingController.clear();
+                    }
+                    isnull=0;
                   },
                 ),
               ],
@@ -103,6 +132,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
+                      deleteList(index);
                       deleteTodoItem(index);
                     },
                   ),
@@ -117,7 +147,11 @@ class _TodoScreenState extends State<TodoScreen> {
 
   void addTodoItem(String title) {
     setState(() {
-      todoList.add(TodoItem(title: title, isCompleted: false));
+      if(title != null && title.trim().isNotEmpty) {
+        todoList.add(TodoItem(title: title, isCompleted: false));
+      } else{
+        isnull = 1;
+      }
     });
   }
 
