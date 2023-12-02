@@ -20,24 +20,12 @@ class _MyProfileState extends State<MyProfile> {
   PickedFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
   String? _selectedMBTI; //User MBTI
-  final TextEditingController _nameController = TextEditingController(); //User Name
-  String? profileName = "";
-  String? intro = "";
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _introController = TextEditingController();
+
   kakao.User ? user;
 
   final profile = FirebaseFirestore.instance;
-
-  void saveProfile() async {
-    user = await kakao.UserApi.instance.me();
-    await profile.collection('MyProfile').doc(user!.id.toString()).set(
-        {
-          "profileID": _nameController.text,
-          "MBTI" : _selectedMBTI,
-          "profile_Img": _imageFile,
-          "Introduction": intro,
-        }
-    );
-  }
 
   @override
   void initState() {
@@ -47,9 +35,29 @@ class _MyProfileState extends State<MyProfile> {
   void dispose() {
     super.dispose();
   }
+  //firebase 연동 - 진영//
+  void saveProfile() async {
+    user = await kakao.UserApi.instance.me();
+    await profile.collection('MyProfile').doc(user!.id.toString()).set(
+        {
+          "profileID": _nameController.text,
+          "Introduction": _introController.text,
+          "MBTI" : _selectedMBTI,
+        }
+    );
+  }
+  void getProfile() async {
+    user = await kakao.UserApi.instance.me();
+    DocumentSnapshot getprof = await profile.collection('MyProfile').doc(user!.id.toString()).get();
+    _nameController.text = getprof['profileID'];
+    _introController.text = getprof['Introduction'];
+    //_selectedMBTI = getprof['MBTI'];
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    getProfile();
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Profile',style: TextStyle(fontWeight: FontWeight.bold),),
@@ -83,7 +91,7 @@ class _MyProfileState extends State<MyProfile> {
         onPressed:() {
           saveProfile();
         },
-        child: Text("save all")
+        child: Text("save all"),
     );
   }
   Widget imageProfile() {
@@ -118,7 +126,6 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   Widget nameTextField()  {
-
       return TextFormField(
         controller: _nameController,
         maxLength: 10,
@@ -137,34 +144,26 @@ class _MyProfileState extends State<MyProfile> {
               Icons.person,
               color: Colors.grey,
             ),
-            labelText: profileName,
+            labelText: 'Name',
             hintText: 'Input your name',
-
         ),
-        onChanged: (value) {
-          setState(() {
-            profileName = value;
-          });
-        },
       );
   }
 
   Widget introduction() {
-    return TextField(
+    return TextFormField(
+      controller: _introController,
       maxLength: 30,
       decoration: InputDecoration(
         hintText: 'introduction',
       ),
-      onChanged: (value) {
-        intro = value;
-      },
     );
   }
 
   Widget chooseMBTI() {
     return ElevatedButton(
       onPressed: () async {
-        final selectedMBTI = await showModalBottomSheet(
+        var selectedMBTI = await showModalBottomSheet(
           context: context,
           builder: (builder) => MBTI(),
         );
