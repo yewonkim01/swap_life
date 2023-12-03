@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Spacer(flex: 2),
                     Container(
                       //decoration: BoxDecoration(border: Border.all()),
-                      child: Image.asset("assets/swap_Life.jpg", scale: 3),
+                      child: Image.asset("assets/swap_life_nukki.png", scale: 3),
                     ),
                     Spacer(flex: 2),
                     InkWell(
@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Image.asset('assets/kakao_login_pic.png'),
                     ),
                   ),
-                    Spacer(flex: 1,),
+                    Spacer(flex: 1),
                     Container(
                         child: Text("선녕원"),
                     ),

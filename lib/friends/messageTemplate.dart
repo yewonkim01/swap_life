@@ -5,7 +5,7 @@ TextTemplate createTemplate(Uri link){
         buttonTitle: '친구 요청 수락',
         text: 'SwapLife에서 김예원님이 친구가 되고싶어해요. 친구를 맺고 김예원님의 일상 체크리스트를 확인해보세요!',
         link: Link(
-            mobileWebUrl: Uri.parse('https://developers.kakao.com')
+            mobileWebUrl: link
         )
     );
     return Template;

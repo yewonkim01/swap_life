@@ -9,10 +9,12 @@ import 'MyProfile.dart';
 import 'TodoScreen.dart';
 import 'firestore/service.dart';
 import 'shared/shared.dart';
-import 'friends/friendList.dart';
+import 'FriendScreen.dart';
 
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:swap_life/FriendScreen.dart';
+import 'package:swap_life/friends/dynamicLink.dart';
 
 
 void main() async{
@@ -36,6 +38,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Future<Uri?> deepLink = DynamicLink().initDynamicLink(context);
+    deepLink.then((Uri? value){
+      if (value != null){
+        print('dynamicLink로 열림');
+        Navigator.pushNamed(context, '/friendScreen');
+      }else{
+        print('value 값은 nullllll');
+      }
+    });
+
     return MaterialApp(
       title: 'Swap Life',
       theme: ThemeData(primaryColor: Colors.blueGrey[200]),
@@ -45,8 +58,10 @@ class MyApp extends StatelessWidget {
         '/myHome': (context) => MyHome(controller: controller),
         '/myProfile' : (context) => MyProfile(),
         '/todoScreen': (context) => TodoScreen(controller: controller),
+        '/friendScreen': (context) => FriendPage(),
       },
       debugShowCheckedModeBanner: false,
+
     );//상태값 변하므로 Stateful위젯 사용
   }
 }
@@ -62,12 +77,14 @@ class MyHome extends StatefulWidget {
 
 class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
   TabController? _tabController;
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    //앱 초기 실행시 프로필로 바꿨을 때 tabcontroller도 바꿔줌(예원)
+    _tabController!.index = 2;
     _tabController!.addListener(() {
       setState(() {
         _selectedIndex = _tabController!.index;
@@ -86,7 +103,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     Widget bodyWidget;
     if(_selectedIndex==0) {
       //추후 친구 chech list받아오는 함수 연결
-      bodyWidget = FriendList();
+      bodyWidget = FriendPage();
       }
     else if(_selectedIndex == 1) {
       bodyWidget = TodoScreen(controller: widget.controller);

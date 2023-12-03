@@ -46,7 +46,7 @@ class KakaoShareButton extends StatelessWidget {
             if (installed){
               Log.i(context, tag, '[카카오톡 공유 가능]\n카카오톡과 연결합니다');
               KakaoShareManager().ShareWithKaKaoTalk(context);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('친구에게 친구 요청을 보냈습니다.')));
+              //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('친구에게 친구 요청을 보냈습니다.')));
             }else{
               Log.i(context, tag, '[카카오톡 공유 불가]\n카카오톡이 설치되어 있지 않아 카카오톡에 연결할 수없습니다.\n카카오톡 설치 후 다시 진행해주세요.');
             }
