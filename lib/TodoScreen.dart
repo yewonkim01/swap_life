@@ -34,6 +34,9 @@ class _TodoScreenState extends State<TodoScreen> {
   FocusNode fnode = FocusNode();
   int i=0; int isnull=0; String? selectedMBTI; kakao.User ? user;
 
+  List<String> dropdownList = ['E','I','S','N','T','F','J','P'];
+  String selectedItem = 'E';
+
   void saveList() async {
     final checkList = firestore;
     bool _isnull=false;
@@ -104,18 +107,17 @@ class _TodoScreenState extends State<TodoScreen> {
                   focusNode: fnode,
                   hint: Text('MBTI'),
                   //button 활성화
-                  onChanged: (String? newVal) {
+                  onChanged: (dynamic newVal) {
                     setState(() {
-                      todoList[i].changeMBTI(newVal ?? '');
+                      selectedItem = newVal;
                     });
                   },
-                  value: todoList[i].mbti,
-                  items: [
-                    'E','I','S','N','T','F','J','P'
-                  ].map<DropdownMenuItem<String>>((String i) {
+                  value: selectedItem,
+                  items: dropdownList.map((String item) {
                     return DropdownMenuItem<String>(
-                      value: i,
-                      child:Text({'E':'E','I':'I','S':'S','N':'N','T':'T','F':'F','J':'J','P':'P'}[i] ?? ''),);
+                      child: Text('$item'),
+                      value: item
+                    );
                   }).toList(),
                 ),
                 IconButton(
