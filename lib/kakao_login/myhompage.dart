@@ -40,7 +40,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     InkWell(
                       onTap: () async {
                         await viewModel.login();
-                        setState(() {});
                       },
                       child: Container(
                         child: Image.asset('assets/kakao_login_pic.png'),
