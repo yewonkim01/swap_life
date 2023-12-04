@@ -14,10 +14,6 @@ class _FriendPageState extends State<FriendPage> {
       body: Column(
         children: [
           FriendList(),
-          Container(
-            color: Colors.red,),
-          Container(
-            color: Colors.green,),
         ],
       ),
     );

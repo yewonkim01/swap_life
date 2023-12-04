@@ -15,6 +15,9 @@ import 'package:swap_life/shared/todo_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swap_life/FriendScreen.dart';
 import 'package:swap_life/friends/dynamicLink.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 
 void main() async{
@@ -31,6 +34,8 @@ void main() async{
   runApp(MyApp(controller: controller));
 }
 
+
+
 //예선 작성//
 class MyApp extends StatelessWidget {
   final TodoController controller;
@@ -38,16 +43,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    Future<Uri?> deepLink = DynamicLink().initDynamicLink(context);
-    deepLink.then((Uri? value){
-      if (value != null){
-        print('dynamicLink로 열림');
-        Navigator.pushNamed(context, '/friendScreen');
-      }else{
-        print('value 값은 nullllll');
-      }
-    });
+    DynamicLink().initDynamicLink(context);
+    print('init 끝');
 
     return MaterialApp(
       title: 'Swap Life',
@@ -76,6 +73,7 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
+
   TabController? _tabController;
   int _selectedIndex = 2;
 
@@ -97,6 +95,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     _tabController!.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {

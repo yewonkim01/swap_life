@@ -48,6 +48,7 @@ dependencies:
   kakao_flutter_sdk_share: ^1.7.0
   kakao_flutter_sdk_template: ^1.7.0
   firebase_dynamic_links: ^5.4.6
+  firebase_analytics: ^10.7.2
 
 dev_dependencies:
   flutter_test:
