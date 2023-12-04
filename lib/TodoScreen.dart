@@ -49,13 +49,13 @@ class _TodoScreenState extends State<TodoScreen> {
     await checkList.collection("checklist").doc(user!.id.toString()).delete();
   }
 
-  void getList() async {
+  /*void getList() async {
     user = await kakao.UserApi.instance.me();
     final checkList = firestore;
     DocumentSnapshot getprof = await checkList.collection("checklist").doc(user!.id.toString()).get();
     todoList[i].title = getprof['MyChecklist$i'];
     selectedMBTI = getprof['MBTI'];
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -74,20 +74,20 @@ class _TodoScreenState extends State<TodoScreen> {
               children: [
                 Expanded(
                   child: TextField(
-                    focusNode: fnode,
-                    controller: textEditingController,
-                    cursorColor: Colors.grey,
-                    decoration: InputDecoration(
+                      focusNode: fnode,
+                      controller: textEditingController,
+                      cursorColor: Colors.grey,
+                      decoration: InputDecoration(
                         labelText: "Add a new task",
                         labelStyle:TextStyle(
                             color:fnode.hasFocus? Colors.deepPurple : Colors.grey),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.deepPurple
-                            ),
+                          borderSide: BorderSide(
+                              color: Colors.deepPurple
+                          ),
                         ),
-                    )  ,
-                      onChanged: (value){
+                      )  ,
+                      onSubmitted: (value){
                         setState(() {
                           todoList[i].title=value;
                         });
@@ -118,7 +118,7 @@ class _TodoScreenState extends State<TodoScreen> {
                     if(isnull==0) {
                       saveList();
                       textEditingController.clear();
-                      getList();
+                      //getList();
                     }
                     isnull=0;
                   },
@@ -146,7 +146,7 @@ class _TodoScreenState extends State<TodoScreen> {
                       ),
                       SizedBox(width: 90,),
                       Text(
-                          selectedMBTI.toString(),
+                        selectedMBTI.toString(),
                       ),
                     ],
                   ),
