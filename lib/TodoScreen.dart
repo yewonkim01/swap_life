@@ -155,7 +155,7 @@ class _TodoScreenState extends State<TodoScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children:[
                       Text(
-                          selectedMBTI.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                          todoList[index].mbti.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                       ),
                       SizedBox(width: 16),
                       IconButton(
