@@ -178,6 +178,7 @@ class _TodoScreenState extends State<TodoScreen> {
 
   void addTodoItem(String title, String mbti) {
     setState(() {
+      //공백 상태로 checkList 추가 불가
       if(title != null && title.trim().isNotEmpty) {
         todoList.add(TodoItem(title: title, mbti: mbti,isCompleted: false));
       } else{
