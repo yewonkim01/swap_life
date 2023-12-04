@@ -10,8 +10,13 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 class TodoItem {
   String title; //todo 항목
   bool isCompleted;// 항목의 완료 상태
+  String mbti;
 
-  TodoItem({required this.title, this.isCompleted = false});
+  TodoItem({required this.title, required this.mbti, this.isCompleted = false});
+
+  void changeMBTI(String mbti){
+    this.mbti = mbti;
+  }
 }
 
 class TodoScreen extends StatefulWidget {
@@ -23,10 +28,14 @@ class TodoScreen extends StatefulWidget {
 
 class _TodoScreenState extends State<TodoScreen> {
   FirebaseFirestore firestore=FirebaseFirestore.instance;
-  final List<TodoItem> todoList = [];
+  List<TodoItem> todoList = [];
   TextEditingController textEditingController = TextEditingController();
+  TextEditingController mbtiEditingController = TextEditingController();
   FocusNode fnode = FocusNode();
   int i=0; int isnull=0; String? selectedMBTI; kakao.User ? user;
+
+  List<String> dropdownList = ['E','I','S','N','T','F','J','P'];
+  String selectedItem = 'E';
 
   void saveList() async {
     final checkList = firestore;
@@ -39,7 +48,7 @@ class _TodoScreenState extends State<TodoScreen> {
           _isnull = true;
       }
     }*/
-    await checkList.collection("checklist").add({"MyChecklist$i":todoList[i].title,"MBTI":selectedMBTI});
+    await checkList.collection("checklist").add({"MyChecklist$i":todoList[i].title,"MBTI":todoList[i].mbti});
     i++;
   }
 
@@ -49,13 +58,13 @@ class _TodoScreenState extends State<TodoScreen> {
     await checkList.collection("checklist").doc(user!.id.toString()).delete();
   }
 
-  /*void getList() async {
+  void getList() async {
     user = await kakao.UserApi.instance.me();
     final checkList = firestore;
     DocumentSnapshot getprof = await checkList.collection("checklist").doc(user!.id.toString()).get();
     todoList[i].title = getprof['MyChecklist$i'];
-    selectedMBTI = getprof['MBTI'];
-  }*/
+    todoList[i].mbti = getprof['MBTI'];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,20 +83,20 @@ class _TodoScreenState extends State<TodoScreen> {
               children: [
                 Expanded(
                   child: TextField(
-                      focusNode: fnode,
-                      controller: textEditingController,
-                      cursorColor: Colors.grey,
-                      decoration: InputDecoration(
+                    focusNode: fnode,
+                    controller: textEditingController,
+                    cursorColor: Colors.grey,
+                    decoration: InputDecoration(
                         labelText: "Add a new task",
                         labelStyle:TextStyle(
                             color:fnode.hasFocus? Colors.deepPurple : Colors.grey),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors.deepPurple
-                          ),
+                            borderSide: BorderSide(
+                                color: Colors.deepPurple
+                            ),
                         ),
-                      )  ,
-                      onSubmitted: (value){
+                    )  ,
+                      onChanged: (value){
                         setState(() {
                           todoList[i].title=value;
                         });
@@ -95,30 +104,30 @@ class _TodoScreenState extends State<TodoScreen> {
                   ),
                 ),
                 DropdownButton<String?>(
+                  focusNode: fnode,
                   hint: Text('MBTI'),
                   //button 활성화
-                  onChanged: (String? newVal) {
+                  onChanged: (dynamic newVal) {
                     setState(() {
-                      selectedMBTI=newVal!;
+                      selectedItem = newVal;
                     });
                   },
-                  value: selectedMBTI,
-                  items: [
-                    'E','I','S','N','T','F','J','P'
-                  ].map<DropdownMenuItem<String?>>((String? i) {
-                    return DropdownMenuItem<String?>(
-                      value: i,
-                      child:Text({'E':'E','I':'I','S':'S','N':'N','T':'T','F':'F','J':'J','P':'P'}[i] ?? ''),);
+                  value: selectedItem,
+                  items: dropdownList.map((String item) {
+                    return DropdownMenuItem<String>(
+                      child: Text('$item'),
+                      value: item
+                    );
                   }).toList(),
                 ),
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
-                    addTodoItem(textEditingController.text);
+                    addTodoItem(textEditingController.text, selectedItem.toString());
                     if(isnull==0) {
                       saveList();
                       textEditingController.clear();
-                      //getList();
+                      getList();
                     }
                     isnull=0;
                   },
@@ -139,23 +148,24 @@ class _TodoScreenState extends State<TodoScreen> {
                       toggleTodoItem(index);
                     },
                   ),
-                  title: Row(
-                    children: [
+                  title: Text(
+                    todoList[index].title
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children:[
                       Text(
-                        todoList[index].title,
+                          selectedMBTI.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                       ),
-                      SizedBox(width: 90,),
-                      Text(
-                        selectedMBTI.toString(),
+                      SizedBox(width: 16),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          deleteList(index);
+                          deleteTodoItem(index);
+                        },
                       ),
                     ],
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      deleteList(index);
-                      deleteTodoItem(index);
-                    },
                   ),
                 );
               },
@@ -166,10 +176,10 @@ class _TodoScreenState extends State<TodoScreen> {
     );
   }
 
-  void addTodoItem(String title) {
+  void addTodoItem(String title, String mbti) {
     setState(() {
       if(title != null && title.trim().isNotEmpty) {
-        todoList.add(TodoItem(title: title, isCompleted: false));
+        todoList.add(TodoItem(title: title, mbti: mbti,isCompleted: false));
       } else{
         isnull = 1;
       }
