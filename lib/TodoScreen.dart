@@ -123,7 +123,7 @@ class _TodoScreenState extends State<TodoScreen> {
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
-                    addTodoItem(textEditingController.text,todoList[i].mbti.toString());
+                    addTodoItem(textEditingController.text, selectedItem.toString());
                     if(isnull==0) {
                       saveList();
                       textEditingController.clear();
