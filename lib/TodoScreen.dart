@@ -37,48 +37,53 @@ class _TodoScreenState extends State<TodoScreen> {
   List<String> dropdownList = ['E','I','S','N','T','F','J','P'];
   String selectedItem = 'E';
 
+  CollectionReference userChecklistCollection(String userId) {
+    return firestore.collection("checklist").doc(userId).collection("user_checklist");
+  }
+
   Future<void> saveList() async {
     final checkList = firestore;
-    bool _isnull=false;
+    bool _isnull = false;
+    String userId = user!.id.toString();
 
-    /*while(!_isnull) {
-      if(todoList[i].title != null) {
-        i++;
-      } else {
-          _isnull = true;
-      }
-    }*/
-    await checkList.collection("checklist").add({"MyChecklist$i":todoList[i].title,"MBTI":todoList[i].mbti});
+    await checkList.collection("checklist").doc(userId).collection("user_checklist").add({
+      "MyChecklist$i": todoList[i].title,
+      "MBTI": todoList[i].mbti,
+    });
+
     i++;
   }
 
   Future<void> deleteList(index) async {
     final checkList = firestore;
+    String userId = user!.id.toString();
 
-    await checkList.collection("checklist").doc(user!.id.toString()).delete();
+    await checkList.collection("checklist").doc(userId).collection("user_checklist").doc(index.toString()).delete();
   }
 
   @override
   void initState() {
     super.initState();
-    // Call getList() during the initialization of the widget
+
     getList();
   }
 
   Future<void> getList() async {
     user = await kakao.UserApi.instance.me();
     final checkList = firestore;
-    DocumentSnapshot getprof = await checkList.collection("checklist").doc(user!.id.toString()).get();
+    String userId = user!.id.toString();
+
+    QuerySnapshot getprofs = await checkList.collection("checklist").doc(userId).collection("user_checklist").get();
+
     setState(() {
-      todoList = [
-        TodoItem(
-          title: getprof['MyChecklist$i'],
-          mbti: getprof['MBTI'],
-          isCompleted: false,
-        ),
-      ];
+      todoList = getprofs.docs.map((doc) => TodoItem(
+        title: doc["MyChecklist$i"],
+        mbti: doc["MBTI"],
+        isCompleted: false,
+      )).toList();
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +156,27 @@ class _TodoScreenState extends State<TodoScreen> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
+          child: StreamBuilder<QuerySnapshot>(
+          // Listen to changes in the collection
+          stream: userChecklistCollection("user_id").snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text('Loading');
+          }
+          todoList = snapshot.data!.docs.map<TodoItem>((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          return TodoItem(
+            title: data['MyChecklist'],
+            mbti: data['MBTI'],
+            isCompleted: false,
+            );
+          }).toList();
+
+            return ListView.builder(
               itemCount: todoList.length,
               itemBuilder: (context, index) {
                 return ListTile(
@@ -184,6 +209,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   ),
                 );
               },
+            );},
             ),
           ),
         ],
