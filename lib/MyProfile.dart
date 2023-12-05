@@ -97,23 +97,25 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   Widget buildProfileContent() {
-    return ListView(
-      shrinkWrap: true,
-      children: <Widget>[
-        imageProfile(),
-        SizedBox(height: 30),
-        nameTextField(),
-        introduction(),
-        SizedBox(height: 40,),
-        chooseMBTI(),
-        selectedMBTI(),
-        if (_selectedMBTI == null)
-          SizedBox(height: 20,)
-        else
-          SizedBox(height: 10,),
-        myReport(),
-        Logout(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        //shrinkWrap: true,
+        children: <Widget>[
+          imageProfile(),
+          SizedBox(height: 30),
+          nameTextField(),
+          introduction(),
+          SizedBox(height: 40,),
+          chooseMBTI(),
+          selectedMBTI(),
+          if (_selectedMBTI == null)
+            SizedBox(height: 20,)
+          else
+            SizedBox(height: 10,),
+          myReport(),
+          Logout(),
+        ],
+      ),
     );
   }
 

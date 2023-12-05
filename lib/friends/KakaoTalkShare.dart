@@ -4,8 +4,11 @@ import 'messageTemplate.dart';
 import 'log.dart';
 import 'dynamicLink.dart';
 import 'package:swap_life/shared/todo_controller.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
+
 
 const String tag = 'SwapLife';
+kakao.User ? user;
 
 class KakaoShareManager{
   final TodoController controller;
@@ -18,9 +21,12 @@ class KakaoShareManager{
 
   void ShareWithKaKaoTalk(BuildContext context) async{
     print('너 되니?');
-    Uri dynamicLink = await DynamicLink(controller: controller).buildDynamicLink();
+    user = await kakao.UserApi.instance.me();
+    Uri dynamicLink = await DynamicLink(controller, context).buildDynamicLink(user!.id.toString());
     print(dynamicLink);
-    TextTemplate template = createTemplate(dynamicLink);
+    final nickname = user!.kakaoAccount!.profile!.nickname;
+    print('얘가 nickname: ${nickname}');
+    TextTemplate template = createTemplate(dynamicLink, nickname!);
     try{
       //카카오톡 공유 uri(메시지를 공유하는 화면으로 이동) 생성
       Uri uri = await ShareClient.instance.shareDefault(template: template);
