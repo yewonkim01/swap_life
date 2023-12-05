@@ -45,6 +45,12 @@ dependencies:
   firebase_auth: ^4.15.0
   http: ^1.1.0
   cloud_firestore: ^4.13.3
+
+  kakao_flutter_sdk_share: ^1.7.0
+  kakao_flutter_sdk_template: ^1.7.0
+  firebase_dynamic_links: ^5.4.6
+  firebase_analytics: ^10.7.2
+
   firebase_storage: ^11.5.3
 
 dev_dependencies:
@@ -73,7 +79,8 @@ flutter:
   assets:
     - assets/profile.png
     - assets/kakao_login_pic.png
-    - assets/swap_Life.jpg
+    - assets/swap_life_nukki.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

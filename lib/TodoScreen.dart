@@ -8,6 +8,8 @@ import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/friends/friendList.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
+List<TodoItem> todoList = [];
+
 class TodoItem {
   String title; //todo 항목
   bool isCompleted;// 항목의 완료 상태
@@ -29,7 +31,6 @@ class TodoScreen extends StatefulWidget {
 
 class _TodoScreenState extends State<TodoScreen> {
   FirebaseFirestore firestore=FirebaseFirestore.instance;
-  List<TodoItem> todoList = [];
   TextEditingController textEditingController = TextEditingController();
   FocusNode fnode = FocusNode();
   int i=0; int isnull=0; String? selectedMBTI; kakao.User ? user;
@@ -41,33 +42,71 @@ class _TodoScreenState extends State<TodoScreen> {
     return firestore.collection("checklist").doc(userId).collection("user_checklist");
   }
 
+  Future<String> getOrCreateDefaultUserId() async {
+    kakao.User? user = await kakao.UserApi.instance.me();
+    String userId = user?.id.toString() ?? 'defaultUserID';
+    // Firestore에서 해당 사용자 ID가 있는지 확인
+    DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+    DocumentSnapshot userSnapshot = await userRef.get();
+
+    if (!userSnapshot.exists) {
+      // 사용자 ID가 Firestore에 없으면 새로운 ID 생성
+      await userRef.set({'createdAt': FieldValue.serverTimestamp()});
+    }
+    return userId;
+  }
+
   Future<void> saveList() async {
+    try {
+      final checkList = firestore;
+      String userId = user?.id.toString() ?? await getOrCreateDefaultUserId();
+      DocumentReference Ref = checkList.collection('checklist').doc(userId);
+
+      List<Map<String, dynamic>> existingItems = [];
+      DocumentSnapshot snapshot = await Ref.get();
+
+      if (snapshot.exists) {
+        dynamic data = snapshot.data();
+        if (data != null && data['user_checklist'] != null) {
+          existingItems = List<Map<String, dynamic>>.from(
+            (data['user_checklist'] as List<dynamic>)
+                .map((item) => Map<String, dynamic>.from(item)),
+          );
+        }
+      }
+      existingItems.add({
+        'title': todoList.last.title,
+        'mbti': todoList.last.mbti,
+      });
+
+      await Ref.set({'user_checklist': existingItems});
+    } catch (e) {
+      print("Error saving list: $e");
+    }
+  }
+
+  Future<void> deleteList(int index) async {
     final checkList = firestore;
-    String userId = user!.id.toString();
+    String userId =user?.id.toString() ?? await getOrCreateDefaultUserId();
+    DocumentReference Ref = checkList.collection('checklist').doc(userId);
+    DocumentSnapshot snapshot = await Ref.get();
 
-    await checkList.collection("checklist").doc(userId).collection("user_checklist").add({
-      "MyChecklist$i": todoList[i].title,
-      "MBTI": todoList[i].mbti,
-    });
+    if (snapshot.exists) {
+      dynamic data = snapshot.data();
+      if (data != null && data['user_checklist'] != null) {
+        List<Map<String, dynamic>> existingItems = List<Map<String, dynamic>>.from(
+          (data['user_checklist'] as List<dynamic>)
+              .map((item) => Map<String, dynamic>.from(item)),
+        );
 
-    i++;
+        if (index >= 0 && index < existingItems.length) {
+          existingItems.removeAt(index);
+          await Ref.update({'user_checklist': existingItems});
+        }
+      }
+    }
   }
 
-  Future<void> deleteList(index) async {
-    final checkList = firestore;
-    String userId = user!.id.toString();
-
-    await checkList.collection("checklist").doc(userId).collection("user_checklist").doc(index.toString()).delete();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    Future.delayed(Duration.zero, () {
-      getList();
-    });
-  }
 
   Future<void> getList() async {
     user = await kakao.UserApi.instance.me();
@@ -79,7 +118,7 @@ class _TodoScreenState extends State<TodoScreen> {
         todoList = snapshot.docs.map<TodoItem>((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
           return TodoItem(
-            title: data['MyChecklist$i'],
+            title: data['title'],
             mbti: data['MBTI'],
             isCompleted: false,
           );
@@ -87,7 +126,6 @@ class _TodoScreenState extends State<TodoScreen> {
       });
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,10 +161,8 @@ class _TodoScreenState extends State<TodoScreen> {
                           ),
                         ),
                       ),
-                      onSubmitted: (value){
-                        setState(() {
-                          todoList[i].title=value;
-                        });}
+                      onChanged: (value){
+                        setState(() {});}
                   ),
                 ),
                 DropdownButton<String?>(
@@ -162,7 +198,7 @@ class _TodoScreenState extends State<TodoScreen> {
             ),
           ),
           Expanded(
-            child:ListView.builder(
+            child: ListView.builder(
               itemCount: todoList.length,
               itemBuilder: (context, index) {
                 return ListTile(
@@ -188,7 +224,7 @@ class _TodoScreenState extends State<TodoScreen> {
                       SizedBox(width: 16),
                       IconButton(
                         icon: Icon(Icons.delete),
-                        onPressed: () {
+                        onPressed: () async {
                           deleteList(index);
                           deleteTodoItem(index);
                         },
