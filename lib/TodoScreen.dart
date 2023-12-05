@@ -15,7 +15,6 @@ class TodoItem {
   String title; //todo 항목
   bool isCompleted;// 항목의 완료 상태
   String mbti;
-
   TodoItem({required this.title, required this.mbti, this.isCompleted = false});
 
   void changeMBTI(String mbti){
