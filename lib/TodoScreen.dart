@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/src/painting/image_provider.dart';
-import 'dart:io';
 import 'dart:core';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
@@ -40,7 +37,7 @@ class _TodoScreenState extends State<TodoScreen> {
   void saveList() async {
     final checkList = firestore;
     bool _isnull=false;
-
+    i = 0;
     /*while(!_isnull) {
       if(todoList[i].title != null) {
         i++;
@@ -58,13 +55,13 @@ class _TodoScreenState extends State<TodoScreen> {
     await checkList.collection("checklist").doc(user!.id.toString()).delete();
   }
 
-  void getList() async {
+  /*void getList() async {
     user = await kakao.UserApi.instance.me();
     final checkList = firestore;
     DocumentSnapshot getprof = await checkList.collection("checklist").doc(user!.id.toString()).get();
     todoList[i].title = getprof['MyChecklist$i'];
     todoList[i].mbti = getprof['MBTI'];
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +93,7 @@ class _TodoScreenState extends State<TodoScreen> {
                             ),
                         ),
                     )  ,
-                      onChanged: (value){
+                      onSubmitted: (value){
                         setState(() {
                           todoList[i].title=value;
                         });
@@ -127,7 +124,7 @@ class _TodoScreenState extends State<TodoScreen> {
                     if(isnull==0) {
                       saveList();
                       textEditingController.clear();
-                      getList();
+                      //getList();
                     }
                     isnull=0;
                   },

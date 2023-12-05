@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Padding(
                       padding:const EdgeInsets.fromLTRB(0,50,0,300),
                       child: Container(
-                        child: Image.asset("assets/swap_Life.jpg"),
+                        child: Image.asset("assets/swap_Life.png"),
                       ),
                     ),
                   Padding(padding: const EdgeInsets.fromLTRB(0,0,0,100),
