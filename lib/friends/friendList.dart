@@ -82,8 +82,8 @@ class _FriendListState extends State<FriendList> {
                         barrierDismissible: true,
                           context: context,
                           builder: (context){
-                          final d = DynamicLink(controller: widget.controller);
-                          d.buildDynamicLink();
+                          // final d = DynamicLink(controller: widget.controller);
+                          // d.buildDynamicLink();
                           return KakaoShareButton(controller: widget.controller);
                           });
                     },
