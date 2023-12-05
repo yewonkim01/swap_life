@@ -2,8 +2,11 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:swap_life/FriendScreen.dart';
 import 'package:swap_life/main.dart';
+import 'package:swap_life/shared/todo_controller.dart';
 
 class DynamicLink{
+  final TodoController controller;
+  DynamicLink({required this.controller});
   Future<Uri> buildDynamicLink() async{
     final dynamicLinkParams = DynamicLinkParameters(
         link: Uri.parse('https://swapllife.page.link/friends'),
@@ -22,7 +25,7 @@ class DynamicLink{
     final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
     if (initialLink != null){
       deepLink = initialLink.link;
-      Navigator.push(context, MaterialPageRoute(builder: (context) => FriendPage()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => FriendPage(controller: controller)));
     }
     //다이나믹 링크로 앱이 열릴 때 리스너
     FirebaseDynamicLinks.instance.onLink.listen(
