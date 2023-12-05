@@ -80,7 +80,6 @@ flutter:
   assets:
     - assets/profile.png
     - assets/kakao_login_pic.png
-    - assets/swap_Life.jpg
     - assets/swap_life_nukki.png
 
 

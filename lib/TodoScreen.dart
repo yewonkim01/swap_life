@@ -11,6 +11,8 @@ import 'package:uuid/uuid.dart';
 
 List<TodoItem> todoList = [];
 
+List<TodoItem> todoList = [];
+
 class TodoItem {
   String title; //todo 항목
   bool isCompleted;// 항목의 완료 상태
@@ -126,7 +128,6 @@ class _TodoScreenState extends State<TodoScreen> {
       });
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

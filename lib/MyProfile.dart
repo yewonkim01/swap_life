@@ -5,6 +5,7 @@ import 'package:flutter/src/painting/image_provider.dart';
 import 'dart:io';
 import 'dart:core';
 import 'package:swap_life/kakao_login/mainview.dart';
+import 'package:swap_life/report.dart';
 import 'kakao_login/login.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 import 'package:firebase_storage/firebase_storage.dart';
@@ -239,9 +240,10 @@ class _MyProfileState extends State<MyProfile> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.deepPurple[50],
         ),
-      onPressed: () {
-
-      },
+      onPressed: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Mbti_report()),
+      ),
       child: Row(
         children: [
           Icon(Icons.favorite,color: Colors.deepPurple,),

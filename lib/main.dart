@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:swap_life/kakao_login/firebase_options.dart';
@@ -11,10 +10,7 @@ import 'firestore/service.dart';
 import 'shared/shared.dart';
 import 'FriendScreen.dart';
 import 'package:swap_life/shared/todo_controller.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:swap_life/FriendScreen.dart';
 import 'package:swap_life/friends/dynamicLink.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 
 
