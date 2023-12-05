@@ -11,6 +11,7 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const auth = require("firebase-auth");
 
+
 var serviceAccount = require("./swap-life-firebase-adminsdk-t5uz0-8d814e98a6.json");
 
 admin.initializeApp({
