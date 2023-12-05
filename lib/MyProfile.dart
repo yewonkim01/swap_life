@@ -70,9 +70,13 @@ class _MyProfileState extends State<MyProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: Text(
-          'Edit profile',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          'EDIT PROFILE',
+          style: TextStyle(fontWeight: FontWeight.bold,
+            color: Colors.black
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -121,6 +125,7 @@ class _MyProfileState extends State<MyProfile> {
               ? CircleAvatar(
             radius: 80,
             backgroundImage: AssetImage('assets/profile.png'),
+            backgroundColor: Colors.deepPurple[50],
           )
               : CircleAvatar(
             radius: 80,
@@ -161,7 +166,7 @@ class _MyProfileState extends State<MyProfile> {
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.black,
+            color: Colors.grey,
           ),
         ),
         prefixIcon: Icon(
@@ -170,6 +175,7 @@ class _MyProfileState extends State<MyProfile> {
         ),
         labelText: 'Name',
         hintText: 'Input your name',
+
       ),
       onFieldSubmitted: (value) {
         saveProfile();
@@ -184,6 +190,7 @@ class _MyProfileState extends State<MyProfile> {
       decoration: InputDecoration(
         hintText: 'introduction',
       ),
+
       onFieldSubmitted: (value) {
         saveProfile();
       },
@@ -192,6 +199,9 @@ class _MyProfileState extends State<MyProfile> {
 
   Widget chooseMBTI() {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.deepPurple[50],
+    ),
       onPressed: () async {
         var selectedMBTI = await showModalBottomSheet(
           context: context,
@@ -206,8 +216,8 @@ class _MyProfileState extends State<MyProfile> {
       },
       child: Row(
         children: [
-          Icon(Icons.edit),
-          Text('                                    MBTI'),
+          Icon(Icons.edit,color: Colors.deepPurple,),
+          Text('                                    MBTI',style: TextStyle(color: Colors.deepPurple),),
         ],
       ),
     );
@@ -217,18 +227,23 @@ class _MyProfileState extends State<MyProfile> {
     return _selectedMBTI != null
         ? Text(
       ' MBTI:  $_selectedMBTI',
-      style: TextStyle(fontSize: 18,),
+      style: TextStyle(fontSize: 18,color: Colors.deepPurple,)
     )
         : Container(); // 선택된 MBTI가 없을 때는 빈 컨테이너 반환
   }
 
   Widget myReport() {
     return ElevatedButton(
-      onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.deepPurple[50],
+        ),
+      onPressed: () {
+
+      },
       child: Row(
         children: [
-          Icon(Icons.favorite),
-          Text('                           My MBTI Report'),
+          Icon(Icons.favorite,color: Colors.deepPurple,),
+          Text('                           My MBTI Report',style: TextStyle(color: Colors.deepPurple),),
         ],
       ),
     );
@@ -240,7 +255,9 @@ class _MyProfileState extends State<MyProfile> {
   Widget Logout() {
     return TextButton(
       onPressed: () => viewModel.logout(),
-      child: Text("Logout"),
+      child: Text("Logout",
+        style: TextStyle(color: Colors.deepPurple),
+      ),
     );
   }
 
