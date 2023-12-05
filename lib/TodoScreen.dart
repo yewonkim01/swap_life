@@ -5,7 +5,6 @@ import 'package:flutter/src/painting/image_provider.dart';
 import 'dart:io';
 import 'dart:core';
 import 'package:swap_life/shared/todo_controller.dart';
-
 import 'package:swap_life/friends/friendList.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
@@ -32,161 +31,183 @@ class _TodoScreenState extends State<TodoScreen> {
   FirebaseFirestore firestore=FirebaseFirestore.instance;
   List<TodoItem> todoList = [];
   TextEditingController textEditingController = TextEditingController();
-  TextEditingController mbtiEditingController = TextEditingController();
   FocusNode fnode = FocusNode();
   int i=0; int isnull=0; String? selectedMBTI; kakao.User ? user;
 
   List<String> dropdownList = ['E','I','S','N','T','F','J','P'];
   String selectedItem = 'E';
 
-  void saveList() async {
-    final checkList = firestore;
-    bool _isnull=false;
+  CollectionReference userChecklistCollection(String userId) {
+    return firestore.collection("checklist").doc(userId).collection("user_checklist");
+  }
 
-    /*while(!_isnull) {
-      if(todoList[i].title != null) {
-        i++;
-      } else {
-          _isnull = true;
-      }
-    }*/
-    await checkList.collection("checklist").add({"MyChecklist$i":todoList[i].title,"MBTI":todoList[i].mbti});
+  Future<void> saveList() async {
+    final checkList = firestore;
+    String userId = user!.id.toString();
+
+    await checkList.collection("checklist").doc(userId).collection("user_checklist").add({
+      "MyChecklist$i": todoList[i].title,
+      "MBTI": todoList[i].mbti,
+    });
+
     i++;
   }
 
-  void deleteList(index) async {
+  Future<void> deleteList(index) async {
     final checkList = firestore;
+    String userId = user!.id.toString();
 
-    await checkList.collection("checklist").doc(user!.id.toString()).delete();
+    await checkList.collection("checklist").doc(userId).collection("user_checklist").doc(index.toString()).delete();
   }
 
-  void getList() async {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration.zero, () {
+      getList();
+    });
+  }
+
+  Future<void> getList() async {
     user = await kakao.UserApi.instance.me();
     final checkList = firestore;
-    DocumentSnapshot getprof = await checkList.collection("checklist").doc(user!.id.toString()).get();
-    todoList[i].title = getprof['MyChecklist$i'];
-    todoList[i].mbti = getprof['MBTI'];
+    String userId = user!.id.toString();
+
+    userChecklistCollection(userId).snapshots().listen((snapshot) {
+      setState(() {
+        todoList = snapshot.docs.map<TodoItem>((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          return TodoItem(
+            title: data['MyChecklist$i'],
+            mbti: data['MBTI'],
+            isCompleted: false,
+          );
+        }).toList();
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
+    return Scaffold(
+      /*appBar: AppBar(
+        title: Text("My Checklist"),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+      ),*/
+      body: Column(
         children: [
-          FriendList(),
-          Scaffold(
-            appBar: AppBar(
-              title: Text("My Checklist"),
-              centerTitle: true,
-              backgroundColor:Colors.white,
-              foregroundColor: Colors.black,
-            ),
-            body:Column(
+          SizedBox(height: 10),
+          FriendList(controller: widget.controller),
+          SizedBox(height: 35),
+          Text("My checklist", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold),),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          focusNode: fnode,
-                          controller: textEditingController,
-                          cursorColor: Colors.grey,
-                          decoration: InputDecoration(
-                              labelText: "Add a new task",
-                              labelStyle:TextStyle(
-                                  color:fnode.hasFocus? Colors.deepPurple : Colors.grey),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.deepPurple
-                                  ),
-                              ),
-                          )  ,
-                            onChanged: (value){
-                              setState(() {
-                                todoList[i].title=value;
-                              });
-                            }
+                Expanded(
+                  child: TextField(
+                      focusNode: fnode,
+                      controller: textEditingController,
+                      cursorColor: Colors.grey,
+                      decoration: InputDecoration(
+                        labelText: "Add a new task",
+                        labelStyle: TextStyle(
+                          color: fnode.hasFocus ? Colors.deepPurple : Colors.grey,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.deepPurple,
+                          ),
                         ),
                       ),
-                      DropdownButton<String?>(
-                        focusNode: fnode,
-                        hint: Text('MBTI'),
-                        //button 활성화
-                        onChanged: (dynamic newVal) {
-                          setState(() {
-                            selectedItem = newVal;
-                          });
-                        },
-                        value: selectedItem,
-                        items: dropdownList.map((String item) {
-                          return DropdownMenuItem<String>(
-                            child: Text('$item'),
-                            value: item
-                          );
-                        }).toList(),
+                      onSubmitted: (value){
+                        setState(() {
+                          todoList[i].title=value;
+                        });}
+                  ),
+                ),
+                DropdownButton<String?>(
+                  focusNode: fnode,
+                  hint: Text('MBTI'),
+                  onChanged: (dynamic newVal) {
+                    setState(() {
+                      selectedItem = newVal;
+                    });
+                  },
+                  value: selectedItem,
+                  items: ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'].map<
+                      DropdownMenuItem<String?>>((String i) {
+                    return DropdownMenuItem<String>(
+                      value: i,
+                      child: Text(i),
+                    );
+                  }).toList(),
+                ),
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    addTodoItem(
+                        textEditingController.text, selectedItem.toString());
+                    if (isnull == 0) {
+                      saveList();
+                      textEditingController.clear();
+                    }
+                    isnull = 0;
+                  },
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child:ListView.builder(
+              itemCount: todoList.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: Checkbox(
+                    activeColor: Colors.white,
+                    checkColor: Colors.deepPurple,
+                    value: todoList[index].isCompleted,
+                    onChanged: (value) {
+                      toggleTodoItem(index);
+                    },
+                  ),
+                  title: Text(
+                    todoList[index].title,
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        todoList[index].mbti.toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17),
                       ),
+                      SizedBox(width: 16),
                       IconButton(
-                        icon: Icon(Icons.add),
+                        icon: Icon(Icons.delete),
                         onPressed: () {
-                          addTodoItem(textEditingController.text, selectedItem.toString());
-                          if(isnull==0) {
-                            saveList();
-                            textEditingController.clear();
-                            getList();
-                          }
-                          isnull=0;
+                          deleteList(index);
+                          deleteTodoItem(index);
                         },
                       ),
                     ],
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: todoList.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: Checkbox(
-                          activeColor: Colors.white,
-                          checkColor: Colors.deepPurple,
-                          value: todoList[index].isCompleted,
-                          onChanged: (value) {
-                            toggleTodoItem(index);
-                          },
-                        ),
-                        title: Text(
-                          todoList[index].title
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children:[
-                            Text(
-                                todoList[index].mbti.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                            ),
-                            SizedBox(width: 16),
-                            IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                deleteList(index);
-                                deleteTodoItem(index);
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                );
+              },
+            ),
           ),
-          )
         ],
       ),
     );
   }
 
+
   void addTodoItem(String title, String mbti) {
     setState(() {
+      //공백 상태로 checkList 추가 불가
       if(title != null && title.trim().isNotEmpty) {
         todoList.add(TodoItem(title: title, mbti: mbti,isCompleted: false));
       } else{

@@ -10,7 +10,6 @@ import 'TodoScreen.dart';
 import 'firestore/service.dart';
 import 'shared/shared.dart';
 import 'FriendScreen.dart';
-
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swap_life/FriendScreen.dart';
@@ -44,7 +43,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     print('dynamic init 시작');
-    DynamicLink().initDynamicLink(context);
+    DynamicLink(controller: controller).initDynamicLink(context);
 
     return MaterialApp(
       title: 'Swap Life',
@@ -55,7 +54,7 @@ class MyApp extends StatelessWidget {
         '/myHome': (context) => MyHome(controller: controller),
         '/myProfile' : (context) => MyProfile(),
         '/todoScreen': (context) => TodoScreen(controller: controller),
-        '/friendScreen': (context) => FriendPage(),
+        '/friendScreen': (context) => FriendPage(controller: controller),
       },
       debugShowCheckedModeBanner: false,
 
@@ -102,9 +101,11 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     Widget bodyWidget;
     if(_selectedIndex==0) {
       //추후 친구 chech list받아오는 함수 연결
-      bodyWidget = FriendPage();
+      //bodyWidget = tabContainer(context, Colors.white, "Friend's List");
+      bodyWidget = FriendPage(controller: widget.controller,);
       }
     else if(_selectedIndex == 1) {
+      //bodyWidget = FriendPage(controller: widget.controller);
       bodyWidget = TodoScreen(controller: widget.controller);
     }
     else {

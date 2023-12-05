@@ -3,10 +3,14 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk_share.dart';
 import 'messageTemplate.dart';
 import 'log.dart';
 import 'dynamicLink.dart';
+import 'package:swap_life/shared/todo_controller.dart';
 
 const String tag = 'SwapLife';
 
 class KakaoShareManager{
+  final TodoController controller;
+  KakaoShareManager({required this.controller});
+
   Future<bool> isKakaoTalkInstalled() async{
     bool installed = await ShareClient.instance.isKakaoTalkSharingAvailable();
     return installed;
@@ -14,7 +18,7 @@ class KakaoShareManager{
 
   void ShareWithKaKaoTalk(BuildContext context) async{
     print('너 되니?');
-    Uri dynamicLink = await DynamicLink().buildDynamicLink();
+    Uri dynamicLink = await DynamicLink(controller: controller).buildDynamicLink();
     print(dynamicLink);
     TextTemplate template = createTemplate(dynamicLink);
     try{
@@ -30,6 +34,8 @@ class KakaoShareManager{
 }
 
 class KakaoShareButton extends StatelessWidget {
+  final TodoController controller;
+  KakaoShareButton({required this.controller});
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -44,11 +50,11 @@ class KakaoShareButton extends StatelessWidget {
           //     backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),
           child: Text('카카오톡으로 친구 초대 요청 보내기', style: TextStyle(color: Colors.black)),
           onPressed: () async{
-            final installed = await KakaoShareManager().isKakaoTalkInstalled();
+            final installed = await KakaoShareManager(controller: controller).isKakaoTalkInstalled();
             if (installed){
               Log.i(context, tag, '[카카오톡 공유 가능]\n카카오톡과 연결합니다');
               print('share 카카오톡 시작');
-              KakaoShareManager().ShareWithKaKaoTalk(context);
+              KakaoShareManager(controller: controller).ShareWithKaKaoTalk(context);
               //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('친구에게 친구 요청을 보냈습니다.')));
             }else{
               Log.i(context, tag, '[카카오톡 공유 불가]\n카카오톡이 설치되어 있지 않아 카카오톡에 연결할 수없습니다.\n카카오톡 설치 후 다시 진행해주세요.');

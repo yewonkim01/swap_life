@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'KakaoTalkShare.dart';
 import 'dynamicLink.dart';
+import 'package:swap_life/shared/todo_controller.dart';
 
 class FriendList extends StatefulWidget {
+  final TodoController controller;
+  FriendList({required this.controller});
 
   @override
   State<FriendList> createState() => _FriendListState();
@@ -79,9 +82,9 @@ class _FriendListState extends State<FriendList> {
                         barrierDismissible: true,
                           context: context,
                           builder: (context){
-                          final d = DynamicLink();
+                          final d = DynamicLink(controller: widget.controller);
                           d.buildDynamicLink();
-                          return KakaoShareButton();
+                          return KakaoShareButton(controller: widget.controller);
                           });
                     },
                     child: Container(
