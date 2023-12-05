@@ -37,7 +37,7 @@ class _TodoScreenState extends State<TodoScreen> {
   List<String> dropdownList = ['E','I','S','N','T','F','J','P'];
   String selectedItem = 'E';
 
-  void saveList() async {
+  Future<void> saveList() async {
     final checkList = firestore;
     bool _isnull=false;
 
@@ -52,22 +52,37 @@ class _TodoScreenState extends State<TodoScreen> {
     i++;
   }
 
-  void deleteList(index) async {
+  Future<void> deleteList(index) async {
     final checkList = firestore;
 
     await checkList.collection("checklist").doc(user!.id.toString()).delete();
   }
 
-  void getList() async {
+  @override
+  void initState() {
+    super.initState();
+    // Call getList() during the initialization of the widget
+    getList();
+  }
+
+  Future<void> getList() async {
     user = await kakao.UserApi.instance.me();
     final checkList = firestore;
     DocumentSnapshot getprof = await checkList.collection("checklist").doc(user!.id.toString()).get();
-    todoList[i].title = getprof['MyChecklist$i'];
-    todoList[i].mbti = getprof['MBTI'];
+    setState(() {
+      todoList = [
+        TodoItem(
+          title: getprof['MyChecklist$i'],
+          mbti: getprof['MBTI'],
+          isCompleted: false,
+        ),
+      ];
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    getList();
     return Scaffold(
       appBar: AppBar(
         title: Text("My Checklist"),

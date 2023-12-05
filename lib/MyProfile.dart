@@ -71,7 +71,7 @@ class _MyProfileState extends State<MyProfile> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '프로필 편집',
+          'Edit profile',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
