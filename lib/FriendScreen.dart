@@ -21,7 +21,7 @@ class _FriendPageState extends State<FriendPage> {
           SizedBox(height: 10),
           FriendList(controller: widget.controller),
           //친구 list 없을 땐, sizebox랑 Text 삼항연산자로 띄우기
-          SizedBox(height: 270),
+          SizedBox(height: 250),
           Text( "Friend's List", style: TextStyle(color: Colors.grey,fontStyle: FontStyle.italic),),
         ],
       ),
