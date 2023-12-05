@@ -13,7 +13,9 @@ class KakaoShareManager{
   }
 
   void ShareWithKaKaoTalk(BuildContext context) async{
+    print('너 되니?');
     Uri dynamicLink = await DynamicLink().buildDynamicLink();
+    print(dynamicLink);
     TextTemplate template = createTemplate(dynamicLink);
     try{
       //카카오톡 공유 uri(메시지를 공유하는 화면으로 이동) 생성
@@ -45,6 +47,7 @@ class KakaoShareButton extends StatelessWidget {
             final installed = await KakaoShareManager().isKakaoTalkInstalled();
             if (installed){
               Log.i(context, tag, '[카카오톡 공유 가능]\n카카오톡과 연결합니다');
+              print('share 카카오톡 시작');
               KakaoShareManager().ShareWithKaKaoTalk(context);
               //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('친구에게 친구 요청을 보냈습니다.')));
             }else{

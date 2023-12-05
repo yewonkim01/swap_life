@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/src/painting/image_provider.dart';
@@ -5,6 +6,8 @@ import 'dart:io';
 import 'dart:core';
 import 'package:swap_life/kakao_login/mainview.dart';
 import 'kakao_login/login.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
+import 'package:firebase_storage/firebase_storage.dart';
 
 //예선 작성//
 class MyProfile extends StatefulWidget {
@@ -15,82 +18,143 @@ class MyProfile extends StatefulWidget {
 
 //예선 작성//
 class _MyProfileState extends State<MyProfile> {
-  PickedFile? _imageFile;
-  final ImagePicker _picker = ImagePicker();
+
   String? _selectedMBTI; //User MBTI
-  TextEditingController _nameController = TextEditingController(); //User Name
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _introController = TextEditingController();
+  ImagePicker _picker = ImagePicker();
+  XFile? _image;
+  FirebaseStorage _storage = FirebaseStorage.instance;
+  String? _imageUrl;
+  kakao.User ? user;
+
+  final profile = FirebaseFirestore.instance;
 
   @override
   void initState() {
     super.initState();
   }
+
   @override
   void dispose() {
     super.dispose();
   }
 
+
+  //firebase 연동 - 진영//
+  Future <void> saveProfile() async {
+    user = await kakao.UserApi.instance.me();
+    await profile.collection('MyProfile').doc(user!.id.toString()).set(
+        {
+          "profileID": _nameController.text,
+          "Introduction": _introController.text,
+          "MBTI": _selectedMBTI,
+          "ImageUrl" : _imageUrl
+        }
+    );
+  }
+
+  Future<void> getProfile() async {
+    user = await kakao.UserApi.instance.me();
+    DocumentSnapshot getprof =
+    await profile.collection('MyProfile').doc(user!.id.toString()).get();
+    _nameController.text = getprof['profileID'];
+    _introController.text = getprof['Introduction'];
+    _selectedMBTI = getprof['MBTI'];
+    _imageUrl = getprof['ImageUrl'];
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile',style: TextStyle(fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          'EDIT PROFILE',
+          style: TextStyle(fontWeight: FontWeight.bold,
+            color: Colors.black
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            imageProfile(),
-            SizedBox(height:30),
-            nameTextField(),
-            introduction(),
-            SizedBox(height: 80,),
-            chooseMBTI(),
-            selectedMBTI(),
-            if (_selectedMBTI == null)
-              SizedBox(height: 20,)
-            else
-              SizedBox(height: 10,),
-            myReport(),
-            Logout(),
-          ],
+        child: FutureBuilder<void>(
+          // 프로필 데이터를 가져오기 위해 FutureBuilder 사용
+          future: getProfile(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return buildProfileContent(); // 데이터를 가져왔을 때 프로필 화면 구성
+            } else {
+              return CircularProgressIndicator(); // 데이터를 가져오는 동안 로딩 표시
+            }
+          },
         ),
       ),
+    );
+  }
+
+  Widget buildProfileContent() {
+    return ListView(
+      shrinkWrap: true,
+      children: <Widget>[
+        imageProfile(),
+        SizedBox(height: 30),
+        nameTextField(),
+        introduction(),
+        SizedBox(height: 40,),
+        chooseMBTI(),
+        selectedMBTI(),
+        if (_selectedMBTI == null)
+          SizedBox(height: 20,)
+        else
+          SizedBox(height: 10,),
+        myReport(),
+        Logout(),
+      ],
     );
   }
 
   Widget imageProfile() {
     return Center(
-        child: Stack(
-            children: <Widget>[
-              (_imageFile==null) ? CircleAvatar(
-                  radius: 80,
-                  backgroundImage: AssetImage('assets/profile.png')
-              ) :
-              CircleAvatar(
-                radius: 80,
-                backgroundImage: FileImage(File(_imageFile!.path)),
-              ) ,
-              Positioned(
-                  bottom:20,
-                  right: 20,
-                  child: InkWell(
-                      onTap:() {
-                        showModalBottomSheet(context: context, builder: ((builder)=> bottomSheet()));
-                      },
-                      child: Icon(
-                        Icons.camera_alt,
-                        color: Colors.grey,
-                        size:40,
-                      ),
-                  ),
+      child: Stack(
+        children: <Widget>[
+          (_imageUrl == null || _imageUrl!.isEmpty)
+              ? CircleAvatar(
+            radius: 80,
+            backgroundImage: AssetImage('assets/profile.png'),
+            backgroundColor: Colors.deepPurple[50],
+          )
+              : CircleAvatar(
+            radius: 80,
+            backgroundImage: NetworkImage(_imageUrl!), // Use NetworkImage for URL
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: ((builder) => bottomSheet()),
+                );
+              },
+              child: Icon(
+                Icons.camera_alt,
+                color: Colors.grey,
+                size: 40,
               ),
-            ],
-        ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget nameTextField(){
+
+  Widget nameTextField() {
     return TextFormField(
       controller: _nameController,
       maxLength: 10,
@@ -101,8 +165,8 @@ class _MyProfileState extends State<MyProfile> {
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide:  BorderSide(
-            color: Colors.black,
+          borderSide: BorderSide(
+            color: Colors.grey,
           ),
         ),
         prefixIcon: Icon(
@@ -110,40 +174,50 @@ class _MyProfileState extends State<MyProfile> {
           color: Colors.grey,
         ),
         labelText: 'Name',
-        hintText: 'Input your name'
+        hintText: 'Input your name',
+
       ),
+      onFieldSubmitted: (value) {
+        saveProfile();
+      },
     );
-  }
-  String getName() {
-    return _nameController.text;
   }
 
   Widget introduction() {
-    return TextField(
+    return TextFormField(
+      controller: _introController,
       maxLength: 30,
       decoration: InputDecoration(
         hintText: 'introduction',
       ),
+
+      onFieldSubmitted: (value) {
+        saveProfile();
+      },
     );
   }
 
   Widget chooseMBTI() {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.deepPurple[50],
+    ),
       onPressed: () async {
-        final selectedMBTI = await showModalBottomSheet(
+        var selectedMBTI = await showModalBottomSheet(
           context: context,
           builder: (builder) => MBTI(),
         );
         if (selectedMBTI != null) {
           setState(() {
             _selectedMBTI = selectedMBTI;
+            saveProfile();
           });
         }
       },
       child: Row(
         children: [
-          Icon(Icons.edit),
-          Text('                                    MBTI'),
+          Icon(Icons.edit,color: Colors.deepPurple,),
+          Text('                                    MBTI',style: TextStyle(color: Colors.deepPurple),),
         ],
       ),
     );
@@ -153,37 +227,48 @@ class _MyProfileState extends State<MyProfile> {
     return _selectedMBTI != null
         ? Text(
       ' MBTI:  $_selectedMBTI',
-      style: TextStyle(fontSize: 18,),
+      style: TextStyle(fontSize: 18,color: Colors.deepPurple,)
     )
         : Container(); // 선택된 MBTI가 없을 때는 빈 컨테이너 반환
   }
 
   Widget myReport() {
     return ElevatedButton(
-      onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.deepPurple[50],
+        ),
+      onPressed: () {
+
+      },
       child: Row(
         children: [
-          Icon(Icons.favorite),
-          Text('                           My MBTI Report'),
+          Icon(Icons.favorite,color: Colors.deepPurple,),
+          Text('                           My MBTI Report',style: TextStyle(color: Colors.deepPurple),),
         ],
       ),
     );
   }
+
   final viewModel = MainViewModel(KakaoLogin());
 
   //Logout 진영//
-  Widget Logout(){
+  Widget Logout() {
     return TextButton(
       onPressed: () => viewModel.logout(),
-      child: Text("Logout"),
+      child: Text("Logout",
+        style: TextStyle(color: Colors.deepPurple),
+      ),
     );
   }
 
   //예선 작성//
   Widget bottomSheet() {
     return Container(
-        height:100,
-        width: MediaQuery.of(context).size.width,
+        height: 100,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
         margin: EdgeInsets.symmetric(
             horizontal: 20,
             vertical: 20
@@ -199,14 +284,21 @@ class _MyProfileState extends State<MyProfile> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 TextButton.icon(
-                  icon: Icon(Icons.camera, size:35, color: Colors.deepPurple),
-                  onPressed: () {takePhoto(ImageSource.camera);},
-                  label: Text('Camera', style: TextStyle(fontSize: 20, color: Colors.grey)),
+                  icon: Icon(Icons.camera, size: 35, color: Colors.deepPurple),
+                  onPressed: () {
+                    takePhoto(ImageSource.camera);
+                  },
+                  label: Text('Camera',
+                      style: TextStyle(fontSize: 20, color: Colors.grey)),
                 ),
                 TextButton.icon(
-                  icon: Icon(Icons.photo_library,size:35, color: Colors.deepPurple),
-                  onPressed: () {takePhoto(ImageSource.gallery);},
-                  label: Text('Gallery',style: TextStyle(fontSize: 20, color: Colors.grey),),
+                  icon: Icon(
+                      Icons.photo_library, size: 35, color: Colors.deepPurple),
+                  onPressed: () {
+                    takePhoto(ImageSource.gallery);
+                  },
+                  label: Text('Gallery',
+                    style: TextStyle(fontSize: 20, color: Colors.grey),),
                 )
               ],
             )
@@ -216,15 +308,26 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   Future<void> takePhoto(ImageSource source) async {
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+    user = await kakao.UserApi.instance.me();
+    final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
       setState(() {
-        _imageFile = pickedFile;
+        _image = pickedFile;
       });
+      File _file = File(pickedFile.path);
+
+      // Firebase Storage에 이미지 업로드
+      Reference _ref = _storage.ref('Profile/image/${user!.id}.jpg');
+      UploadTask _uploadTask = _ref.putFile(_file);
+
+      // 업로드 태스크가 완료될 때까지 기다린 후 이미지 URL을 얻어옴
+      TaskSnapshot taskSnapshot = await _uploadTask.whenComplete(() => print('Image uploaded'));
+      _imageUrl = await taskSnapshot.ref.getDownloadURL();
+      print('Download URL: $_imageUrl');
+      saveProfile();
     }
   }
 }
-
 //예선 작성//
 class MBTI extends StatelessWidget {
   @override
@@ -309,4 +412,3 @@ class MBTITile extends StatelessWidget {
     );
   }
 }
-

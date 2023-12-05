@@ -17,7 +17,6 @@ import 'package:swap_life/FriendScreen.dart';
 import 'package:swap_life/friends/dynamicLink.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 
 void main() async{
@@ -43,8 +42,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    print('dynamic init 시작');
     DynamicLink().initDynamicLink(context);
-    print('init 끝');
 
     return MaterialApp(
       title: 'Swap Life',
