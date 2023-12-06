@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/src/painting/image_provider.dart';
-import 'dart:io';
 import 'dart:core';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/friends/friendList.dart';
@@ -10,9 +7,10 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
 List<TodoItem> todoList = [];
 
+//Todo list에 들어갈 항목,mbti,완료상태
 class TodoItem {
-  String title; //todo 항목
-  bool isCompleted;// 항목의 완료 상태
+  String title;
+  bool isCompleted; //기본값 false -> 항목을 완료하지 않음
   String mbti;
   TodoItem({required this.title, required this.mbti, this.isCompleted = false});
 
@@ -34,13 +32,11 @@ class _TodoScreenState extends State<TodoScreen> {
   FocusNode fnode = FocusNode();
   int i=0; int isnull=0; String? selectedMBTI; kakao.User ? user;
 
+  //Dropdown에서 쓸 MBTI 선택지 list
   List<String> dropdownList = ['E','I','S','N','T','F','J','P'];
-  String selectedItem = 'E';
+  String selectedItem = 'E'; //기본값=null 상황을 방지하기 위한 초기값
 
-  CollectionReference userChecklistCollection(String userId) {
-    return firestore.collection("checklist").doc(userId).collection("user_checklist");
-  }
-
+  //초기에 사용자ID=null 상황을 방지하기 위해 userId받아오는 함수
   Future<String> getOrCreateDefaultUserId() async {
     kakao.User? user = await kakao.UserApi.instance.me();
     String userId = user?.id.toString() ?? 'defaultUserID';
@@ -55,6 +51,7 @@ class _TodoScreenState extends State<TodoScreen> {
     return userId;
   }
 
+  //firestore에 유저 checkList 저장하는 함수
   Future<void> saveList() async {
     try {
       final checkList = firestore;
@@ -84,6 +81,7 @@ class _TodoScreenState extends State<TodoScreen> {
     }
   }
 
+  //에뮬레이터 화면 상에 삭제된 checkList를 firestore상에서도 삭제하는 함수
   Future<void> deleteList(int index) async {
     final checkList = firestore;
     String userId =user?.id.toString() ?? await getOrCreateDefaultUserId();
@@ -105,12 +103,14 @@ class _TodoScreenState extends State<TodoScreen> {
       }
     }
   }
+
+  //함수 실행 시, 자동으로 getList() 실행시켜주는 함수
   @override
   void initState() {
     getList();
     super.initState();
   }
-
+  //화면 전환 및 종료시에도 checkList 유지
   Future<void> getList() async {
       final checkList = firestore;
       String userId = user?.id.toString() ?? await getOrCreateDefaultUserId();
@@ -146,14 +146,17 @@ class _TodoScreenState extends State<TodoScreen> {
       body: Column(
         children: [
           SizedBox(height: 10),
+          // 친구 목록
           FriendList(controller: widget.controller),
           SizedBox(height: 35),
+          //checkList
           Text("My checklist", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold),),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
                 Expanded(
+                  //checkList입력하는 TextField
                   child: TextField(
                       focusNode: fnode,
                       controller: textEditingController,
@@ -173,6 +176,7 @@ class _TodoScreenState extends State<TodoScreen> {
                         setState(() {});}
                   ),
                 ),
+                //MBTI 선책할 수 있는 버튼
                 DropdownButton<String?>(
                   focusNode: fnode,
                   hint: Text('MBTI'),
@@ -190,15 +194,19 @@ class _TodoScreenState extends State<TodoScreen> {
                     );
                   }).toList(),
                 ),
+                //checkList를 등록하는 버튼
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
+                    // todoList에 text,mbti,isconplete 값 add
                     addTodoItem(
                         textEditingController.text, selectedItem.toString());
+                    // input값이 존재하면 firestore상에 add 및 TextField 초기화
                     if (isnull == 0) {
                       saveList();
                       textEditingController.clear();
                     }
+                    // 1로 변경되었을 때를 대비해 다시 0으로 변경해주는 작업
                     isnull = 0;
                   },
                 ),
@@ -207,14 +215,15 @@ class _TodoScreenState extends State<TodoScreen> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: todoList.length,
-              itemBuilder: (context, index) {
+              itemCount: todoList.length, //text 좌우로 icon존재하기 때문에 길이 제한
+              itemBuilder: (context, index) { // 선택한 index 따라 작업 진행
                 return ListTile(
                   leading: Checkbox(
                     activeColor: Colors.white,
                     checkColor: Colors.deepPurple,
                     value: todoList[index].isCompleted,
                     onChanged: (value) {
+                      // checkBox상태 변경을 위한 bool 함수
                       toggleTodoItem(index);
                     },
                   ),
@@ -255,6 +264,7 @@ class _TodoScreenState extends State<TodoScreen> {
       if(title != null && title.trim().isNotEmpty) {
         todoList.add(TodoItem(title: title, mbti: mbti,isCompleted: false));
       } else{
+        // input text=null이면, isnull=1로 지정해 add버튼 실행 시 saveList(),clear 작업 생략
         isnull = 1;
       }
     });
