@@ -1,7 +1,5 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:swap_life/FriendScreen.dart';
-import 'package:swap_life/main.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'friendDocument.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
