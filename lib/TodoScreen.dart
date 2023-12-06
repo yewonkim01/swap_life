@@ -176,7 +176,7 @@ class _TodoScreenState extends State<TodoScreen> {
                         setState(() {});}
                   ),
                 ),
-                //MBTI 선책할 수 있는 버튼
+                //MBTI 선택할 수 있는 버튼
                 DropdownButton<String?>(
                   focusNode: fnode,
                   hint: Text('MBTI'),
