@@ -42,9 +42,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    print('dynamic init 시작');
     DynamicLink(controller, context).initDynamicLink(context);
-    print('혹시 여기까지오나요???');
 
     return MaterialApp(
       title: 'Swap Life',

@@ -100,7 +100,7 @@ class _TodoScreenState extends State<TodoScreen> {
       body: Column(
         children: [
           SizedBox(height: 10),
-          FriendList(controller: widget.controller),
+          FriendList(widget.controller, context),
           SizedBox(height: 35),
           Text("My checklist", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold),),
           Padding(

@@ -193,6 +193,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+1"
+  firebase_analytics:
+    dependency: "direct main"
+    description:
+      name: firebase_analytics
+      sha256: "6325991042226a515406b4fc9204d3102e54a514b72fffb945b625d9f69c5196"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.7.2"
+  firebase_analytics_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_analytics_platform_interface
+      sha256: "38ad4bec1fa0fe16577e6f178e4c4280f029181b18e16bf68782c527c7d82bfe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.8.2"
+  firebase_analytics_web:
+    dependency: transitive
+    description:
+      name: firebase_analytics_web
+      sha256: "6c0deb691a26db2006ded65fd8999a204dcfe8ef67d7d75b7f55ebc08e1d89a4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.5+9"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -241,6 +265,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.9.0"
+  firebase_dynamic_links:
+    dependency: "direct main"
+    description:
+      name: firebase_dynamic_links
+      sha256: "300bd7e1c2dafe7e90cfe7f0890e1371bd30f37043bf64cde406b53ecd1dd4af"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.4.6"
+  firebase_dynamic_links_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_dynamic_links_platform_interface
+      sha256: "1d1d2d90a2edb1a67aad66a44ffc92ba43b4550631c62b4fd988dff771d91edd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.6+14"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -433,7 +473,7 @@ packages:
     source: hosted
     version: "1.7.0"
   kakao_flutter_sdk_share:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: kakao_flutter_sdk_share
       sha256: "05b4641bc16eb63ebf77744249f9c0ed3c240e7cda734070adaeb55999a61053"
@@ -449,7 +489,7 @@ packages:
     source: hosted
     version: "1.7.0"
   kakao_flutter_sdk_template:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: kakao_flutter_sdk_template
       sha256: "709201bc5a90127e00d1828baabf0ad2dd678afc28611101e18f4e77071d03ec"

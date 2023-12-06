@@ -24,7 +24,6 @@ class DynamicLink{
 
 
     Uri dynamicLink = await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
-    print('이게 다이나믹 링크 ${dynamicLink}');
     return dynamicLink;
   }
 
@@ -41,7 +40,6 @@ class DynamicLink{
           //앱이 다이나믹 링크로 열렸을 때의 처리
           if (Dynamiclink != null) {
             deepLink = Dynamiclink.link;
-            print('곧 네비게이터');
             //Navigator.pushNamed(context, '/friendScreen');
             print('다이나믹 링크로 열림');
             String? friendid = deepLink!.queryParameters['friendid'];
@@ -52,7 +50,6 @@ class DynamicLink{
 
             //FriendListManager().createFriendList(friendid!, user.id.toString());
             FriendListManager().addFriendList(context, friendid!, user.id.toString());
-
 
           }
         });
