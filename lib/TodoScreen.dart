@@ -7,9 +7,6 @@ import 'dart:core';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/friends/friendList.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
-import 'package:uuid/uuid.dart';
-
-List<TodoItem> todoList = [];
 
 List<TodoItem> todoList = [];
 
@@ -108,26 +105,35 @@ class _TodoScreenState extends State<TodoScreen> {
       }
     }
   }
-
+  @override
+  void initState() {
+    getList();
+    super.initState();
+  }
 
   Future<void> getList() async {
-    user = await kakao.UserApi.instance.me();
-    final checkList = firestore;
-    String userId = user!.id.toString();
+      final checkList = firestore;
+      String userId = user?.id.toString() ?? await getOrCreateDefaultUserId();
+      user = await kakao.UserApi.instance.me();
 
-    userChecklistCollection(userId).snapshots().listen((snapshot) {
-      setState(() {
-        todoList = snapshot.docs.map<TodoItem>((DocumentSnapshot document) {
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-          return TodoItem(
-            title: data['title'],
-            mbti: data['MBTI'],
-            isCompleted: false,
-          );
-        }).toList();
-      });
-    });
+      if(userId != null) {
+        DocumentSnapshot snapshot = await checkList.collection('checklist').doc(userId).get();
+        Map<String, dynamic>? data = snapshot.data() as Map<String,dynamic>?;
+        if (data != null) {
+          setState(() {
+            todoList = List<TodoItem>.from(data['user_checklist'].map(
+                  (item) => TodoItem(
+                title: item['title'],
+                mbti: item['mbti'],
+               // isCompleted: item['isCompleted'],
+              ),
+            ));
+          });
+          print(todoList);
+        }
+      }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
