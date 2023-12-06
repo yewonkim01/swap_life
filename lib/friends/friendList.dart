@@ -28,6 +28,8 @@ class _FriendListState extends State<FriendList> {
   final db = FirebaseFirestore.instance;
   kakao.User ? user;
   var friendlist;
+  var mylist;
+
 
   Future<List<Widget>> getFriend() async{
     user = await kakao.UserApi.instance.me();
@@ -44,13 +46,25 @@ class _FriendListState extends State<FriendList> {
 
       for(int i = 0; i<friendlist.length; i++) {
         var friend = friendlist[i];
+        print('이게 friend!!!${friend}');
         DocumentSnapshot friends = await db.collection('MyProfile')
             .doc(friend)
             .get();
 
+        final frienddoc = await db.collection('MyFriends').doc(friend);
+        DocumentSnapshot friendsnapshot = await doc.get();
+
+        Map<String, dynamic>? frienddata = friendsnapshot.data() as Map<String, dynamic>?;
+        mylist = frienddata!['FriendID'];
+
+
+
+
         Map<String, dynamic>? friendProfile = friends.data() as Map<String, dynamic>?;
         var ImageUrl = friendProfile!['ImageUrl'];
         var profileId = friendProfile!['profileID'];
+
+
         if (ImageUrl == null) {
           ImageUrl = 'null';
         }
@@ -70,7 +84,12 @@ class _FriendListState extends State<FriendList> {
                           ElevatedButton(onPressed: () async{
                             (friendlist.length == 1)?
                             await doc.set({"FriendID" : []}) :
-                            doc.update({'FriendID':FieldValue.delete()});
+                            doc.update({'FriendID':FieldValue.arrayRemove([friend])});
+
+                            (mylist.length == 1)?
+                            await frienddoc.set({"FriendID" : []}) :
+                            frienddoc.update({'FriendID':FieldValue.arrayRemove([userid])});
+
                             Navigator.of(context).pop();
                             },
                               child: Text('네')),
