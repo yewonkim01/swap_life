@@ -11,12 +11,8 @@ class FriendListManager{
     DocumentReference Ref = db.collection('MyFriends').doc(userid);
     DocumentSnapshot friends =  await Ref.get();
 
-
     DocumentReference friendRef = db.collection('MyFriends').doc(friendid);
-    DocumentSnapshot me =  await Ref.get();
-
-
-
+    DocumentSnapshot me =  await friendRef.get();
 
     //collection 초기화
     if (friends.data() == null){
