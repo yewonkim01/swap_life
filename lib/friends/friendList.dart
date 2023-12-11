@@ -106,7 +106,7 @@ class _FriendListState extends State<FriendList> {
                 //color: Colors.red,
                 width: 80,
                 height: 80,
-                child: FriendIcon(ImageUrl, profileId),
+                child: FriendIcon(imageUrl: ImageUrl, NickName: profileId),
               ),
             )
         );
@@ -138,8 +138,6 @@ class _FriendListState extends State<FriendList> {
 
   }
 }
-
-
 
 
 //전체 Friend리스트 위 창 클래스
