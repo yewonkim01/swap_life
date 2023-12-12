@@ -87,7 +87,7 @@ class FriendProfileScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 70,),
-            // 친구 checklist끌어오기
+            // 친구 checklist끌어오기..
             Text("< ${NickName}'s List >",style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             SizedBox(height: 270,),
             ElevatedButton(
