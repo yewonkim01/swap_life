@@ -86,11 +86,28 @@ class FriendProfileScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 500,),
+            SizedBox(height: 70,),
             // 친구 checklist끌어오기
-            TextFormField(
-
+            Text("< ${NickName}'s List >",style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            SizedBox(height: 270,),
+            ElevatedButton(
+                onPressed: (){},
+                child: Row(
+                  children: [
+                    Icon(Icons.mail_outline_outlined, size: 50),
+                    SizedBox(width: 50,),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Get Checklist', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                        Text('친구 리스트 가져오기')
+                      ],
+                    )
+                  ],
+                ),
             ),
+            SizedBox(height: 20,),
+            Text('delete friend', style: TextStyle(fontSize: 17,),),
           ],
         ),
       ),
