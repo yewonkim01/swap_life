@@ -5,6 +5,8 @@ import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/friends/friendList.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
+//모든 class 예선 작성
+
 List<TodoItem> todoList = [];
 
 //Todo list에 들어갈 항목,mbti,완료상태
@@ -106,7 +108,6 @@ class _TodoScreenState extends State<TodoScreen> {
     }
   }
 
-  //함수 실행 시, 자동으로 getList() 실행시켜주는 함수
   @override
   void initState() {
     getList();
@@ -141,17 +142,10 @@ class _TodoScreenState extends State<TodoScreen> {
   Widget build(BuildContext context) {
     FriendList old_FriendList = FriendList(widget.controller, context);
     return Scaffold(
-      /*appBar: AppBar(
-        title: Text("My Checklist"),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-      ),*/
       body: Column(
         children: [
           SizedBox(height: 10),
           FriendList(widget.controller, context),
-
           SizedBox(height: 35),
           //checkList
           Text("My checklist", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold),),
@@ -177,33 +171,46 @@ class _TodoScreenState extends State<TodoScreen> {
                         ),
                       ),
 
-                  //////task 입력할 때마다 위젯 다시 빌드돼서 friend창 로딩, 일단 주석처리 /////////////////
-                  //     onChanged: (value){
-                  //       setState(() {});
-                  //////////////////////////////////////////////////////////////////////////////
-
-
-                   ),
+                      onChanged: (value){}
+                  ),
+                ),
+                //MBTI 선택할 수 있는 버튼
+                DropdownButton<String?>(
+                  focusNode: fnode,
+                  hint: Text('MBTI'),
+                  onChanged: (dynamic newVal) {
+                    setState(() {
+                      selectedItem = newVal;
+                    });
+                  },
+                  value: selectedItem,
+                  items: ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'].map<
+                      DropdownMenuItem<String?>>((String i) {
+                    return DropdownMenuItem<String>(
+                      value: i,
+                      child: Text(i),
+                    );
+                  }).toList(),
                 ),
                 //MBTI 선택할 수 있는
-                DropdownButtonWidget(),
-                // DropdownButton<String?>(
-                //   focusNode: fnode,
-                //   hint: Text('MBTI'),
-                //   onChanged: (dynamic newVal) {
-                //     setState(() {
-                //       selectedItem = newVal;
-                //     });
-                //   },
-                //   value: selectedItem,
-                //   items: ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'].map<
-                //       DropdownMenuItem<String?>>((String i) {
-                //     return DropdownMenuItem<String>(
-                //       value: i,
-                //       child: Text(i),
-                //     );
-                //   }).toList(),
-                // ),
+                // DropdownButtonWidget(),
+                DropdownButton<String?>(
+                  focusNode: fnode,
+                  hint: Text('MBTI'),
+                  onChanged: (dynamic newVal) {
+                    setState(() {
+                      selectedItem = newVal;
+                    });
+                  },
+                  value: selectedItem,
+                  items: ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'].map<
+                      DropdownMenuItem<String?>>((String i) {
+                    return DropdownMenuItem<String>(
+                      value: i,
+                      child: Text(i),
+                    );
+                  }).toList(),
+                ),
                 //checkList를 등록하는 버튼
                 IconButton(
                   icon: Icon(Icons.add),
@@ -216,8 +223,7 @@ class _TodoScreenState extends State<TodoScreen> {
                       saveList();
                       textEditingController.clear();
                     }
-                    // 1로 변경되었을 때를 대비해 다시 0으로 변경해주는 작업
-                    isnull = 0;
+                    isnull = 0; // 1로 변경되었을 때를 대비해 다시 0으로 변경해주는 작업
                   },
                 ),
               ],
@@ -274,8 +280,21 @@ class _TodoScreenState extends State<TodoScreen> {
       if(title != null && title.trim().isNotEmpty) {
         todoList.add(TodoItem(title: title, mbti: mbti,isCompleted: false));
       } else{
-        // input text=null이면, isnull=1로 지정해 add버튼 실행 시 saveList(),clear 작업 생략
-        isnull = 1;
+        isnull = 1; // input text=null이면, isnull=1로 지정해 add버튼 실행 시 saveList(),clear 작업 생략
+        showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: const Text('Add a text',style: TextStyle(fontSize: 20),),
+              actions: [
+                TextButton(
+                  child: const Text('OK', ),
+                  onPressed: () => Navigator.pop(context),
+                )
+              ],
+            );
+          }
+        );
       }
     });
   }

@@ -1,49 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:swap_life/friends/FriendProfile.dart';
 
-class FriendIcon extends StatefulWidget {
-  String? imageUrl;
-  String? NickName;
+class FriendIcon extends StatelessWidget {
+  final String? imageUrl;
+  final String? NickName;
 
   //생성자로 초기화
-  FriendIcon(var imageUrl, var NickName){
-    this.imageUrl = imageUrl;
-    this.NickName = NickName;
-  }
-
-  @override
-  State<FriendIcon> createState() => _FriendIconState();
-}
-
-class _FriendIconState extends State<FriendIcon> {
-  late var _imageUrl;
-  late var _NickName;
-
-  @override
-  void initState(){
-    super.initState();
-    _imageUrl = widget.imageUrl!;
-    _NickName = widget.NickName!;
-
-  }
+  FriendIcon({Key? key, this.imageUrl, this.NickName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
-
       children: [
-        (_imageUrl == 'null') ? CircleAvatar(
+        (imageUrl == 'null')
+            ? CircleAvatar(
           radius: 25,
           backgroundImage: AssetImage('assets/profile.png'),
           backgroundColor: Colors.deepPurple[50],
-        ) : CircleAvatar(
+        )
+            : CircleAvatar(
           radius: 25,
-          backgroundImage: NetworkImage(_imageUrl),
+          backgroundImage: NetworkImage(imageUrl!),
         ),
-        (_NickName == 'null') ? Text("  ")
-         : Text('${_NickName}')
+        (NickName == 'null') ? Text("  ") : Text('$NickName'),
       ],
     );
   }
 }
+
+
 
 

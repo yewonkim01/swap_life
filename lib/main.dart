@@ -27,18 +27,14 @@ void main() async{
   runApp(MyApp(controller: controller));
 }
 
-
-
-//예선 작성//
+//MyApp class 예선 작성//
 class MyApp extends StatelessWidget {
   final TodoController controller;
   MyApp({required this.controller});
 
   @override
   Widget build(BuildContext context) {
-
     DynamicLink(controller, context).initDynamicLink(context);
-
     return MaterialApp(
       title: 'Swap Life',
       theme: ThemeData(primaryColor: Colors.blueGrey[200]),
@@ -51,12 +47,11 @@ class MyApp extends StatelessWidget {
         '/friendScreen': (context) => FriendPage(controller: controller),
       },
       debugShowCheckedModeBanner: false,
-
-    );//상태값 변하므로 Stateful위젯 사용
+    );
   }
 }
 
-//예선 작성//
+//MyHome, _MyHomeState class 예선 작성//
 class MyHome extends StatefulWidget {
   final TodoController controller;
   MyHome({required this.controller});
@@ -66,7 +61,6 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
-
   TabController? _tabController;
   int _selectedIndex = 2;
 
@@ -89,7 +83,6 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     Widget bodyWidget;
@@ -97,15 +90,12 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
       //추후 친구 chech list받아오는 함수 연결
       //bodyWidget = tabContainer(context, Colors.white, "Friend's List");
       bodyWidget = FriendPage(controller: widget.controller,);
-      }
-    else if(_selectedIndex == 1) {
+      } else if(_selectedIndex == 1) {
       //bodyWidget = FriendPage(controller: widget.controller);
       bodyWidget = TodoScreen(controller: widget.controller);
-    }
-    else {
+    } else {
       bodyWidget = MyProfile();
     }
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () {},icon: Icon(Icons.cloud_outlined)),
@@ -125,6 +115,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
         tabs: <Tab>[
           Tab(
             icon: Icon(
+              //해당 bar가 선택되면 Icon바꿔 표시
               _selectedIndex == 0 ? Icons.swap_horizontal_circle : Icons.swap_horizontal_circle_outlined,
               color: Colors.deepPurple,
             ),
@@ -145,22 +136,6 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
             text: "Profile",
           ),
         ],
-      ),
-    );
-  }
-
-  Container tabContainer(BuildContext context, Color tabColor, String tabText) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      color: tabColor,
-      child: Center(
-        child: Text(
-          tabText,
-          style: TextStyle(
-            color: Colors.black54,
-          ),
-        ),
       ),
     );
   }

@@ -5,6 +5,8 @@ import 'package:swap_life/shared/todo_controller.dart';
 import 'FriendIcon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
+import 'package:swap_life/friends/deleteFriendDialog.dart';
+import 'package:swap_life/friends/FriendProfile.dart';
 
 
 
@@ -19,73 +21,63 @@ class FriendList extends StatefulWidget {
   State<FriendList> createState() => _FriendListState();
 }
 
-
 class _FriendListState extends State<FriendList> {
   final db = FirebaseFirestore.instance;
   kakao.User ? user;
-  var friendlist;
-  var mylist;
+  late List friendlist;
+  late List myfriendlist;
+  late DocumentReference doc;
+  late DocumentReference frienddoc;
 
+  //firestore에서 친구 리스트 가져오는 함수
   Future<List<Widget>> getFriend() async{
     user = await kakao.UserApi.instance.me();
     var userid = user!.id.toString();
     List<Widget> update_friendIconList = [];
 
     if(userid != null){
-      final doc = await db.collection('MyFriends').doc(userid);
+      doc = await db.collection('MyFriends').doc(userid);
       DocumentSnapshot snapshot = await doc.get();
 
       Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
       friendlist = data!['FriendID'];
 
       for(int i = 0; i<friendlist.length; i++) {
-        var friend = friendlist[i];
+        String friendid = friendlist[i];
         DocumentSnapshot friends = await db.collection('MyProfile')
-            .doc(friend)
+            .doc(friendid)
             .get();
 
-        final frienddoc = await db.collection('MyFriends').doc(friend);
+        frienddoc = await db.collection('MyFriends').doc(friendid);
         DocumentSnapshot friendsnapshot = await doc.get();
 
         Map<String, dynamic>? frienddata = friendsnapshot.data() as Map<String, dynamic>?;
-        mylist = frienddata!['FriendID'];
+        myfriendlist = frienddata!['FriendID'];
 
         Map<String, dynamic>? friendProfile = friends.data() as Map<String, dynamic>?;
         var ImageUrl = friendProfile!['ImageUrl'];
-        var profileId = friendProfile!['profileID'];
+        var NickName = friendProfile!['profileID'];
+
+        var MBTI = friendProfile!['MBTI'];
+        var intro = friendProfile!['Introduction']; //한줄소개
+
         if (ImageUrl == null) {
           ImageUrl = 'null';
         }
-        if (profileId == null) {
-          profileId = 'null';
+        if (NickName == null) {
+          NickName = 'null';
         }
 
         update_friendIconList.add(
-            GestureDetector(onTap: (){print('1');},
-              onLongPress: (){
-                showDialog(
-                    context: context,
-                    builder: ((context){
-                      return AlertDialog(
-                        content: Text('친구를 삭제하시겠습니까?'),
-                        actions: [
-                          ElevatedButton(onPressed: () async{
-                            (friendlist.length == 1)?
-                            await doc.set({"FriendID" : []}) :
-                            doc.update({'FriendID':FieldValue.arrayRemove([friend])});
-
-                            (mylist.length == 1)?
-                            await frienddoc.set({"FriendID" : []}) :
-                            frienddoc.update({'FriendID':FieldValue.arrayRemove([userid])});
-                            Navigator.of(context).pop();
-                            },
-                              child: Text('네')),
-                          ElevatedButton(onPressed: (){Navigator.of(context).pop();}, child: Text('아니오')),
-                        ],
-                      );
-                    }
-                    )
-                );
+            GestureDetector(
+              //꾹 누르면 친구 삭제
+              onLongPress: (){DeleteFriendDialog(context, doc, frienddoc, friendlist, friendid, myfriendlist, userid);},
+              //탭하면 친구 프로필창 나옴
+              onTap: (){
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => FriendProfile(userid: userid, friendid: friendid, doc: doc, frienddoc: frienddoc, friendlist: friendlist, myfriendlist: myfriendlist, imageUrl: ImageUrl, NickName: NickName, MBTI: MBTI, intro: intro,),
+                ),
+              );
               },
               child: Container(
                 //alignment: Alignment.center,
@@ -93,7 +85,7 @@ class _FriendListState extends State<FriendList> {
                 //color: Colors.red,
                 width: 80,
                 height: 80,
-                child: FriendIcon(ImageUrl, profileId),
+                child: FriendIcon(imageUrl: ImageUrl, NickName: NickName),
               ),
             )
         );
@@ -141,9 +133,7 @@ class _FriendListState extends State<FriendList> {
 }
 
 
-
-
-//전체 Friend리스트 위 창 클래스
+//전체 Friend리스트 박스 컨테이너 (여기 안에 친구들이 추가됨)
 class returnContainer extends StatefulWidget {
   List<Widget>? friendIconList;
   TodoController? controller;
@@ -225,3 +215,6 @@ class _returnContainerState extends State<returnContainer> {
     );
   }
 }
+
+
+
