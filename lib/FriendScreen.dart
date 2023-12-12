@@ -53,7 +53,7 @@ class _FriendPageState extends State<FriendPage> {
         todoList.add(TodoItem(title: title, mbti: mbti,isCompleted: false));
       } else{
         // input text=null이면, isnull=1로 지정해 add버튼 실행 시 saveList(),clear 작업 생략
-        isnull = 1;
+        //isnull = 1;
       }
     });
   }

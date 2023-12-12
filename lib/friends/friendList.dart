@@ -24,7 +24,6 @@ class FriendList extends StatefulWidget {
 }
 
 class _FriendListState extends State<FriendList> {
-
   final db = FirebaseFirestore.instance;
   kakao.User ? user;
   var friendlist;
@@ -35,7 +34,6 @@ class _FriendListState extends State<FriendList> {
     user = await kakao.UserApi.instance.me();
     var userid = user!.id.toString();
     List<Widget> update_friendIconList = [];
-
 
     if(userid != null){
       final doc = await db.collection('MyFriends').doc(userid);
@@ -63,7 +61,8 @@ class _FriendListState extends State<FriendList> {
         Map<String, dynamic>? friendProfile = friends.data() as Map<String, dynamic>?;
         var ImageUrl = friendProfile!['ImageUrl'];
         var profileId = friendProfile!['profileID'];
-
+        var MBTI = friendProfile!['MBTI'];
+        var intro = friendProfile!['intro']; //한줄소개
 
         if (ImageUrl == null) {
           ImageUrl = 'null';
@@ -79,9 +78,9 @@ class _FriendListState extends State<FriendList> {
                     context: context,
                     builder: ((context){
                       return AlertDialog(
-                        content: Text('친구를 삭제하시겠습니까?'),
+                        content: Text('친구를 삭제하시겠습니까?',style: TextStyle(fontSize: 17),),
                         actions: [
-                          ElevatedButton(onPressed: () async{
+                          TextButton(onPressed: () async{
                             (friendlist.length == 1)?
                             await doc.set({"FriendID" : []}) :
                             doc.update({'FriendID':FieldValue.arrayRemove([friend])});
@@ -92,8 +91,8 @@ class _FriendListState extends State<FriendList> {
 
                             Navigator.of(context).pop();
                             },
-                              child: Text('네')),
-                          ElevatedButton(onPressed: (){Navigator.of(context).pop();}, child: Text('아니오')),
+                              child: Text('YES')),
+                          TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text('NO')),
                         ],
                       );
                     }
@@ -106,7 +105,7 @@ class _FriendListState extends State<FriendList> {
                 //color: Colors.red,
                 width: 80,
                 height: 80,
-                child: FriendIcon(imageUrl: ImageUrl, NickName: profileId),
+                child: FriendIcon(imageUrl: ImageUrl, NickName: profileId, MBTI: MBTI, intro: intro,),
               ),
             )
         );
