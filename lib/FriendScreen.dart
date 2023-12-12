@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swap_life/TodoScreen.dart';
 import 'package:swap_life/friends/friendList.dart';
 import 'package:swap_life/shared/todo_controller.dart';
+import 'package:swap_life/friends/log.dart';
 
 // 여기에 friend 창 구현 !!!
 
@@ -13,8 +14,11 @@ class FriendPage extends StatefulWidget {
 }
 
 class _FriendPageState extends State<FriendPage> {
+
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       body: Column(
         children: [

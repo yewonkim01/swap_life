@@ -89,7 +89,7 @@ class _MyProfileState extends State<MyProfile> {
             if (snapshot.connectionState == ConnectionState.done) {
               return buildProfileContent(); // 데이터를 가져왔을 때 프로필 화면 구성
             } else {
-              return CircularProgressIndicator(); // 데이터를 가져오는 동안 로딩 표시
+              return Center(child: CircularProgressIndicator()); // 데이터를 가져오는 동안 로딩 표시
             }
           },
         ),

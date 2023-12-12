@@ -31,6 +31,8 @@ class _TodoScreenState extends State<TodoScreen> {
   TextEditingController textEditingController = TextEditingController();
   FocusNode fnode = FocusNode();
   int i=0; int isnull=0; String? selectedMBTI; kakao.User ? user;
+  //상태 글로벌 키 선언 : 이 키로 그 상태클래스의 메서드에 접근 가능
+  GlobalKey<_DropdownButtonWidgetState> dropdownButtonKey = GlobalKey<_DropdownButtonWidgetState>();
 
   //Dropdown에서 쓸 MBTI 선택지 list
   List<String> dropdownList = ['E','I','S','N','T','F','J','P'];
@@ -134,8 +136,10 @@ class _TodoScreenState extends State<TodoScreen> {
       }
   }
 
+
   @override
   Widget build(BuildContext context) {
+    FriendList old_FriendList = FriendList(widget.controller, context);
     return Scaffold(
       /*appBar: AppBar(
         title: Text("My Checklist"),
@@ -146,7 +150,6 @@ class _TodoScreenState extends State<TodoScreen> {
       body: Column(
         children: [
           SizedBox(height: 10),
-
           FriendList(widget.controller, context),
 
           SizedBox(height: 35),
@@ -173,28 +176,34 @@ class _TodoScreenState extends State<TodoScreen> {
                           ),
                         ),
                       ),
-                      onChanged: (value){
-                        setState(() {});}
-                  ),
+
+                  //////task 입력할 때마다 위젯 다시 빌드돼서 friend창 로딩, 일단 주석처리 /////////////////
+                  //     onChanged: (value){
+                  //       setState(() {});
+                  //////////////////////////////////////////////////////////////////////////////
+
+
+                   ),
                 ),
-                //MBTI 선택할 수 있는 버튼
-                DropdownButton<String?>(
-                  focusNode: fnode,
-                  hint: Text('MBTI'),
-                  onChanged: (dynamic newVal) {
-                    setState(() {
-                      selectedItem = newVal;
-                    });
-                  },
-                  value: selectedItem,
-                  items: ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'].map<
-                      DropdownMenuItem<String?>>((String i) {
-                    return DropdownMenuItem<String>(
-                      value: i,
-                      child: Text(i),
-                    );
-                  }).toList(),
-                ),
+                //MBTI 선택할 수 있는
+                DropdownButtonWidget(),
+                // DropdownButton<String?>(
+                //   focusNode: fnode,
+                //   hint: Text('MBTI'),
+                //   onChanged: (dynamic newVal) {
+                //     setState(() {
+                //       selectedItem = newVal;
+                //     });
+                //   },
+                //   value: selectedItem,
+                //   items: ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'].map<
+                //       DropdownMenuItem<String?>>((String i) {
+                //     return DropdownMenuItem<String>(
+                //       value: i,
+                //       child: Text(i),
+                //     );
+                //   }).toList(),
+                // ),
                 //checkList를 등록하는 버튼
                 IconButton(
                   icon: Icon(Icons.add),
@@ -283,3 +292,37 @@ class _TodoScreenState extends State<TodoScreen> {
     });
   }
 }
+
+
+
+class DropdownButtonWidget extends StatefulWidget {
+
+
+  @override
+  State<DropdownButtonWidget> createState() => _DropdownButtonWidgetState();
+}
+
+class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
+  String selectedItem = 'E';
+  List<String> MBTIList = ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'];
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+    value: selectedItem,
+    items: MBTIList.map<
+        DropdownMenuItem<String>>((String i) {
+      return DropdownMenuItem<String>(
+        value: i,
+        child: Text(i),
+      );
+    }).toList(),
+    onChanged: (String? newValue){setState((){
+      selectedItem = newValue!;
+    });
+    });
+  }
+}
+

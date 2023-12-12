@@ -8,6 +8,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 class DynamicLink{
   late TodoController controller;
   late BuildContext context;
+
   DynamicLink(TodoController controller, BuildContext context){
     this.controller = controller;
     this.context = context;
@@ -48,7 +49,9 @@ class DynamicLink{
 
             //FriendListManager().createFriendList(friendid!, user.id.toString());
             FriendListManager().addFriendList(context, friendid!, user.id.toString());
-
+            //print('이게 context ${context}');
+            //Navigator.of(context).pushNamed('/friendScreen');
+            //print('navigate 완료');
           }
         });
 

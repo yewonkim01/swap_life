@@ -13,7 +13,6 @@ import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/friends/dynamicLink.dart';
 
 
-
 void main() async{
   var services = HttpServices();
   var controller = TodoController(services);

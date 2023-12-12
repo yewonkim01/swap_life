@@ -8,34 +8,28 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
 
 
-
 class FriendList extends StatefulWidget {
   late TodoController controller;
   late BuildContext context;
-
   FriendList(TodoController controller, BuildContext context){
     this.controller = controller;
     this.context = context;
   }
-
-
   @override
   State<FriendList> createState() => _FriendListState();
 }
 
-class _FriendListState extends State<FriendList> {
 
+class _FriendListState extends State<FriendList> {
   final db = FirebaseFirestore.instance;
   kakao.User ? user;
   var friendlist;
   var mylist;
 
-
   Future<List<Widget>> getFriend() async{
     user = await kakao.UserApi.instance.me();
     var userid = user!.id.toString();
     List<Widget> update_friendIconList = [];
-
 
     if(userid != null){
       final doc = await db.collection('MyFriends').doc(userid);
@@ -46,7 +40,6 @@ class _FriendListState extends State<FriendList> {
 
       for(int i = 0; i<friendlist.length; i++) {
         var friend = friendlist[i];
-        print('이게 friend!!!${friend}');
         DocumentSnapshot friends = await db.collection('MyProfile')
             .doc(friend)
             .get();
@@ -57,14 +50,9 @@ class _FriendListState extends State<FriendList> {
         Map<String, dynamic>? frienddata = friendsnapshot.data() as Map<String, dynamic>?;
         mylist = frienddata!['FriendID'];
 
-
-
-
         Map<String, dynamic>? friendProfile = friends.data() as Map<String, dynamic>?;
         var ImageUrl = friendProfile!['ImageUrl'];
         var profileId = friendProfile!['profileID'];
-
-
         if (ImageUrl == null) {
           ImageUrl = 'null';
         }
@@ -73,7 +61,7 @@ class _FriendListState extends State<FriendList> {
         }
 
         update_friendIconList.add(
-            GestureDetector(
+            GestureDetector(onTap: (){print('1');},
               onLongPress: (){
                 showDialog(
                     context: context,
@@ -89,7 +77,6 @@ class _FriendListState extends State<FriendList> {
                             (mylist.length == 1)?
                             await frienddoc.set({"FriendID" : []}) :
                             frienddoc.update({'FriendID':FieldValue.arrayRemove([userid])});
-
                             Navigator.of(context).pop();
                             },
                               child: Text('네')),
@@ -114,23 +101,37 @@ class _FriendListState extends State<FriendList> {
     }else{
       print('user는 null입니다.');
     }
-
     return update_friendIconList;
-
-
   }
+
+
   @override
   Widget build(BuildContext context) {
     List<Widget> friendIconList;
+
     return FutureBuilder(
         future: getFriend(),
         builder: (BuildContext context, AsyncSnapshot snapshot){
           if (snapshot.connectionState == ConnectionState.waiting){
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }else if(snapshot.data == null){
             return returnContainer([Container()], widget.controller, widget.context);
           }else{
             friendIconList = snapshot.data;
+            // Future.delayed(Duration.zero, (){
+            //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('되지롱')));
+            // });
+
+
+            // Future.delayed(Duration.zero, (){
+            //   showDialog(context: context, builder: (context){
+            //     return AlertDialog(
+            //       content: Text('위젯'),
+            //     );
+            //   });
+            // });
+
+
             return returnContainer(friendIconList, widget.controller, widget.context);
           }
         }

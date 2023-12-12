@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-
 class FriendListManager{
-  String? frienduser;
   final db = FirebaseFirestore.instance;
 
   Future<void> addFriendList(BuildContext context, String friendid, String userid) async {
@@ -18,6 +16,7 @@ class FriendListManager{
 
     if (userid == friendid) {
       print('자기자신을 친구로 추가할 수 없습니다.');
+      return;
     }
     if (friends.data() == null){
       await Ref.set(
@@ -28,12 +27,20 @@ class FriendListManager{
     }else{
       Map<String, dynamic>? friendsdata = friends.data() as Map<String, dynamic>?;
       List<dynamic> userid_friends = friendsdata!['FriendID'] ;
-      userid_friends.add(friendid);
-      await Ref.set({
-        "FriendID": userid_friends
-      }).then((value) {
-        print('update 완료');
-      });
+
+      if(userid_friends.contains(friendid)){
+        print('이미 추가된 친구입니다.');
+        return;
+      }else{
+        userid_friends.add(friendid);
+        await Ref.set({
+          "FriendID": userid_friends
+        }).then((value) {
+          print('update 완료');
+        });
+      }
+
+
     }
 
 
