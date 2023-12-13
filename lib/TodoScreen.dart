@@ -192,25 +192,6 @@ class _TodoScreenState extends State<TodoScreen> {
                     );
                   }).toList(),
                 ),
-                //MBTI 선택할 수 있는
-                // DropdownButtonWidget(),
-                DropdownButton<String?>(
-                  focusNode: fnode,
-                  hint: Text('MBTI'),
-                  onChanged: (dynamic newVal) {
-                    setState(() {
-                      selectedItem = newVal;
-                    });
-                  },
-                  value: selectedItem,
-                  items: ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'].map<
-                      DropdownMenuItem<String?>>((String i) {
-                    return DropdownMenuItem<String>(
-                      value: i,
-                      child: Text(i),
-                    );
-                  }).toList(),
-                ),
                 //checkList를 등록하는 버튼
                 IconButton(
                   icon: Icon(Icons.add),
@@ -315,8 +296,6 @@ class _TodoScreenState extends State<TodoScreen> {
 
 
 class DropdownButtonWidget extends StatefulWidget {
-
-
   @override
   State<DropdownButtonWidget> createState() => _DropdownButtonWidgetState();
 }
@@ -324,8 +303,6 @@ class DropdownButtonWidget extends StatefulWidget {
 class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
   String selectedItem = 'E';
   List<String> MBTIList = ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P'];
-
-
 
   @override
   Widget build(BuildContext context) {

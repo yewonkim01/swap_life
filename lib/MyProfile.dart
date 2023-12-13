@@ -402,7 +402,6 @@ class MBTI extends StatelessWidget {
 //예선 작성//
 class MBTITile extends StatelessWidget {
   final String type;
-
   MBTITile({required this.type});
 
   @override

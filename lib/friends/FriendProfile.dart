@@ -48,7 +48,7 @@ class FriendProfile extends StatelessWidget {
                   radius: 70,
                   backgroundImage: NetworkImage(imageUrl!),
                 ),
-                SizedBox(width: 70,),
+                SizedBox(width: 50,),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -65,25 +65,28 @@ class FriendProfile extends StatelessWidget {
             Text("< ${NickName}'s List >",style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             SizedBox(height: 270,),
             ElevatedButton(
-              onPressed: (){},
-              child: Row(
-                children: [
-                  Icon(Icons.mail_outline_outlined, size: 50),
-                  SizedBox(width: 50,),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Get Checklist', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-                      Text('친구 리스트 가져오기')
-                    ],
-                  )
-                ],
+              onPressed: () {},
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 23.0), // 좌우 여백 조절
+                child: Row(
+                  children: [
+                    Icon(Icons.mail_outline_outlined, size: 50),
+                    SizedBox(width: 30),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Get Checklist', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                        Text('친구 리스트 가져오기'),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-            SizedBox(height: 20,),
-            ElevatedButton(
+            SizedBox(height: 15,),
+            TextButton(
               onPressed: (){DeleteFriendDialog(context, doc!, frienddoc!, friendlist!, friendid!, myfriendlist!, userid!);},
-              child: Text('delete friend', style: TextStyle(fontSize: 17,),),
+              child: Text('delete friend', style: TextStyle(fontSize: 17,decoration: TextDecoration.underline),),
             ),
           ],
         ),
