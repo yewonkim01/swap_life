@@ -14,6 +14,7 @@ class FriendProfile extends StatelessWidget {
   late DocumentReference? doc;
   late DocumentReference? frienddoc;
   late List? friendlist;
+  late List? myfriendlist;
   late List<Map<String, dynamic>>? friendChecklist;
 
   Future<List<Map<String, dynamic>>> getFriendChecklist(String friendid) async {
@@ -32,7 +33,7 @@ class FriendProfile extends StatelessWidget {
   }
 
   // 생성자로 초기화
-  FriendProfile({Key? key, this.userid, this.friendid, this.doc, this.frienddoc, this.friendlist,this.imageUrl, this.NickName, this.MBTI, this.intro}) : super(key: key);
+  FriendProfile({Key? key, this.userid, this.friendid, this.doc, this.frienddoc, this.friendlist,this.myfriendlist,this.imageUrl, this.NickName, this.MBTI, this.intro}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +79,7 @@ class FriendProfile extends StatelessWidget {
             Text("< ${NickName}'s List >",style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             SizedBox(height: 270,),
             ElevatedButton(
+
               onPressed: () async {
                 friendChecklist = await getFriendChecklist(friendid!);
                 Navigator.push(
@@ -108,7 +110,9 @@ class FriendProfile extends StatelessWidget {
             ),
             SizedBox(height: 15,),
             TextButton(
-              onPressed: (){DeleteFriendDialog(context, doc!, frienddoc!, friendlist!, friendid!, myfriendlist!, userid!);},
+              onPressed: () async{
+                DeleteFriendDialog(context, doc!, frienddoc!, friendlist!, friendid!, myfriendlist!, userid!);
+                },
               child: Text('delete friend', style: TextStyle(fontSize: 17,decoration: TextDecoration.underline),),
             ),
           ],

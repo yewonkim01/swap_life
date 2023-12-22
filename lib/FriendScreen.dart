@@ -25,7 +25,7 @@ class _FriendPageState extends State<FriendPage> {
               value: todoList[index].isCompleted,
               onChanged: (value) {
                 // checkBoxa상태 변경을 위한 bool 함수
-                toggleTodoItem(index);
+                _toggleTodoItem(index);
                 },
             ),
           );
@@ -33,7 +33,7 @@ class _FriendPageState extends State<FriendPage> {
       )
     );
   }
-  void toggleTodoItem(int index) {
+  void _toggleTodoItem(int index) {
     setState(() {
       todoList[index].isCompleted = !todoList[index].isCompleted;
     });

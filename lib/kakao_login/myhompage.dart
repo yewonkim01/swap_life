@@ -1,7 +1,7 @@
 //김진영 작성//
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../friends/main.dart';
+import '../main.dart';
 import '../shared/todo_controller.dart';
 import 'login.dart';
 import 'package:swap_life/kakao_login/mainview.dart';

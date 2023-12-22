@@ -4,10 +4,10 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:swap_life/kakao_login/firebase_options.dart';
 import 'package:swap_life/kakao_login/myhompage.dart';
 import 'dart:core';
-import '../MyProfile.dart';
-import '../TodoScreen.dart';
-import '../firestore/service.dart';
-import '../shared/shared.dart';
+import 'MyProfile.dart';
+import 'TodoScreen.dart';
+import 'firestore/service.dart';
+import 'shared/shared.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/friends/dynamicLink.dart';
 import 'package:swap_life/Body/friendBody.dart';
@@ -91,7 +91,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     if(_selectedIndex==0) {
       //추후 친구 chech list받아오는 함수 연결
       //bodyWidget = tabContainer(context, Colors.white, "Friend's List");
-      bodyWidget = friendBody(controller: widget.controller);
+      bodyWidget = friendBody(controller: widget.controller, friendChecklist: []);
       } else if(_selectedIndex == 1) {
       bodyWidget = TodoScreen(controller: widget.controller);
     } else {
