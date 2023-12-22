@@ -2,24 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:swap_life/TodoScreen.dart';
 import 'package:swap_life/friends/friendList.dart';
 import 'dart:core';
+import 'package:swap_life/shared/todo_controller.dart';
 
 // 여기에 friend 창 구현 !!!
 class FriendPage extends StatefulWidget {
-  final List<Map<String, dynamic>>? friendChecklist;
-  //late String? NickName;
-  FriendPage({ required this.friendChecklist,});
+  final List<String>? friendChecklist;
+  final String? friendName;
+  late TodoController controller;
+  FriendPage({ required this.friendChecklist, required this.friendName});
   @override
-  State<FriendPage> createState() => _FriendPageState();
+  State<FriendPage> createState() => FriendPageState();
 }
 
-class _FriendPageState extends State<FriendPage> {
+class FriendPageState extends State<FriendPage> {
   String selectedEmoji = '😊';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          Text("s checkList", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold)),
+          Text("${widget.friendName}'s checkList", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold)),
           Text("친구의 일상을 경험하고, 완료사항을 체크해보세요"),
           Expanded(
               child: ListView(
@@ -35,9 +37,8 @@ class _FriendPageState extends State<FriendPage> {
                         _toggleTodoItem(index);
                       },
                     ),
-                      title: Text(
-                         // friendChecklist
-                        'test'
+                      title:  Text(
+                        widget.friendChecklist![index],
                       ),
                       trailing:
                       DropdownButton<String?>(
@@ -76,7 +77,7 @@ class _FriendPageState extends State<FriendPage> {
                 child: Row(
                   children: [
                     Icon(Icons.smart_toy_sharp),
-                    Text('Finish', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))
+                    Text('Finish', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                   ],
                 ),
               )

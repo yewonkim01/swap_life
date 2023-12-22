@@ -131,7 +131,6 @@ class _TodoScreenState extends State<TodoScreen> {
               ),
             ));
           });
-          print(todoList);
         }
       }
   }

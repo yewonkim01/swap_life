@@ -11,6 +11,7 @@ import 'firestore/service.dart';
 import 'shared/shared.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/friends/dynamicLink.dart';
+import 'package:swap_life/FriendScreen.dart';
 import 'package:swap_life/Body/friendBody.dart';
 import 'package:swap_life/Body/homeBody.dart';
 import 'package:swap_life/friends/FriendProfile.dart';
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
         '/myHome': (context) => MyHome(controller: controller),
         '/myProfile' : (context) => MyProfile(),
         '/todoScreen': (context) => TodoScreen(controller: controller),
-        '/alert_dialog': (context) => AlertFriendDialog()
+        '/alert_dialog': (context) => AlertFriendDialog(),
         //'/friendScreen': (context) => FriendPage(friendChecklist: friendChecklist),
       },
       debugShowCheckedModeBanner: false,
@@ -71,14 +72,16 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
     //앱 초기 실행시 프로필로 바꿨을 때 tabcontroller도 바꿔줌(예원)
-    _tabController!.index = 2;
-    _tabController!.addListener(() {
-      setState(() {
-        _selectedIndex = _tabController!.index;
+    if (widget.controller != null) {
+      _tabController = TabController(length: 3, vsync: this);
+      _tabController!.index = 2;
+      _tabController!.addListener(() {
+        setState(() {
+          _selectedIndex = _tabController!.index;
+        });
       });
-    });
+    }
   }
 
   @override
@@ -92,8 +95,8 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     Widget bodyWidget;
     if(_selectedIndex==0) {
       //추후 친구 chech list받아오는 함수 연결
-      //bodyWidget = tabContainer(context, Colors.white, "Friend's List");
-      bodyWidget = friendBody(controller: widget.controller, friendChecklist: []);
+      bodyWidget = friendBody(controller: widget.controller, friendChecklist: [], friendName: '');
+      //bodyWidget = FriendPage(friendChecklist: [], friendName: '');
       } else if(_selectedIndex == 1) {
       bodyWidget = TodoScreen(controller: widget.controller);
     } else {
