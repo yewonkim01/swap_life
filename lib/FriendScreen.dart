@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swap_life/TodoScreen.dart';
-import 'package:swap_life/friends/friendList.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 import 'dart:core';
 import 'package:swap_life/shared/todo_controller.dart';
 
@@ -15,7 +18,66 @@ class FriendPage extends StatefulWidget {
 }
 
 class FriendPageState extends State<FriendPage> {
-  String selectedEmoji = '😊';
+  Map<int, String> emojiMap = {};
+  String mbtivalue = ' ';
+  List<int> emojiValue = [];
+  @override
+  void initState() {
+    super.initState();
+    for (int i = 0; i < widget.friendChecklist!.length; i++) {
+      emojiMap[i] = '😊';
+    }
+  }
+
+  void emojiToint(emoji) async {
+    for(int i =0; i<widget.friendChecklist!.length; i++) {
+      {
+        switch (emoji[i]) {
+          case '😍':
+            emojiValue[i] = 100;
+            break;
+          case '😀':
+            emojiValue[i] = 80;
+            break;
+          case '😊':
+            emojiValue[i] = 60;
+            break;
+          case '😑':
+            emojiValue[i] = 40;
+            break;
+          case '😩':
+            emojiValue[i] = 20;
+            break;
+        }
+      }
+    }
+  }
+
+  // void saveAll() async {
+  //   kakao.User? user = await kakao.UserApi.instance.me();
+  //   final db = FirebaseFirestore.instance;
+  //   DocumentReference Ref = db.collection('checklist').doc(user!.id.toString());
+  //   DocumentSnapshot mine = await Ref.get();
+  //   for(int i=0; i<widget.friendChecklist!.length; i++ ) {
+  //     {
+  //       if (mine.data() == null) {
+  //         await Ref.set({
+  //           "${widget.friendName}": {'MBTI': emojiValue[i] ,
+  //             'checklist' : widget.friendChecklist?[i]}
+  //         });
+  //       }
+  //       else{
+  //         await Ref.update(
+  //           {
+  //             "${widget.friendName}": {'MBTI': emojiValue[i] ,
+  //               'checklist' : widget.friendChecklist?[i]}
+  //           }
+  //         );
+  //       }
+  //     }
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +89,7 @@ class FriendPageState extends State<FriendPage> {
               child: ListView(
                 children: List.generate(
                   widget.friendChecklist?.length ?? 0,
-                  (index) => ListTile(
+                      (index) => ListTile(
                     leading: Checkbox(
                       activeColor: Colors.white,
                       checkColor: Colors.deepPurple,
@@ -37,40 +99,41 @@ class FriendPageState extends State<FriendPage> {
                         _toggleTodoItem(index);
                       },
                     ),
-                      title:  Text(
-                        widget.friendChecklist![index],
-                      ),
-                      trailing:
-                      DropdownButton<String?>(
-                        value: selectedEmoji,
-                        items:[
-                          '😍',
-                          '😀',
-                          '😊',
-                          '😑',
-                          '😩'
-                        ].map((String emoji) {
-                          return DropdownMenuItem<String>(
-                              value: emoji,
-                            child: Text(
-                              emoji,
-                              style: TextStyle(fontSize: 24),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? value){
-                          setState(() {
-                            selectedEmoji = value!;
-                          });
-                        },
-                      ),
+                    title:  Text(
+                      widget.friendChecklist![index],
                     ),
+                    trailing:
+                    DropdownButton<String?>(
+                      value: emojiMap[index],
+                      items:[
+                        '😍',
+                        '😀',
+                        '😊',
+                        '😑',
+                        '😩'
+                      ].map((String emoji) {
+                        return DropdownMenuItem<String>(
+                          value: emoji,
+                          child: Text(
+                            emoji,
+                            style: TextStyle(fontSize: 24),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? value){
+                        setState(() {
+                          emojiMap[index] = value!;
+                        });
+                      },
+                    ),
+                  ),
                 ),
               )
           ),
           ElevatedButton(
               onPressed: () {
-
+                emojiToint(emojiMap);
+                // saveAll();
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 23.0),

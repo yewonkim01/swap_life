@@ -32,17 +32,18 @@ class _SliderWidgetState extends State<SliderWidget>{
   double Nvalue = 0;
   double Fvalue = 0;
   double Jvalue = 0;
-  String? MBTI = '';
+  String? MBTI = "";
 
   void getAll(){
     getList mbtiCalculator = getList();
     mbtiCalculator.getProfile();
     mbtiCalculator.processList();
     mbtiCalculator.finalMBTI();
-    Evalue = mbtiCalculator.E / 100;
-    Nvalue = mbtiCalculator.N / 100;
-    Fvalue = mbtiCalculator.F / 100;
-    Jvalue = mbtiCalculator.J / 100;
+    Evalue = mbtiCalculator.E;
+    Nvalue = mbtiCalculator.N;
+    Fvalue = mbtiCalculator.F;
+    Jvalue = mbtiCalculator.J;
+    MBTI = mbtiCalculator.getMBTI();
   }
 
 
@@ -146,6 +147,7 @@ class _SliderWidgetState extends State<SliderWidget>{
               fontWeight: FontWeight.bold,
               color: Colors.deepPurple,
             ),),
+            Text("$MBTI"),
           ],
         ),
       ],

@@ -14,14 +14,19 @@ class getList {
   Future<void> getProfile() async {
     user = await kakao.UserApi.instance.me();
     DocumentSnapshot getprof =
-    await profile.collection('friendlist').doc(user!.id.toString()).get();
+    await profile.collection('checklist').doc(user!.id.toString()).get();
 
+    //여기다가 친구의 체크리스트 추가 하면 댐.
     List<Map<String, dynamic>>? userChecklistList =
     List<Map<String, dynamic>>.from(getprof['user_checklist']);
     if (userChecklistList != null) {
       for (var userChecklist in userChecklistList) {
-        MBTIList.add(userChecklist['MBTI']);
-        EmoticonList.add(List<int>.from(userChecklist['emoticon']) as int);
+        if (userChecklist['MBTI'] != null && userChecklist['emoticon'] != null) {
+          MBTIList.add(userChecklist['MBTI']);
+          if (userChecklist['emoticon'] is List<int>) {
+            EmoticonList.add(List<int>.from(userChecklist['emoticon']) as int);
+          }
+        }
       }
     }
   }
@@ -66,6 +71,30 @@ class getList {
   }
 
   finalMBTI() {
+    if (E > I) {
+      E >75 ? MBTI[0] = 'E' : MBTI[0]= 'e';
+    }
+    if (I > E) {
+      I >75 ? MBTI[0] = 'I' : MBTI[0]= 'i';
+    }
+    if (F > T) {
+      F >75 ? MBTI[0] = 'F' : MBTI[0]= 'f';
+    }
+    if (T > F) {
+      T >75 ? MBTI[0] = 'T' : MBTI[0]= 't';
+    }
+    if (S > N) {
+      S >75 ? MBTI[0] = 'S' : MBTI[0]= 's';
+    }
+    if (N > S) {
+      N >75 ? MBTI[0] = 'N' : MBTI[0]= 'n';
+    }
+    if (P > J) {
+      P >75 ? MBTI[0] = 'P' : MBTI[0]= 'p';
+    }
+    if (J > P) {
+      J >75 ? MBTI[0] = 'J' : MBTI[0]= 'j';
+    }
     E = (E_num != 0) ? (E / E_num).toDouble() : 0;
     I = (I_num != 0) ? (I / I_num).toDouble() : 0;
     N = (N_num != 0) ? (N / N_num).toDouble() : 0;
@@ -74,74 +103,11 @@ class getList {
     T = (T_num != 0) ? (T / T_num).toDouble() : 0;
     P = (P_num != 0) ? (P / P_num).toDouble() : 0;
     J = (J_num != 0) ? (J / J_num).toDouble() : 0;
-    //E = 80; I= 70; S=90; N=70; T=100;F=0; P=40; J =90;
-    if (E > I) {
-      if (E > 75) {
-        MBTI[0] = 'E';
-      }
-      else {
-        MBTI[0] = 'e';
-      }
-    }
-    if (I > E) {
-      if (I > 75) {
-        MBTI[0] = 'I';
-      }
-      else {
-        MBTI[0] = 'i';
-      }
-    }
-    if (F > T) {
-      if (F > 75) {
-        MBTI[1] = 'F';
-      }
-      else {
-        MBTI[1] = 'f';
-      }
-    }
-    if (T > F) {
-      if (T > 75) {
-        MBTI[1] = 'T';
-      }
-      else {
-        MBTI[1] = 't';
-      }
-    }
-    if (S > N) {
-      if (S > 75) {
-        MBTI[2] = 'S';
-      }
-      else {
-        MBTI[2] = 's';
-      }
-    }
-    if (N > S) {
-      if (N > 75) {
-        MBTI[2] = 'N';
-      }
-      else {
-        MBTI[2] = 'n';
-      }
-    }
-    if (P > J) {
-      if (P > 75) {
-        MBTI[3] = 'P';
-      }
-      else {
-        MBTI[3] = 'p';
-      }
-    }
-    if (J > P) {
-      if (J > 75) {
-        MBTI[3] = 'J';
-      }
-      else {
-        MBTI[3] = 'j';
-      }
-    }
   }
+
   String? getMBTI(){
-    String result = MBTI[0];
+    String result = MBTIList.join(',');
+    print(result);
     return result;
   }
 }

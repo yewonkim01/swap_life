@@ -39,8 +39,6 @@ class FriendListManager{
           print('update 완료');
         });
       }
-
-
     }
 
 
