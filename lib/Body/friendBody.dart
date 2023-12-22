@@ -5,14 +5,17 @@ import 'package:swap_life/shared/todo_controller.dart';
 
 class friendBody extends StatefulWidget {
   final TodoController controller;
-  final List<Map<String, dynamic>> friendChecklist;
-  friendBody({required this.controller, required this.friendChecklist});
+  final List<String> friendChecklist;
+  final String? friendName;
+  friendBody({super.key, required this.controller, required this.friendChecklist,required this.friendName});
 
   @override
-  _friendBody createState() => _friendBody();
+  friendBodyState createState() => friendBodyState();
 }
 
-class _friendBody extends State<friendBody> {
+class friendBodyState extends State<friendBody> {
+  bool showFriendList = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,9 +26,9 @@ class _friendBody extends State<friendBody> {
             child: ListView(
               children: [
                 FriendList(widget.controller, context),
-                (widget.friendChecklist == null || widget.friendChecklist.isEmpty)
+                (widget.friendChecklist == null|| widget.friendChecklist.isEmpty)
                     ? SizedBox(
-                  height: 200,
+                  height: 500,
                   child: Center(
                     child: Text(
                       "Friend's List",
@@ -38,6 +41,7 @@ class _friendBody extends State<friendBody> {
                 )
                     : FriendPage(
                   friendChecklist: widget.friendChecklist,
+                    friendName: widget.friendName
                 ),
               ],
             ),

@@ -4,7 +4,7 @@ import 'package:swap_life/friends/deleteFriendDialog.dart';
 import 'package:swap_life/FriendScreen.dart';
 
 
-class FriendProfile extends StatelessWidget {
+class FriendProfile extends StatefulWidget {
   late String? imageUrl;
   late String? NickName;
   late String? MBTI;
@@ -15,25 +15,55 @@ class FriendProfile extends StatelessWidget {
   late DocumentReference? frienddoc;
   late List? friendlist;
   late List? myfriendlist;
-  late List<Map<String, dynamic>>? friendChecklist;
+  late List<String>? friendChecklist;
 
-  Future<List<Map<String, dynamic>>> getFriendChecklist(String friendid) async {
+  FriendProfile({
+    Key? key,
+    this.userid,
+    this.friendid,
+    this.doc,
+    this.frienddoc,
+    this.friendlist,
+    this.myfriendlist,
+    this.imageUrl,
+    this.NickName,
+    this.MBTI,
+    this.intro,
+  }) : super(key: key);
+
+  @override
+  _FriendProfile createState() => _FriendProfile();
+}
+class _FriendProfile extends State<FriendProfile> {
+  List<String>? friendChecklist;
+
+  @override
+  void initState() {
+    super.initState();
+    updatefriend();
+  }
+  void updatefriend() async{
+    friendChecklist = await getFriendChecklist(widget.friendid!);
+    setState(() {});
+  }
+
+  Future<List<String>> getFriendChecklist(String friendid) async {
     try {
       // Firestore 쿼리: friendid를 사용하여 해당 친구의 체크리스트 가져오기
-      QuerySnapshot checklistSnapshot = await FirebaseFirestore.instance
-          .collection('checklist').doc(friendid).collection('user_checklist').get();
+      DocumentSnapshot checklistSnapshot = await FirebaseFirestore.instance
+          .collection('checklist').doc(friendid).get();
       // 가져온 데이터를 friendChecklist에 추가
-      return checklistSnapshot.docs
-          .map((DocumentSnapshot document) => document.data() as Map<String, dynamic>)
-          .toList();
+      Map<String, dynamic> datas = checklistSnapshot.data() as Map<String, dynamic>;
+      List<String> titles = [];
+      for (int i = 0; i < datas['user_checklist'].length; i++) {
+        titles.add(datas['user_checklist'][i]['title']);
+      }
+      return titles;
     } catch (e) {
       print('Error fetching friend checklist: $e');
       return [];
     }
   }
-
-  // 생성자로 초기화
-  FriendProfile({Key? key, this.userid, this.friendid, this.doc, this.frienddoc, this.friendlist,this.myfriendlist,this.imageUrl, this.NickName, this.MBTI, this.intro}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +79,10 @@ class FriendProfile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             Row(
               children: [
                 SizedBox(width: 30,),
-                (imageUrl == 'null')
+                (widget.imageUrl == 'null')
                     ? CircleAvatar(
                   radius: 70,
                   backgroundImage: AssetImage('assets/profile.png'),
@@ -61,55 +90,37 @@ class FriendProfile extends StatelessWidget {
                 )
                     : CircleAvatar(
                   radius: 70,
-                  backgroundImage: NetworkImage(imageUrl!),
+                  backgroundImage: NetworkImage(widget.imageUrl!),
                 ),
                 SizedBox(width: 50,),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    (NickName == 'null') ? Text("  ") : Text('$NickName', style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold)),
+                    (widget.NickName == 'null') ? Text("  ") : Text('${widget.NickName}', style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold)),
                     SizedBox(height: 10,),
-                    (MBTI == 'null') ? Text("MBTI") : Text('$MBTI', style: TextStyle(fontSize: 22),),
-                    (intro == 'null') ? Text("상태메시지") : Text('$intro', style: TextStyle(fontSize: 20),)
+                    (widget.MBTI == 'null') ? Text("MBTI") : Text('${widget.MBTI}', style: TextStyle(fontSize: 22),),
+                    (widget.MBTI == 'null') ? Text("상태메시지") : Text('${widget.intro}', style: TextStyle(fontSize: 20),)
                   ],
                 ),
               ],
             ),
             SizedBox(height: 70,),
             // 친구 checklist끌어오기..
-            FutureBuilder<List<Map<String, dynamic>>> (
-              future: getFriendChecklist(friendid!),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error loading checklist: ${snapshot.error}');
-                } else {
-                  List<Map<String, dynamic>>? friendChecklist = snapshot.data;
-
-                  return Column(
-                    children: [
-                      Text("< ${NickName}'s List >", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 10),
-                      // Friend의 체크리스트 표시
-                      if (friendChecklist != null && friendChecklist.isNotEmpty)
-                        for (var checklistItem in friendChecklist)
-                          Text(checklistItem['itemName'].toString()), // 예시: 'itemName'은 실제 체크리스트 항목에 맞게 변경해주세요.
-                    ],
-                  );
-                }
-              },
+            Text("< ${widget.NickName}'s List >", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+            SizedBox(height: 20),
+            Column(
+              children: showList(),
             ),
             SizedBox(height: 270,),
             ElevatedButton(
-
               onPressed: () async {
-                friendChecklist = await getFriendChecklist(friendid!);
+                friendChecklist = await getFriendChecklist(widget.friendid!);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => FriendPage(
                       friendChecklist: friendChecklist,
+                      friendName: widget.NickName,
                     ),
                   ),
                 );
@@ -134,7 +145,7 @@ class FriendProfile extends StatelessWidget {
             SizedBox(height: 15,),
             TextButton(
               onPressed: () async{
-                DeleteFriendDialog(context, doc!, frienddoc!, friendlist!, friendid!, myfriendlist!, userid!);
+                DeleteFriendDialog(context, widget.doc!, widget.frienddoc!, widget.friendlist!, widget.friendid!, widget.myfriendlist!, widget.userid!);
                 },
               child: Text('delete friend', style: TextStyle(fontSize: 17,decoration: TextDecoration.underline),),
             ),
@@ -142,5 +153,20 @@ class FriendProfile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> showList() {
+    List<Widget> lists = [];
+    for (int i = 0; i < friendChecklist!.length; i++) {
+      lists.add(Row(
+        children: [
+          SizedBox(width: 40),
+          Icon(Icons.check),
+          SizedBox(width: 10),
+          Text(friendChecklist![i], style: TextStyle(fontSize: 17),),
+        ],
+      ));
+    }
+    return lists;
   }
 }
