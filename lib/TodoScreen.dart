@@ -147,7 +147,7 @@ class _TodoScreenState extends State<TodoScreen> {
           FriendList(widget.controller, context),
           SizedBox(height: 35),
           //checkList
-          Text("My checklist", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold),),
+          Text("My checkList", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold),),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(

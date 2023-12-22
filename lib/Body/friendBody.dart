@@ -17,7 +17,7 @@ class _friendBody extends State<friendBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: ListView(
         children: [
           SizedBox(height: 10),
           FriendList(widget.controller, context),
