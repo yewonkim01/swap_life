@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:swap_life/friends/AlertFriendDialog.dart';
 import 'package:swap_life/kakao_login/firebase_options.dart';
 import 'package:swap_life/kakao_login/myhompage.dart';
 import 'dart:core';
@@ -13,7 +14,7 @@ import 'package:swap_life/friends/dynamicLink.dart';
 import 'package:swap_life/Body/friendBody.dart';
 import 'package:swap_life/Body/homeBody.dart';
 import 'package:swap_life/friends/FriendProfile.dart';
-
+import 'friends/AlertFriendDialog.dart';
 
 void main() async{
   var services = HttpServices();
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         '/myHome': (context) => MyHome(controller: controller),
         '/myProfile' : (context) => MyProfile(),
         '/todoScreen': (context) => TodoScreen(controller: controller),
+        '/alert_dialog': (context) => AlertFriendDialog()
         //'/friendScreen': (context) => FriendPage(friendChecklist: friendChecklist),
       },
       debugShowCheckedModeBanner: false,
@@ -99,7 +101,10 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     }
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () {},icon: Icon(Icons.cloud_outlined)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/alert_dialog');
+            },icon: Icon(Icons.cloud_outlined)),
         iconTheme: IconThemeData(color: Colors.deepPurple),
         title: Text("Swap Life"),
         centerTitle: true,
