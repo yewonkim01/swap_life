@@ -8,12 +8,10 @@ class AlertFriendDialog extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
+        leading: IconButton(
             onPressed: (){Navigator.pop(context);},
             icon: Icon(Icons.close),
-      )
-        ],
+      ),
     ));
   }
 }
