@@ -6,31 +6,83 @@ import 'dart:core';
 // 여기에 friend 창 구현 !!!
 class FriendPage extends StatefulWidget {
   final List<Map<String, dynamic>>? friendChecklist;
-  FriendPage({ required this.friendChecklist});
+  //late String? NickName;
+  FriendPage({ required this.friendChecklist,});
   @override
   State<FriendPage> createState() => _FriendPageState();
 }
 
 class _FriendPageState extends State<FriendPage> {
+  String selectedEmoji = '😊';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: widget.friendChecklist?.length ?? 0,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: Checkbox(
-              activeColor: Colors.white,
-              checkColor: Colors.deepPurple,
-              value: todoList[index].isCompleted,
-              onChanged: (value) {
-                // checkBoxa상태 변경을 위한 bool 함수
-                _toggleTodoItem(index);
-                },
-            ),
-          );
-          },
-      )
+      body: Column(
+        children: [
+          Text("s checkList", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold)),
+          Text("친구의 일상을 경험하고, 완료사항을 체크해보세요"),
+          Expanded(
+              child: ListView(
+                children: List.generate(
+                  widget.friendChecklist?.length ?? 0,
+                  (index) => ListTile(
+                    leading: Checkbox(
+                      activeColor: Colors.white,
+                      checkColor: Colors.deepPurple,
+                      value: todoList[index].isCompleted,
+                      onChanged: (value) {
+                        // checkBoxa상태 변경을 위한 bool 함수
+                        _toggleTodoItem(index);
+                      },
+                    ),
+                      title: Text(
+                         // friendChecklist
+                        'test'
+                      ),
+                      trailing:
+                      DropdownButton<String?>(
+                        value: selectedEmoji,
+                        items:[
+                          '😍',
+                          '😀',
+                          '😊',
+                          '😑',
+                          '😩'
+                        ].map((String emoji) {
+                          return DropdownMenuItem<String>(
+                              value: emoji,
+                            child: Text(
+                              emoji,
+                              style: TextStyle(fontSize: 24),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? value){
+                          setState(() {
+                            selectedEmoji = value!;
+                          });
+                        },
+                      ),
+                    ),
+                ),
+              )
+          ),
+          ElevatedButton(
+              onPressed: () {
+
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 23.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.smart_toy_sharp),
+                    Text('Finish', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))
+                  ],
+                ),
+              )
+          ),
+        ],
+      ),
     );
   }
   void _toggleTodoItem(int index) {

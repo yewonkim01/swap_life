@@ -49,6 +49,7 @@ class FriendProfile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
             Row(
               children: [
                 SizedBox(width: 30,),
@@ -76,7 +77,29 @@ class FriendProfile extends StatelessWidget {
             ),
             SizedBox(height: 70,),
             // 친구 checklist끌어오기..
-            Text("< ${NickName}'s List >",style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            FutureBuilder<List<Map<String, dynamic>>> (
+              future: getFriendChecklist(friendid!),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error loading checklist: ${snapshot.error}');
+                } else {
+                  List<Map<String, dynamic>>? friendChecklist = snapshot.data;
+
+                  return Column(
+                    children: [
+                      Text("< ${NickName}'s List >", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 10),
+                      // Friend의 체크리스트 표시
+                      if (friendChecklist != null && friendChecklist.isNotEmpty)
+                        for (var checklistItem in friendChecklist)
+                          Text(checklistItem['itemName'].toString()), // 예시: 'itemName'은 실제 체크리스트 항목에 맞게 변경해주세요.
+                    ],
+                  );
+                }
+              },
+            ),
             SizedBox(height: 270,),
             ElevatedButton(
 
