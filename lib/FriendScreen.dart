@@ -29,29 +29,29 @@ class FriendPageState extends State<FriendPage> {
     }
   }
 
-  void emojiToint(emoji) async {
-    for(int i =0; i<widget.friendChecklist!.length; i++) {
-      {
-        switch (emoji[i]) {
-          case '😍':
-            emojiValue[i] = 100;
-            break;
-          case '😀':
-            emojiValue[i] = 80;
-            break;
-          case '😊':
-            emojiValue[i] = 60;
-            break;
-          case '😑':
-            emojiValue[i] = 40;
-            break;
-          case '😩':
-            emojiValue[i] = 20;
-            break;
-        }
-      }
-    }
-  }
+  // void emojiToint(emoji) async {
+  //   for(int i =0; i<widget.friendChecklist!.length; i++) {
+  //     {
+  //       switch (emoji[i]) {
+  //         case '😍':
+  //           emojiValue[i] = 100;
+  //           break;
+  //         case '😀':
+  //           emojiValue[i] = 80;
+  //           break;
+  //         case '😊':
+  //           emojiValue[i] = 60;
+  //           break;
+  //         case '😑':
+  //           emojiValue[i] = 40;
+  //           break;
+  //         case '😩':
+  //           emojiValue[i] = 20;
+  //           break;
+  //       }
+  //     }
+  //   }
+  // }
 
   // void saveAll() async {
   //   kakao.User? user = await kakao.UserApi.instance.me();
@@ -132,7 +132,7 @@ class FriendPageState extends State<FriendPage> {
           ),
           ElevatedButton(
               onPressed: () {
-                emojiToint(emojiMap);
+                //emojiToint(emojiMap);
                 // saveAll();
               },
               child: Padding(

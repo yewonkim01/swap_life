@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'KakaoTalkShare.dart';
-import 'dynamicLink.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'FriendIcon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
