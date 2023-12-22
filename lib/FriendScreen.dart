@@ -4,7 +4,6 @@ import 'package:swap_life/friends/friendList.dart';
 import 'dart:core';
 import 'package:swap_life/shared/todo_controller.dart';
 
-// 여기에 friend 창 구현 !!!
 class FriendPage extends StatefulWidget {
   final TodoController controller;
   final List<String>? friendChecklist;
@@ -31,8 +30,7 @@ class FriendPageState extends State<FriendPage> {
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(height: 60,),
-          Text("< ${widget.friendName}'s checkList> ", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold)),
+          Text("< ${widget.friendName} checkList > ", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold)),
           Text("친구의 일상을 경험하고, 완료사항을 체크해보세요"),
           Expanded(
               child: ListView(
@@ -44,7 +42,6 @@ class FriendPageState extends State<FriendPage> {
                       checkColor: Colors.deepPurple,
                       value: todoList[index].isCompleted,
                       onChanged: (value) {
-                        // checkBoxa상태 변경을 위한 bool 함수
                         _toggleTodoItem(index);
                       },
                     ),
@@ -80,17 +77,17 @@ class FriendPageState extends State<FriendPage> {
               )
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50.0),
+            padding: const EdgeInsets.symmetric(horizontal: 70.0),
             child: ElevatedButton(
                 onPressed: () {
-
+                  Navigator.pop(context);
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 23.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Row(
                     children: [
                       Icon(Icons.smart_toy_sharp),
-                      SizedBox(width: 60,),
+                      SizedBox(width: 45,),
                       Text('Finish', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
                     ],
                   ),

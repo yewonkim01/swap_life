@@ -189,7 +189,7 @@ class _MyProfileState extends State<MyProfile> {
   Widget introduction() {
     return TextFormField(
       controller: _introController,
-      maxLength: 30,
+      maxLength: 20,
       decoration: InputDecoration(
         hintText: 'introduction',
       ),
@@ -260,7 +260,7 @@ class _MyProfileState extends State<MyProfile> {
     return TextButton(
       onPressed: () => viewModel.logout(),
       child: Text("Logout",
-        style: TextStyle(color: Colors.deepPurple),
+        style: TextStyle(color: Colors.deepPurple, decoration: TextDecoration.underline),
       ),
     );
   }

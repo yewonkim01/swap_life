@@ -19,6 +19,7 @@ class FriendProfile extends StatefulWidget {
   late List? myfriendlist;
   late List<String>? friendChecklist;
   final TodoController controller;
+  final int? exist;
 
   FriendProfile({
     Key? key,
@@ -32,7 +33,8 @@ class FriendProfile extends StatefulWidget {
     this.NickName,
     this.MBTI,
     this.intro,
-    required this.controller
+    required this.controller,
+    this.exist,
   }) : super(key: key);
 
   @override
@@ -40,12 +42,15 @@ class FriendProfile extends StatefulWidget {
 }
 class _FriendProfile extends State<FriendProfile> {
   List<String>? friendChecklist;
+  int? exist;
 
   @override
   void initState() {
     super.initState();
+    exist = widget.exist;
     updatefriend();
   }
+
   void updatefriend() async{
     friendChecklist = await getFriendChecklist(widget.friendid!);
     setState(() {});
@@ -83,6 +88,7 @@ class _FriendProfile extends State<FriendProfile> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 20,),
             Row(
               children: [
                 SizedBox(width: 30,),
@@ -108,27 +114,30 @@ class _FriendProfile extends State<FriendProfile> {
                 ),
               ],
             ),
-            SizedBox(height: 70,),
+            SizedBox(height: 50,),
             // 친구 checklist끌어오기..
             Text("< ${widget.NickName}'s List >", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-            SizedBox(height: 20),
-            Column(
-              children: showList(),
+            SizedBox(height: 5),
+            Container(
+              padding: EdgeInsets.all(30),
+              child: Column(
+                children: showList(),
+              ),
             ),
-            SizedBox(height: 270,),
+            SizedBox(height: 200),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 23.0),
               child: ElevatedButton(
                 onPressed: () async {
                   friendChecklist = await getFriendChecklist(widget.friendid!);
-                  Navigator.pop(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FriendPage(
+                      builder: (context) => FriendMain(
                         controller: widget.controller,
                         friendChecklist: friendChecklist!,
-                        friendName: widget.NickName,
-                        exist: 1
+                        friendName: widget.NickName!,
+                        exist: 1,
                       ),
                     ),
                   );
@@ -165,6 +174,10 @@ class _FriendProfile extends State<FriendProfile> {
   }
 
   List<Widget> showList() {
+    if (friendChecklist == null) {
+      return []; // friendChecklist이 null인 경우 처리
+    }
+
     List<Widget> lists = [];
     for (int i = 0; i < friendChecklist!.length; i++) {
       lists.add(Row(

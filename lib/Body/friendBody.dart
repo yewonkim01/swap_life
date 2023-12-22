@@ -15,21 +15,23 @@ class friendBody extends StatefulWidget {
 }
 
 class friendBodyState extends State<friendBody> {
-  bool showFriendList = true;
-  int exist = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(height: 10),
+          FriendList(widget.controller, context),
+          SizedBox(height: 25,),
           Expanded(
-            child: ListView(
-              children: [
-                FriendList(widget.controller, context),
-                exist == 0
-                    ? SizedBox(
+            child: FriendPage(
+              controller: widget.controller,
+              friendChecklist: widget.friendChecklist,
+              friendName: widget.friendName,
+              exist: widget.exist,
+            ),
+          ),
+          /*exist == 0
+              ? SizedBox(
                   height: 500,
                   child: Center(
                     child: Text(
@@ -41,17 +43,45 @@ class friendBodyState extends State<friendBody> {
                     ),
                   ),
                 )
-                    : FriendPage(
-                  controller: widget.controller,
-                  friendChecklist: widget.friendChecklist,
-                    friendName: widget.friendName,
-                    exist: widget.exist
-                ),
-              ],
-            ),
-          ),
+              : */
         ],
       ),
+    );
+  }
+}
+
+class FriendMain extends StatefulWidget {
+  final TodoController controller;
+  final List<String> friendChecklist;
+  final String? friendName;
+  final int? exist;
+  FriendMain({required this.controller,required this.friendChecklist, required this.friendName, required this.exist});
+  @override
+  _FriendMainState createState() => _FriendMainState();
+}
+
+class _FriendMainState extends State<FriendMain> with SingleTickerProviderStateMixin {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/alert_dialog');
+          },
+          icon: Icon(Icons.cloud_outlined),
+        ),
+        iconTheme: IconThemeData(color: Colors.deepPurple),
+        title: Text("Swap Life"),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0.0,
+      ),
+      body: friendBody(controller: widget.controller,
+        friendChecklist: widget.friendChecklist,
+        friendName: widget.friendName,
+        exist: 1,),
     );
   }
 }
