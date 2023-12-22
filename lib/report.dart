@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
-
-import 'caculate_mbti.dart';
+import 'package:swap_life/report_when_finish.dart';
 
 class Mbti_report extends StatefulWidget {
   @override
@@ -60,13 +59,6 @@ class _Mbti_report extends State<Mbti_report> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 30,
-                    ),
-                  ),
-                  //바꿔야 됨!!!!!!!!!!!!!!!!!!!!!!!//
-                  Text('$MBTI',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   SliderWidget(),

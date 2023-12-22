@@ -1,5 +1,8 @@
+//김진영 작성
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:swap_life/calc_mbti.dart';
 
 class calc_mbti extends StatefulWidget{
   @override
@@ -7,6 +10,7 @@ class calc_mbti extends StatefulWidget{
 }
 
 class _calc_mbit extends State<calc_mbti>{
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,17 +22,32 @@ class _calc_mbit extends State<calc_mbti>{
     );
   }
 }
+
 class SliderWidget extends StatefulWidget{
   _SliderWidgetState createState() => _SliderWidgetState();
 }
 
 class _SliderWidgetState extends State<SliderWidget>{
-  double Evalue = 0.2;
-  double Nvalue = 0.1;
-  double Fvalue = 0.1;
-  double Jvalue = 0.45;
+  double Evalue = 0;
+  double Nvalue = 0;
+  double Fvalue = 0;
+  double Jvalue = 0;
+  String? MBTI = '';
+
+  void getAll(){
+    getList mbtiCalculator = getList();
+    mbtiCalculator.getProfile();
+    mbtiCalculator.processList();
+    mbtiCalculator.finalMBTI();
+    Evalue = mbtiCalculator.E / 100;
+    Nvalue = mbtiCalculator.N / 100;
+    Fvalue = mbtiCalculator.F / 100;
+    Jvalue = mbtiCalculator.J / 100;
+  }
+
 
   Widget build(BuildContext context){
+    getAll();
     return Column(
       children: [
         Row(
