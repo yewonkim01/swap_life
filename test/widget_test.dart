@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:swap_life/main.dart';
+import 'package:swap_life/friends/main.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 
 void main() {

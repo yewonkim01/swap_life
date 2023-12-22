@@ -1,15 +1,14 @@
 //김진영 작성//
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
+import '../friends/main.dart';
 import '../shared/todo_controller.dart';
 import 'login.dart';
 import 'package:swap_life/kakao_login/mainview.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.controller, required this.friendChecklist}) : super(key: key);
+  const MyHomePage({Key? key, required this.controller}) : super(key: key);
   final TodoController controller;
-  final List<Map<String, dynamic>> friendChecklist;
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -54,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ]
                 );
               }
-              return MyHome(controller: widget.controller, friendChecklist: widget.friendChecklist);
+              return MyHome(controller: widget.controller);
             }
         ),
       ),

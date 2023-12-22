@@ -14,25 +14,25 @@ class FriendProfile extends StatelessWidget {
   late DocumentReference? doc;
   late DocumentReference? frienddoc;
   late List? friendlist;
-  late List? myfriendlist;
+  late List<Map<String, dynamic>>? friendChecklist;
 
   Future<List<Map<String, dynamic>>> getFriendChecklist(String friendid) async {
-    List<Map<String, dynamic>> friendChecklist = [];
     try {
       // Firestore 쿼리: friendid를 사용하여 해당 친구의 체크리스트 가져오기
       QuerySnapshot checklistSnapshot = await FirebaseFirestore.instance
           .collection('checklist').doc(friendid).collection('user_checklist').get();
       // 가져온 데이터를 friendChecklist에 추가
-      friendChecklist = checklistSnapshot.docs.map((DocumentSnapshot document) {
-        return document.data() as Map<String, dynamic>;
-      }).toList();
+      return checklistSnapshot.docs
+          .map((DocumentSnapshot document) => document.data() as Map<String, dynamic>)
+          .toList();
     } catch (e) {
       print('Error fetching friend checklist: $e');
-    } return friendChecklist;
+      return [];
+    }
   }
 
   // 생성자로 초기화
-  FriendProfile({Key? key, this.userid, this.friendid, this.doc, this.frienddoc, this.friendlist, this.myfriendlist, this.imageUrl, this.NickName, this.MBTI, this.intro}) : super(key: key);
+  FriendProfile({Key? key, this.userid, this.friendid, this.doc, this.frienddoc, this.friendlist,this.imageUrl, this.NickName, this.MBTI, this.intro}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class FriendProfile extends StatelessWidget {
             SizedBox(height: 270,),
             ElevatedButton(
               onPressed: () async {
-                List<Map<String, dynamic>> friendChecklist = await getFriendChecklist(friendid!);
+                friendChecklist = await getFriendChecklist(friendid!);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

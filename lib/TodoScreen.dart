@@ -78,7 +78,6 @@ class _TodoScreenState extends State<TodoScreen> {
         'title': todoList.last.title,
         'mbti': todoList.last.mbti,
       });
-
       await Ref.set({'user_checklist': existingItems});
     } catch (e) {
       print("Error saving list: $e");

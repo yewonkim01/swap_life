@@ -4,21 +4,20 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:swap_life/kakao_login/firebase_options.dart';
 import 'package:swap_life/kakao_login/myhompage.dart';
 import 'dart:core';
-import 'MyProfile.dart';
-import 'TodoScreen.dart';
-import 'firestore/service.dart';
-import 'shared/shared.dart';
-import 'FriendScreen.dart';
+import '../MyProfile.dart';
+import '../TodoScreen.dart';
+import '../firestore/service.dart';
+import '../shared/shared.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/friends/dynamicLink.dart';
 import 'package:swap_life/Body/friendBody.dart';
 import 'package:swap_life/Body/homeBody.dart';
+import 'package:swap_life/friends/FriendProfile.dart';
 
 
 void main() async{
   var services = HttpServices();
   var controller = TodoController(services);
-  final List<Map<String, dynamic>> friendChecklist = await getFriendChecklist(friendid!);
   KakaoSdk.init(
       nativeAppKey: 'e7a7bba0f8d93f336d1343d3f47222ae',
       javaScriptAppKey: 'dc58af574c1d9b2e8e2a27485a830ecf14f59171');
@@ -27,14 +26,13 @@ void main() async{
     options : DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MyApp(controller: controller,friendChecklist: friendChecklist));
+  runApp(MyApp(controller: controller,));
 }
 
 //MyApp class 예선 작성//
 class MyApp extends StatelessWidget {
   final TodoController controller;
-  final List<Map<String, dynamic>> friendChecklist;
-  MyApp({required this.controller, required this.friendChecklist});
+  MyApp({required this.controller,});
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +42,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primaryColor: Colors.blueGrey[200]),
       initialRoute: '/',
       routes: {
-        '/': (context) => MyHomePage(controller: controller,friendChecklist: friendChecklist),
-        '/myHome': (context) => MyHome(controller: controller,friendChecklist: friendChecklist),
+        '/': (context) => MyHomePage(controller: controller),
+        '/myHome': (context) => MyHome(controller: controller),
         '/myProfile' : (context) => MyProfile(),
         '/todoScreen': (context) => TodoScreen(controller: controller),
-        '/friendScreen': (context) => FriendPage(friendChecklist: friendChecklist),
+        //'/friendScreen': (context) => FriendPage(friendChecklist: friendChecklist),
       },
       debugShowCheckedModeBanner: false,
     );
@@ -58,8 +56,7 @@ class MyApp extends StatelessWidget {
 //MyHome, _MyHomeState class 예선 작성//
 class MyHome extends StatefulWidget {
   final TodoController controller;
-  final List<Map<String, dynamic>> friendChecklist;
-  MyHome({required this.controller, required this.friendChecklist});
+  MyHome({required this.controller});
 
   @override
   _MyHomeState createState() => _MyHomeState();
@@ -94,7 +91,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     if(_selectedIndex==0) {
       //추후 친구 chech list받아오는 함수 연결
       //bodyWidget = tabContainer(context, Colors.white, "Friend's List");
-      bodyWidget = friendBody(controller: widget.controller, friendChecklist: widget.friendChecklist);
+      bodyWidget = friendBody(controller: widget.controller);
       } else if(_selectedIndex == 1) {
       bodyWidget = TodoScreen(controller: widget.controller);
     } else {
