@@ -139,7 +139,6 @@ class _TodoScreenState extends State<TodoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FriendList old_FriendList = FriendList(widget.controller, context);
     return Scaffold(
       body: Column(
         children: [
