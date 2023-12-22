@@ -23,7 +23,7 @@ class _friendBody extends State<friendBody> {
             child: ListView(
               children: [
                 FriendList(widget.controller, context),
-                widget.friendChecklist == null
+                (widget.friendChecklist == null || widget.friendChecklist.isEmpty)
                     ? SizedBox(
                   height: 200,
                   child: Center(
