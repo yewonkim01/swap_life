@@ -39,25 +39,15 @@ class _FriendProfile extends State<FriendProfile> {
 
   @override
   void initState() {
-    print('init start');
     super.initState();
-    print('init STATE 끝, update  시작');
     updatefriend();
-    print('update 끝');
-
   }
   void updatefriend() async{
-    friendChecklist = await getFriendChecklist(widget.friendid!) ?? [];
-    if (friendChecklist == null){
-      print('여기니??');
-    }
-    print(friendChecklist);
+    friendChecklist = await getFriendChecklist(widget.friendid!);
     setState(() {});
   }
 
   Future<List<String>> getFriendChecklist(String friendid) async {
-    print('GET FRIENDCHECK 시작');
-
     try {
       // Firestore 쿼리: friendid를 사용하여 해당 친구의 체크리스트 가져오기
       DocumentSnapshot checklistSnapshot = await FirebaseFirestore.instance
@@ -77,8 +67,6 @@ class _FriendProfile extends State<FriendProfile> {
 
   @override
   Widget build(BuildContext context) {
-    print('BUILD 시작');
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
