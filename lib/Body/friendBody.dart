@@ -7,7 +7,8 @@ class friendBody extends StatefulWidget {
   final TodoController controller;
   final List<String> friendChecklist;
   final String? friendName;
-  friendBody({super.key, required this.controller, required this.friendChecklist,required this.friendName});
+  final int? exist;
+  friendBody({ required this.controller,required this.friendChecklist, required this.friendName, required this.exist});
 
   @override
   friendBodyState createState() => friendBodyState();
@@ -15,6 +16,7 @@ class friendBody extends StatefulWidget {
 
 class friendBodyState extends State<friendBody> {
   bool showFriendList = true;
+  int exist = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class friendBodyState extends State<friendBody> {
             child: ListView(
               children: [
                 FriendList(widget.controller, context),
-                (widget.friendChecklist == null|| widget.friendChecklist.isEmpty)
+                exist == 0
                     ? SizedBox(
                   height: 500,
                   child: Center(
@@ -40,8 +42,10 @@ class friendBodyState extends State<friendBody> {
                   ),
                 )
                     : FriendPage(
+                  controller: widget.controller,
                   friendChecklist: widget.friendChecklist,
-                    friendName: widget.friendName
+                    friendName: widget.friendName,
+                    exist: widget.exist
                 ),
               ],
             ),

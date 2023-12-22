@@ -6,22 +6,33 @@ import 'package:swap_life/shared/todo_controller.dart';
 
 // 여기에 friend 창 구현 !!!
 class FriendPage extends StatefulWidget {
+  final TodoController controller;
   final List<String>? friendChecklist;
   final String? friendName;
-  late TodoController controller;
-  FriendPage({ required this.friendChecklist, required this.friendName});
+  final int? exist;
+  FriendPage({ required this.controller,required this.friendChecklist, required this.friendName, required this.exist});
   @override
   State<FriendPage> createState() => FriendPageState();
 }
 
 class FriendPageState extends State<FriendPage> {
-  String selectedEmoji = '😊';
+  Map<int, String> emojiMap = {};
+
+  @override
+  void initState() {
+    super.initState();
+    for (int i = 0; i < widget.friendChecklist!.length; i++) {
+      emojiMap[i] = '😊';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          Text("${widget.friendName}'s checkList", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold)),
+          SizedBox(height: 60,),
+          Text("< ${widget.friendName}'s checkList> ", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold)),
           Text("친구의 일상을 경험하고, 완료사항을 체크해보세요"),
           Expanded(
               child: ListView(
@@ -42,7 +53,7 @@ class FriendPageState extends State<FriendPage> {
                       ),
                       trailing:
                       DropdownButton<String?>(
-                        value: selectedEmoji,
+                        value: emojiMap[index],
                         items:[
                           '😍',
                           '😀',
@@ -60,7 +71,7 @@ class FriendPageState extends State<FriendPage> {
                         }).toList(),
                         onChanged: (String? value){
                           setState(() {
-                            selectedEmoji = value!;
+                            emojiMap[index] = value!;
                           });
                         },
                       ),
@@ -68,19 +79,23 @@ class FriendPageState extends State<FriendPage> {
                 ),
               )
           ),
-          ElevatedButton(
-              onPressed: () {
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50.0),
+            child: ElevatedButton(
+                onPressed: () {
 
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 23.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.smart_toy_sharp),
-                    Text('Finish', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              )
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 23.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.smart_toy_sharp),
+                      SizedBox(width: 60,),
+                      Text('Finish', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                )
+            ),
           ),
         ],
       ),

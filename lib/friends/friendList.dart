@@ -75,7 +75,7 @@ class _FriendListState extends State<FriendList> {
               //탭하면 친구 프로필창 나옴
               onTap: (){
                 Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => FriendProfile(userid: userid, friendid: friendid, doc: doc, frienddoc: frienddoc, friendlist: friendlist, myfriendlist: myfriendlist, imageUrl: ImageUrl, NickName: NickName, MBTI: MBTI, intro: intro,),
+                  MaterialPageRoute(builder: (context) => FriendProfile(userid: userid, friendid: friendid, doc: doc, frienddoc: frienddoc, friendlist: friendlist, myfriendlist: myfriendlist, imageUrl: ImageUrl, NickName: NickName, MBTI: MBTI, intro: intro,controller: widget.controller,),
                 ),
               );
               },

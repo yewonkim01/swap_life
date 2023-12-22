@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swap_life/friends/deleteFriendDialog.dart';
+import 'package:swap_life/shared/todo_controller.dart';
+import 'package:swap_life/Body/friendBody.dart';
 import 'package:swap_life/FriendScreen.dart';
 
 
@@ -16,6 +18,7 @@ class FriendProfile extends StatefulWidget {
   late List? friendlist;
   late List? myfriendlist;
   late List<String>? friendChecklist;
+  final TodoController controller;
 
   FriendProfile({
     Key? key,
@@ -29,6 +32,7 @@ class FriendProfile extends StatefulWidget {
     this.NickName,
     this.MBTI,
     this.intro,
+    required this.controller
   }) : super(key: key);
 
   @override
@@ -112,33 +116,38 @@ class _FriendProfile extends State<FriendProfile> {
               children: showList(),
             ),
             SizedBox(height: 270,),
-            ElevatedButton(
-              onPressed: () async {
-                friendChecklist = await getFriendChecklist(widget.friendid!);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FriendPage(
-                      friendChecklist: friendChecklist,
-                      friendName: widget.NickName,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 23.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  friendChecklist = await getFriendChecklist(widget.friendid!);
+                  Navigator.pop(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FriendPage(
+                        controller: widget.controller,
+                        friendChecklist: friendChecklist!,
+                        friendName: widget.NickName,
+                        exist: 1
+                      ),
                     ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 23.0), // 좌우 여백 조절
+                  child: Row(
+                    children: [
+                      Icon(Icons.mail_outline_outlined, size: 50),
+                      SizedBox(width: 15),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Get Checklist', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                          Text('친구 리스트 가져오기'),
+                        ],
+                      ),
+                    ],
                   ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 23.0), // 좌우 여백 조절
-                child: Row(
-                  children: [
-                    Icon(Icons.mail_outline_outlined, size: 50),
-                    SizedBox(width: 30),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Get Checklist', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                        Text('친구 리스트 가져오기'),
-                      ],
-                    ),
-                  ],
                 ),
               ),
             ),
