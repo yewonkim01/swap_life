@@ -168,18 +168,18 @@ class _TodoScreenState extends State<TodoScreen> {
       } else{
         isnull = 1; // input text=null이면, isnull=1로 지정해 add버튼 실행 시 saveList(),clear 작업 생략
         showDialog<void>(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: const Text('Add a text',style: TextStyle(fontSize: 20),),
-              actions: [
-                TextButton(
-                  child: const Text('OK', ),
-                  onPressed: () => Navigator.pop(context),
-                )
-              ],
-            );
-          }
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: const Text('Add a text',style: TextStyle(fontSize: 20),),
+                actions: [
+                  TextButton(
+                    child: const Text('OK', ),
+                    onPressed: () => Navigator.pop(context),
+                  )
+                ],
+              );
+            }
         );
       }
     });
@@ -300,18 +300,17 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-    value: selectedItem,
-    items: MBTIList.map<
-        DropdownMenuItem<String>>((String i) {
-      return DropdownMenuItem<String>(
-        value: i,
-        child: Text(i),
-      );
-    }).toList(),
-    onChanged: (String? newValue){setState((){
-      selectedItem = newValue!;
-    });
-    });
+        value: selectedItem,
+        items: MBTIList.map<
+            DropdownMenuItem<String>>((String i) {
+          return DropdownMenuItem<String>(
+            value: i,
+            child: Text(i),
+          );
+        }).toList(),
+        onChanged: (String? newValue){setState((){
+          selectedItem = newValue!;
+        });
+        });
   }
 }
-

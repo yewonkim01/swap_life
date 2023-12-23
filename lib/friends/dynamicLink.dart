@@ -1,61 +1,58 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:swap_life/shared/todo_controller.dart';
-import 'friendDocument.dart';
+import 'AddFriend.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
 
-class DynamicLink{
+class DynamicLink {
   late TodoController controller;
   late BuildContext context;
+  bool isDynamicLinkListenerInitialized = false;
 
-  DynamicLink(TodoController controller, BuildContext context){
+  DynamicLink(TodoController controller, BuildContext context) {
     this.controller = controller;
     this.context = context;
+    initDynamicLink(context);
   }
 
-  Future<Uri> buildDynamicLink(String friendid) async{
+  Future<Uri> buildDynamicLink(String friendid) async {
     final dynamicLinkParams = DynamicLinkParameters(
-        link: Uri.parse('https://swapllife.page.link/friends?friendid=${friendid}'),
+        link: Uri.parse(
+            'https://swapllife.page.link/friends?friendid=${friendid}'),
         uriPrefix: 'https://swapllife.page.link',
-        androidParameters: AndroidParameters(packageName: "com.example.swap_life")
+        androidParameters: AndroidParameters(
+            packageName: "com.example.swap_life")
     );
 
 
-    Uri dynamicLink = await FirebaseDynamicLinks.instance.buildLink(dynamicLinkParams);
+    Uri dynamicLink = await FirebaseDynamicLinks.instance.buildLink(
+        dynamicLinkParams);
     return dynamicLink;
   }
 
-  Future<Uri?> initDynamicLink(context) async{
+  Future<Uri?> initDynamicLink(context) async {
     Uri? deepLink;
-    final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
-    if (initialLink != null){
+    final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks
+        .instance.getInitialLink();
+    if (initialLink != null) {
       deepLink = initialLink.link;
       //Navigator.push(context, MaterialPageRoute(builder: (context) => FriendPage(controller: controller)));
     }
     //다이나믹 링크로 앱이 열릴 때 리스너
     FirebaseDynamicLinks.instance.onLink.listen(
-        (PendingDynamicLinkData? Dynamiclink) async {
-          //앱이 다이나믹 링크로 열렸을 때의 처리
+            (PendingDynamicLinkData? Dynamiclink) async {
           if (Dynamiclink != null) {
             deepLink = Dynamiclink.link;
-            //Navigator.pushNamed(context, '/friendScreen');
-            print('다이나믹 링크로 열림');
+            //print('다이나믹 링크로 열림');
             String? friendid = deepLink!.queryParameters['friendid'];
             kakao.User? user = await kakao.UserApi.instance.me();
-            print('다이나믹 링크로 열린 후, userid ${friendid}');
-            // final nickname = user.kakaoAccount!.profile!.nickname;
-            // print('얘가 nickname: ${nickname}');
-
-            //FriendListManager().createFriendList(friendid!, user.id.toString());
-            FriendListManager().addFriendList(context, friendid!, user.id.toString());
-            //print('이게 context ${context}');
-            //Navigator.of(context).pushNamed('/friendScreen');
-            //print('navigate 완료');
+            //print('다이나믹 링크로 열린 후, userid ${friendid}');
+            print('===================');
+            FriendListManager().addFriendList(
+                context, friendid!, user.id.toString());
           }
         });
-
   }
-
 }
 
