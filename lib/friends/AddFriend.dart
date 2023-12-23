@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
+import 'AddAlarm.dart';
 
 
 
@@ -40,7 +40,7 @@ class FriendListManager {
             "FriendID": [friendid]
           }
       );
-      addAlarm('userid', db, userid, friendid);
+      addAlarm(me: 'userid', db: db, userid: userid, friendid: friendid, alarm_index: 0);
     } else {
 
       Map<String, dynamic>? friendsdata = friends.data() as Map<String, dynamic>?;
@@ -54,7 +54,7 @@ class FriendListManager {
         await Ref.set({
           "FriendID": userid_friends
         }).then((value) {
-          addAlarm('userid', db, userid, friendid);
+          addAlarm(me: 'userid', db: db, userid: userid, friendid: friendid, alarm_index: 0);
         });}}
 
     if (me.data() == null) {
@@ -63,7 +63,7 @@ class FriendListManager {
             "FriendID": [userid]
           }
       );
-      addAlarm('friendid', db, userid, friendid);
+      addAlarm(me: 'friendid', db: db, userid: userid, friendid: friendid, alarm_index: 0);
     } else {
       Map<String, dynamic>? mydata = me.data() as Map<String, dynamic>?;
       List<dynamic> friends_userid = mydata!['FriendID'];
@@ -71,39 +71,9 @@ class FriendListManager {
       await friendRef.set({
         "FriendID": friends_userid
       }).then((value) {
-        addAlarm('friendid', db, userid, friendid);
+        addAlarm(me: 'friendid', db: db, userid: userid, friendid: friendid, alarm_index: 0);
       });
     }
   }
 }
 
-Future<void> addAlarm(String me, FirebaseFirestore db, String userid, String friendid) async{
-  DocumentReference AlarmRef;
-  DocumentSnapshot Alarm_db;
-
-  DocumentReference user_AlarmRef = db.collection('Alarm').doc(userid);
-  DocumentSnapshot user_Alarm_db = await user_AlarmRef.get();
-
-  DocumentReference friend_AlarmRef = db.collection('Alarm').doc(friendid);
-  DocumentSnapshot friend_Alarm_db = await friend_AlarmRef.get();
-
-  DateTime now = DateTime.now();
-
-  AlarmRef = (me == 'userid') ? user_AlarmRef : friend_AlarmRef;
-  Alarm_db = (me == 'userid') ? user_Alarm_db : friend_Alarm_db;
-  var add_id = (me == 'userid') ? friendid : userid;
-
-  if (Alarm_db.data() == null) {
-    await AlarmRef.set({
-      "userID": [add_id],
-      "timestamp": now});
-  }else{
-    Map<String, dynamic>? Alarmdata = Alarm_db.data() as Map<String, dynamic>?;
-    var alarm_data = Alarmdata!['userID'];
-    alarm_data.add(add_id);
-    await user_AlarmRef.set({
-      "userID": alarm_data,
-      "timestamp": now,
-    });
-  }
-}

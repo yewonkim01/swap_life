@@ -3,10 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swap_life/friends/deleteFriendDialog.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/Body/friendBody.dart';
+import 'AddAlarm.dart';
+
 
 class FriendProfile extends StatefulWidget {
   late String? imageUrl;
   late String? NickName;
+
   late String? MBTI;
   late String? intro; //한줄소개
   late String? userid;
@@ -39,6 +42,7 @@ class FriendProfile extends StatefulWidget {
   _FriendProfile createState() => _FriendProfile();
 }
 class _FriendProfile extends State<FriendProfile> {
+  final db = FirebaseFirestore.instance;
   List<String>? friendChecklist;
   int? exist;
 
@@ -94,10 +98,10 @@ class _FriendProfile extends State<FriendProfile> {
                 ),
               ],
             ),
-            SizedBox(height: 50,),
+            Spacer(),
             // 친구 checklist끌어오기..
             Text("< ${widget.NickName}'s List >", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-            SizedBox(height: 5),
+            Spacer(),
             Container(
               padding: EdgeInsets.all(20),
               child: SingleChildScrollView(
@@ -106,7 +110,7 @@ class _FriendProfile extends State<FriendProfile> {
                 ),
               ),
             ),
-            SizedBox(height: 100),
+            Spacer(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 23.0),
               child: ElevatedButton(
@@ -121,7 +125,8 @@ class _FriendProfile extends State<FriendProfile> {
                         content: Text("${widget.NickName}'s checklist가 4항목 이하입니다. 계속 진행하시겠습니까? (정확한 MBTI 진단 불가)"),
                         actions: [
                           TextButton(
-                            onPressed: () {
+                            onPressed: () async{
+                              await addAlarm(me: 'friendid', db: db, userid: widget.userid!, friendid: widget.friendid!, alarm_index: 1);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -141,7 +146,9 @@ class _FriendProfile extends State<FriendProfile> {
                             },
                             child: Text("NO", style: TextStyle(fontWeight: FontWeight.bold),),
                           ),],);});
-                  }else { //친구의 List 개수가 4개 이상이면 정상적으로 push진행
+                  }else {
+                    //친구의 List 개수가 4개 이상이면 정상적으로 push진행
+                    await addAlarm(me: 'friendid', db: db, userid: widget.userid!, friendid: widget.friendid!, alarm_index: 1);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -170,7 +177,7 @@ class _FriendProfile extends State<FriendProfile> {
                 ),
               ),
             ),
-            SizedBox(height: 15,),
+            Spacer(),
             TextButton(
               onPressed: () async{
                 DeleteFriendDialog(context, widget.doc!, widget.frienddoc!, widget.friendlist!, widget.friendid!, widget.myfriendlist!, widget.userid!);
@@ -220,3 +227,5 @@ class _FriendProfile extends State<FriendProfile> {
     return lists;
   }
 }
+
+

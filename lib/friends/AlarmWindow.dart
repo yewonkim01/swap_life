@@ -5,13 +5,13 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
 
 
-class AlertFriendDialog extends StatelessWidget {
+class AlertFriend extends StatelessWidget {
   String? userid;
   kakao.User? user;
   final db = FirebaseFirestore.instance;
 
 
-  AlertFriendDialog({this.userid});
+  AlertFriend({this.userid});
 
   Future<List<Widget>> addAlarm() async {
     user = await kakao.UserApi.instance.me();
@@ -19,17 +19,18 @@ class AlertFriendDialog extends StatelessWidget {
     List<Widget> alarm_ListTileitem = [];
 
 
-
     DocumentReference Ref = await db.collection('Alarm').doc(userid);
     DocumentSnapshot Alarm_db = await Ref.get();
-    Map<String, dynamic>? Alarm = Alarm_db.data() as Map<String, dynamic>?;
+    Map<String, dynamic> Alarm = Alarm_db.data() as Map<String, dynamic>;
+    var AlarmList = Alarm!['info'];
 
-    List AlarmList = Alarm!['userID'];
-    String timestamp = Alarm!['timestamp'].toDate().toString();
     for(int i = 0; i<AlarmList.length; i++){
-      String alarmid = AlarmList[i];
+      Map alarm_item = AlarmList[i];
+      String timestamp = alarm_item['timestamp'].toDate().toString();
+      int alarm_info = alarm_item['alarm_info'];
+      print('${alarm_item}, ${timestamp}. ${alarm_info}');
       DocumentSnapshot alarmdata = await db.collection('MyProfile')
-          .doc(alarmid)
+          .doc(alarm_item['userID'])
           .get();
       Map<String, dynamic>? alarmid_info = alarmdata.data() as Map<String, dynamic>?;
       var ImageUrl = alarmid_info!['ImageUrl'];
@@ -48,10 +49,12 @@ class AlertFriendDialog extends StatelessWidget {
               backgroundImage: NetworkImage(ImageUrl!),
             ),
             title: Row(
-              children: [
-                Text('${friendName}', style: TextStyle(fontWeight: FontWeight.bold),),
-                Text('님이 나를 친구로 추가했습니다.')
-              ],
+              children: alarm_info == 0?
+              [Text('${friendName}', style: TextStyle(fontWeight: FontWeight.bold),),
+                Text('님이 나를 친구로 추가했습니다.')]
+                  :
+              [Text('${friendName}', style: TextStyle(fontWeight: FontWeight.bold),),
+                Text('님이 나의 일상을 담았습니다.')],
             ),
             subtitle: Text('${timestamp.substring(0,10)}'),
           ), SizedBox()]));
@@ -76,7 +79,7 @@ class AlertFriendDialog extends StatelessWidget {
         future: addAlarm(),
         builder: (context, snapshot){
           if (snapshot.connectionState == ConnectionState.waiting){
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }else if(snapshot.data == null){
             return Container();
           } else{

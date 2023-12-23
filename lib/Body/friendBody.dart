@@ -66,7 +66,7 @@ class _FriendMainState extends State<FriendMain> with SingleTickerProviderStateM
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/alert_dialog');
+            Navigator.pushNamed(context, '/alertPage');
           },
           icon: Icon(Icons.add_alert, color: Colors.black,),
         ),

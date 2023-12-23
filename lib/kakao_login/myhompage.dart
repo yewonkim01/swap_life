@@ -28,12 +28,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Spacer(flex: 2),
+                    Spacer(),
                     Container(
                       //decoration: BoxDecoration(border: Border.all()),
                       child: Image.asset("assets/swap_life_nukki.png", scale: 3),
                     ),
-                    Spacer(flex: 2),
+                    Spacer(),
                     InkWell(
                       onTap: () async {
                         await viewModel.login();
@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Image.asset('assets/kakao_login_pic.png'),
                     ),
                   ),
-                    Spacer(flex: 1),
+                    Spacer(),
                     Container(
                         child: Text("선녕원"),
                     ),
