@@ -34,25 +34,12 @@ class FriendPageState extends State<FriendPage> {
     return Scaffold(
       body: Column(
         children: [
-          if(todoList.length!=0)
+          if(todoList.length!=0) //get한 친구의 리스트가 있을 때
           Text("<${widget.friendName} checkList>",
               style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
           if(todoList.length!=0)
           Text("친구의 일상을 경험하고, 완료사항을 체크해보세요"),
           SizedBox(height: 25,),
-          if(todoList.length==0)
-            SizedBox(
-              height: 450,
-              child: Center(
-                child: Text(
-                  "Friend's List",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ),
-            ),
           if(todoList.length!=0)
           Expanded(
             child: ListView.builder(
@@ -125,6 +112,17 @@ class FriendPageState extends State<FriendPage> {
           ),
           if(todoList.length!=0)
             SizedBox(height: 50,),
+          if(todoList.length==0) //get한 친구의 리스트가 없을 때
+            Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: 145,),
+                    Text("Friend's List", style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic,),),
+                    SizedBox(height: 10,),
+                    Text("친구의 CheckList를 가져와 일상을 경험해보세요",style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic,))
+                  ],
+                ),
+              ),
         ],
       ),
     );
