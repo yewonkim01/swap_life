@@ -61,25 +61,23 @@ class getList {
 
   Future<void> savemyChecklist() async {
     user = await kakao.UserApi.instance.me();
-    DocumentReference Ref = profile.collection('checklist').doc(
-        user!.id.toString())
-        .collection('mychecklist').doc('allchecklist');
+    DocumentReference Ref = profile.collection('checklist')
+        .doc(user!.id.toString())
+        .collection('mychecklist')
+        .doc('allchecklist');
     DocumentSnapshot me = await Ref.get();
 
-    if (me.data() == null) {
-      await Ref.set(
-          {
-            "checklist_mbti": [resultMBTI]
-          }
-      );
+    if (me.exists) {
+      await Ref.update({
+        "checklist_mbti": FieldValue.arrayUnion([resultMBTI])
+      });
     } else {
-      await Ref.update(
-          {
-            "checklist_mbti": [resultMBTI]
-          }
-      );
+      await Ref.set({
+        "checklist_mbti": [resultMBTI]
+      });
     }
   }
+
     processList() async {
       for (int i = 0; i < MBTIList.length; i++) {
         switch (MBTIList[i]) {
@@ -116,21 +114,21 @@ class getList {
             J_num++;
             break;
         }
-        E = (E_num != 0) ? (E / E_num).toDouble() : 0;
-        I = (I_num != 0) ? (I / I_num).toDouble() : 0;
-        N = (N_num != 0) ? (N / N_num).toDouble() : 0;
-        S = (S_num != 0) ? (S / S_num).toDouble() : 0;
-        F = (F_num != 0) ? (F / F_num).toDouble() : 0;
-        T = (T_num != 0) ? (T / T_num).toDouble() : 0;
-        P = (P_num != 0) ? (P / P_num).toDouble() : 0;
-        J = (J_num != 0) ? (J / J_num).toDouble() : 0;
-        print("E: $E, I: $I , N: $N, S:$S, F:$F , T:$T, P:$P , J:$J");
       }
+      print("E: $E, I: $I , N: $N, S:$S, F:$F , T:$T, P:$P , J:$J");
+      E = (E_num != 0) ? (E / E_num).toDouble() : 0;
+      I = (I_num != 0) ? (I / I_num).toDouble() : 0;
+      N = (N_num != 0) ? (N / N_num).toDouble() : 0;
+      S = (S_num != 0) ? (S / S_num).toDouble() : 0;
+      F = (F_num != 0) ? (F / F_num).toDouble() : 0;
+      T = (T_num != 0) ? (T / T_num).toDouble() : 0;
+      P = (P_num != 0) ? (P / P_num).toDouble() : 0;
+      J = (J_num != 0) ? (J / J_num).toDouble() : 0;
     }
 
     finalMBTI() async {
       MBTI = [];
-      if (E > I) {
+      if (E >= I) {
         if (E > 75) {
           MBTI.add('E');
         }
@@ -140,19 +138,19 @@ class getList {
       if (I > E) {
         I > 75 ? MBTI.add('I') : MBTI.add('i');
       }
-      if (S > N) {
+      if (S >= N) {
         S > 75 ? MBTI.add('S') : MBTI.add('s');
       }
       if (N > S) {
         N > 75 ? MBTI.add('N') : MBTI.add('n');
       }
-      if (F > T) {
+      if (F >= T) {
         F > 75 ? MBTI.add('F') : MBTI.add('f');
       }
       if (T > F) {
         T > 75 ? MBTI.add('T') : MBTI.add('t');
       }
-      if (P > J) {
+      if (P >= J) {
         P > 75 ? MBTI.add('P') : MBTI.add('p');
       }
       if (J > P) {
