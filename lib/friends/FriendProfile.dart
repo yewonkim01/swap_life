@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swap_life/friends/deleteFriendDialog.dart';
-import 'package:swap_life/FriendScreen.dart';
 import 'package:swap_life/shared/todo_controller.dart';
+import 'package:swap_life/Body/friendBody.dart';
+import 'package:swap_life/FriendScreen.dart';
+
 
 class FriendProfile extends StatefulWidget {
   late String? imageUrl;
@@ -17,6 +19,7 @@ class FriendProfile extends StatefulWidget {
   late List? myfriendlist;
   late List<String>? friendChecklist;
   final TodoController controller;
+  final int? exist;
 
   FriendProfile({
     Key? key,
@@ -30,7 +33,8 @@ class FriendProfile extends StatefulWidget {
     this.NickName,
     this.MBTI,
     this.intro,
-    required this.controller
+    required this.controller,
+    this.exist,
   }) : super(key: key);
 
   @override
@@ -38,13 +42,15 @@ class FriendProfile extends StatefulWidget {
 }
 class _FriendProfile extends State<FriendProfile> {
   List<String>? friendChecklist;
-  List<String>? MBTI;
+  int? exist;
 
   @override
   void initState() {
     super.initState();
+    exist = widget.exist;
     updatefriend();
   }
+
   void updatefriend() async{
     friendChecklist = await getFriendChecklist(widget.friendid!);
     setState(() {});
@@ -82,6 +88,7 @@ class _FriendProfile extends State<FriendProfile> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 20,),
             Row(
               children: [
                 SizedBox(width: 30,),
@@ -107,43 +114,49 @@ class _FriendProfile extends State<FriendProfile> {
                 ),
               ],
             ),
-            SizedBox(height: 70,),
+            SizedBox(height: 50,),
             // 친구 checklist끌어오기..
             Text("< ${widget.NickName}'s List >", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-            SizedBox(height: 20),
-            Column(
-              children: showList(),
+            SizedBox(height: 5),
+            Container(
+              padding: EdgeInsets.all(30),
+              child: Column(
+                children: showList(),
+              ),
             ),
-            SizedBox(height: 270,),
-            ElevatedButton(
-              onPressed: () async {
-                friendChecklist = await getFriendChecklist(widget.friendid!);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FriendPage(
-                      friendid: widget.friendid!,
-                      controller : widget.controller,
-                      friendChecklist: friendChecklist,
-                      friendName: widget.NickName,
+            SizedBox(height: 200),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 23.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  //버튼 누르면 새로운 Main 페이지로 이동
+                  friendChecklist = await getFriendChecklist(widget.friendid!);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FriendMain(
+                        controller: widget.controller,
+                        friendChecklist: friendChecklist!,
+                        friendName: widget.NickName!,
+                      ),
                     ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 23.0), // 좌우 여백 조절
+                  child: Row(
+                    children: [
+                      Icon(Icons.mail_outline_outlined, size: 50),
+                      SizedBox(width: 15),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Get Checklist', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                          Text('친구 리스트 가져오기'),
+                        ],
+                      ),
+                    ],
                   ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 23.0), // 좌우 여백 조절
-                child: Row(
-                  children: [
-                    Icon(Icons.mail_outline_outlined, size: 50),
-                    SizedBox(width: 30),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Get Checklist', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                        Text('친구 리스트 가져오기'),
-                      ],
-                    ),
-                  ],
                 ),
               ),
             ),
@@ -162,8 +175,9 @@ class _FriendProfile extends State<FriendProfile> {
 
   List<Widget> showList() {
     if (friendChecklist == null) {
-      return [];
+      return []; // friendChecklist이 null인 경우 처리
     }
+
     List<Widget> lists = [];
     for (int i = 0; i < friendChecklist!.length; i++) {
       lists.add(Row(

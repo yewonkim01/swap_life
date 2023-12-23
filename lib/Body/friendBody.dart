@@ -7,8 +7,7 @@ class friendBody extends StatefulWidget {
   final TodoController controller;
   final List<String> friendChecklist;
   final String? friendName;
-  final String? friendId;
-  friendBody({super.key, required this.controller, required this.friendChecklist,required this.friendName, this.friendId});
+  friendBody({super.key, required this.controller, required this.friendChecklist,required this.friendName});
 
   @override
   friendBodyState createState() => friendBodyState();
@@ -41,8 +40,6 @@ class friendBodyState extends State<friendBody> {
                   ),
                 )
                     : FriendPage(
-                  friendid: widget.friendId!,
-                  controller : widget.controller,
                   friendChecklist: widget.friendChecklist,
                     friendName: widget.friendName
                 ),

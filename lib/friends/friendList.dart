@@ -73,7 +73,7 @@ class _FriendListState extends State<FriendList> {
               //꾹 누르면 친구 삭제
               onLongPress: (){DeleteFriendDialog(context, doc, frienddoc, friendlist, friendid, myfriendlist, userid);},
               //탭하면 친구 프로필창 나옴
-              onTap: (){
+              onTap: ()  {
                 Navigator.push(context,
                   MaterialPageRoute(builder: (context) => FriendProfile(userid: userid, friendid: friendid, doc: doc, frienddoc: frienddoc, friendlist: friendlist, myfriendlist: myfriendlist, imageUrl: ImageUrl, NickName: NickName, MBTI: MBTI, intro: intro,controller: widget.controller,),
                 ),
