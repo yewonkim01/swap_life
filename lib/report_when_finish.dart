@@ -18,38 +18,6 @@ class calc_mbti extends StatefulWidget{
 }
 
 class _calc_mbit extends State<calc_mbti>{
-  // kakao.User? user;
-  // final profile = FirebaseFirestore.instance;
-  // List<String> mbti = [];
-  // List<int> intMBTI = [];
-  //
-  // Future<void> getProfile() async {
-  //   user = await kakao.UserApi.instance.me();
-  //
-  //   if (user != null) {
-  //     DocumentSnapshot getprof = await profile
-  //         .collection('checklist')
-  //         .doc(user!.id.toString())
-  //         .collection('friends')
-  //         .doc('${widget.friendid}')
-  //         .get();
-  //
-  //     var data = getprof.data() as Map<String, dynamic>;
-  //
-  //     if (data != null) {
-  //       if (data.containsKey('mbti')) {
-  //         var mbtiList = data['mbti'] as List<dynamic>;
-  //         mbti = mbtiList.map((dynamic item) => item.toString()).toList();
-  //       }
-  //
-  //       if (data.containsKey('intMBIT')) {
-  //         var intMBITList = data['intMBIT'] as List<dynamic>;
-  //         intMBTI =
-  //             intMBITList.map((dynamic item) => int.parse(item.toString())).toList();
-  //       }
-  //     }
-  //   }
-  // }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,6 +39,8 @@ class SliderWidget extends StatefulWidget{
 }
 
 class _SliderWidgetState extends State<SliderWidget>{
+  Future<void>? dataLoading;
+
   double Evalue = 0;
   double Ivalue =0;
   double Nvalue = 0;
@@ -79,53 +49,59 @@ class _SliderWidgetState extends State<SliderWidget>{
   double Tvalue = 0;
   double Jvalue = 0;
   double Pvalue = 0;
-  String MBTI = "";
+  String? MBTI = "";
 
-  @override
-  void initState() {
-    super.initState();
-    getAll();
-  }
-
-  void getAll() async {
+  Future<void> getAll() async {
     getList mbtiCalculator = getList(friendid: widget.friendid);
     await mbtiCalculator.getProfile();
     await mbtiCalculator.processList();
     await mbtiCalculator.finalMBTI();
-
-    Evalue = mbtiCalculator.E / 100;
-    Ivalue = mbtiCalculator.I / 100;
-    Nvalue = mbtiCalculator.N / 100;
-    Svalue = mbtiCalculator.S / 100;
-    Fvalue = mbtiCalculator.F / 100;
-    Tvalue = mbtiCalculator.T / 100;
-    Jvalue = mbtiCalculator.J / 100;
-    Pvalue = mbtiCalculator.P / 100;
     MBTI = await mbtiCalculator.getMBTI();
+
+    setState(() {
+      Evalue = mbtiCalculator.E / 100;
+      Ivalue = mbtiCalculator.I / 100;
+      Nvalue = mbtiCalculator.N / 100;
+      Svalue = mbtiCalculator.S / 100;
+      Fvalue = mbtiCalculator.F / 100;
+      Tvalue = mbtiCalculator.T / 100;
+      Jvalue = mbtiCalculator.J / 100;
+      Pvalue = mbtiCalculator.P / 100;
+      MBTI = MBTI;
+    });
+  }
+  @override
+  void initState() {
+    super.initState();
+    dataLoading = getAll();
   }
 
-
   Widget build(BuildContext context) {
-    getAll();
+
+  return FutureBuilder(
+  future: dataLoading,
+  builder: (context, snapshot) {
+  if (snapshot.connectionState == ConnectionState.done) {
+    print("mbti : $MBTI");
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 30),
-            const Text('I',style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              color: Colors.deepPurple
+            const Text('I', style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple
             ),),
             Container(
-            width: 300,
+              width: 300,
               child: Slider(
-                value: Evalue == 0? 1-Ivalue : Evalue,
+                value: Evalue == 0 ? 1 - Ivalue : Evalue,
                 onChanged: null,
               ),
             ),
-            Text('E',style : TextStyle(
+            Text('E', style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
               color: Colors.deepPurple,
@@ -138,7 +114,7 @@ class _SliderWidgetState extends State<SliderWidget>{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 30),
-            const Text('S',style: TextStyle(
+            const Text('S', style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
                 color: Colors.deepPurple
@@ -146,11 +122,11 @@ class _SliderWidgetState extends State<SliderWidget>{
             Container(
               width: 300,
               child: Slider(
-                value: Nvalue == 0? 1-Svalue : Nvalue,
+                value: Nvalue == 0 ? 1 - Svalue : Nvalue,
                 onChanged: null,
               ),
             ),
-            Text('N',style : TextStyle(
+            Text('N', style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
               color: Colors.deepPurple,
@@ -163,7 +139,7 @@ class _SliderWidgetState extends State<SliderWidget>{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 30),
-            const Text('T',style: TextStyle(
+            const Text('T', style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
                 color: Colors.deepPurple
@@ -171,11 +147,11 @@ class _SliderWidgetState extends State<SliderWidget>{
             Container(
               width: 300,
               child: Slider(
-                value: Fvalue == 0? 1-Tvalue : Fvalue,
+                value: Fvalue == 0 ? 1 - Tvalue : Fvalue,
                 onChanged: null,
               ),
             ),
-            Text('F',style : TextStyle(
+            Text('F', style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
               color: Colors.deepPurple,
@@ -188,7 +164,7 @@ class _SliderWidgetState extends State<SliderWidget>{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 30),
-            const Text('P',style: TextStyle(
+            const Text('P', style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
                 color: Colors.deepPurple
@@ -196,11 +172,11 @@ class _SliderWidgetState extends State<SliderWidget>{
             Container(
               width: 300,
               child: Slider(
-                value: Jvalue == 0? 1-Pvalue : Jvalue,
+                value: Jvalue == 0 ? 1 - Pvalue : Jvalue,
                 onChanged: null,
               ),
             ),
-            Text('J',style : TextStyle(
+            Text('J', style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
               color: Colors.deepPurple,
@@ -208,12 +184,18 @@ class _SliderWidgetState extends State<SliderWidget>{
 
           ],
         ),
-        Text(MBTI,
-        style: TextStyle(
-          color:Colors.deepPurple,
-          fontSize: 40,
-        ),),
+        Text(MBTI!,
+          style: TextStyle(
+            color: Colors.deepPurple,
+            fontSize: 40,
+          ),
+        ),
       ],
     );
+  }
+  else{
+    return CircularProgressIndicator();}
+    },
+  );
   }
 }

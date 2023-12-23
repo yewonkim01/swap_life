@@ -1,9 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 import 'package:swap_life/report_when_finish.dart';
-import 'report_when_finish.dart';
 
 class Mbti_report extends StatefulWidget {
   final String friendid;
@@ -17,38 +14,6 @@ class Mbti_report extends StatefulWidget {
 }
 
 class _Mbti_report extends State<Mbti_report> {
-  //kakao.User? user;
-  //final profile = FirebaseFirestore.instance;
-  // List<String> mbti = [];
-  // List<int> intMBTI = [];
-  //
-  // Future<void> getProfile() async {
-  //   user = await kakao.UserApi.instance.me();
-  //
-  //   if (user != null) {
-  //     DocumentSnapshot getprof = await profile
-  //         .collection('checklist')
-  //         .doc(user!.id.toString())
-  //         .collection('friends')
-  //         .doc('${widget.friendid}')
-  //         .get();
-  //
-  //     var data = getprof.data() as Map<String, dynamic>;
-  //
-  //     if (data != null) {
-  //       if (data.containsKey('mbti')) {
-  //         var mbtiList = data['mbti'] as List<dynamic>;
-  //         mbti = mbtiList.map((dynamic item) => item.toString()).toList();
-  //       }
-  //
-  //       if (data.containsKey('intMBIT')) {
-  //         var intMBITList = data['intMBIT'] as List<dynamic>;
-  //         intMBTI =
-  //             intMBITList.map((dynamic item) => int.parse(item.toString())).toList();
-  //       }
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

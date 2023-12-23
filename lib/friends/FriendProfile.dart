@@ -138,6 +138,7 @@ class _FriendProfile extends State<FriendProfile> {
                         controller: widget.controller,
                         friendChecklist: friendChecklist!,
                         friendName: widget.NickName!,
+                        friendid: widget.friendid!,
                       ),
                     ),
                   );
@@ -164,7 +165,7 @@ class _FriendProfile extends State<FriendProfile> {
             TextButton(
               onPressed: () async{
                 DeleteFriendDialog(context, widget.doc!, widget.frienddoc!, widget.friendlist!, widget.friendid!, widget.myfriendlist!, widget.userid!);
-                },
+              },
               child: Text('delete friend', style: TextStyle(fontSize: 17,decoration: TextDecoration.underline),),
             ),
           ],

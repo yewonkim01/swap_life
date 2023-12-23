@@ -13,11 +13,11 @@ class getList {
   List<String> MBTIList = [];
   List<double> EmoticonList = [];
   List<String> MBTI = [];
+  String resultMBTI = "";
   double E = 0, I = 0, S = 0, N = 0, T = 0, F = 0, P = 0, J = 0;
   double E_num = 0, I_num = 0, S_num = 0, N_num = 0, T_num = 0, F_num = 0, P_num = 0, J_num = 0;
 
   Future<void> getProfile() async {
-    print("여기가 getProfile");
     user = await kakao.UserApi.instance.me();
     if (user != null) {
       DocumentSnapshot getprof = await profile
@@ -46,9 +46,6 @@ class getList {
   }
 
   processList() async {
-    print("여기가 process이고 현재 MBTI 와 EMOTICONLIST");
-    print(MBTIList);
-    print(EmoticonList);
     for (int i = 0; i < MBTIList.length; i++) {
       switch (MBTIList[i]) {
         case 'E':
@@ -97,7 +94,6 @@ class getList {
 
   finalMBTI() async {
     MBTI = [];
-    print("여기가 finalMBTI");
     if (E > I) {
       if(E > 75){
         MBTI.add('E');
@@ -109,7 +105,7 @@ class getList {
       I > 75 ? MBTI.add('I') : MBTI.add('i');
     }
     if (S > N) {
-      S > 75 ? MBTI.add('s') : MBTI.add('S');
+      S > 75 ? MBTI.add('S') : MBTI.add('s');
     }
     if (N > S) {
       N > 75 ? MBTI.add('N') : MBTI.add('n');
@@ -129,10 +125,9 @@ class getList {
   }
 
   getMBTI() async {
-    String result = MBTI.join();
-    print("여기가 getMBTI");
-    print(result);
-    return result;
+    resultMBTI = MBTI.join();
+    print(resultMBTI);
+    return resultMBTI;
   }
 }
 
