@@ -92,7 +92,7 @@ class FriendPageState extends State<FriendPage> {
                 saveAll();
                 Navigator.push(context,
                     MaterialPageRoute(builder:
-                        (context)=> Mbti_report(friendid: widget.friendid)));
+                        (context)=> Mbti_report(friendid: widget.friendid, friendName:widget.friendName! )));
               },
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 10.0),

@@ -7,9 +7,10 @@ import 'report_when_finish.dart';
 
 class Mbti_report extends StatefulWidget {
   final String friendid;
+  final String friendName;
 
   Mbti_report({
-    required this.friendid,
+    required this.friendid, required this.friendName
   });
 
   @override
@@ -40,12 +41,12 @@ class _Mbti_report extends State<Mbti_report> {
                   children: [
                     SizedBox(height: 30),
                     Text(
-                      "Finish friend's list",
+                      "${widget.friendName}'s list",
                       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                     Text(
-                      'Friends의 리스트를 완료했어요!',
+                      '${widget.friendName}의 리스트를 완료했어요!',
                       style: TextStyle(fontSize: 13),
                       textAlign: TextAlign.center,
                     ),
@@ -63,7 +64,7 @@ class _Mbti_report extends State<Mbti_report> {
                         onPressed:() {
                           Navigator.pushNamed(context, '/myHome');
                         },
-                        child: Text("나가기"),
+                        child: Text("EXIT"),
                     )
                   ],
                 ),
