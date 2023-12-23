@@ -1,22 +1,61 @@
 //김진영 작성
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:swap_life/calc_mbti.dart';
+import 'report.dart' as report;
 
 class calc_mbti extends StatefulWidget{
+  final String friendid;
+
+  calc_mbti({
+    required this.friendid
+});
+
   @override
   State<StatefulWidget> createState()=> _calc_mbit();
 }
 
 class _calc_mbit extends State<calc_mbti>{
-
+  // kakao.User? user;
+  // final profile = FirebaseFirestore.instance;
+  // List<String> mbti = [];
+  // List<int> intMBTI = [];
+  //
+  // Future<void> getProfile() async {
+  //   user = await kakao.UserApi.instance.me();
+  //
+  //   if (user != null) {
+  //     DocumentSnapshot getprof = await profile
+  //         .collection('checklist')
+  //         .doc(user!.id.toString())
+  //         .collection('friends')
+  //         .doc('${widget.friendid}')
+  //         .get();
+  //
+  //     var data = getprof.data() as Map<String, dynamic>;
+  //
+  //     if (data != null) {
+  //       if (data.containsKey('mbti')) {
+  //         var mbtiList = data['mbti'] as List<dynamic>;
+  //         mbti = mbtiList.map((dynamic item) => item.toString()).toList();
+  //       }
+  //
+  //       if (data.containsKey('intMBIT')) {
+  //         var intMBITList = data['intMBIT'] as List<dynamic>;
+  //         intMBTI =
+  //             intMBITList.map((dynamic item) => int.parse(item.toString())).toList();
+  //       }
+  //     }
+  //   }
+  // }
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
-          SliderWidget(),
+          SliderWidget(friendid: widget.friendid,),
         ],
       ),
     );
@@ -24,30 +63,49 @@ class _calc_mbit extends State<calc_mbti>{
 }
 
 class SliderWidget extends StatefulWidget{
+  final String friendid;
+  SliderWidget({
+    required this.friendid,
+});
   _SliderWidgetState createState() => _SliderWidgetState();
 }
 
 class _SliderWidgetState extends State<SliderWidget>{
   double Evalue = 0;
+  double Ivalue =0;
   double Nvalue = 0;
+  double Svalue = 0;
   double Fvalue = 0;
+  double Tvalue = 0;
   double Jvalue = 0;
-  String? MBTI = "";
+  double Pvalue = 0;
+  String MBTI = "";
 
-  void getAll(){
-    getList mbtiCalculator = getList();
-    mbtiCalculator.getProfile();
-    mbtiCalculator.processList();
-    mbtiCalculator.finalMBTI();
-    Evalue = mbtiCalculator.E;
-    Nvalue = mbtiCalculator.N;
-    Fvalue = mbtiCalculator.F;
-    Jvalue = mbtiCalculator.J;
-    MBTI = mbtiCalculator.getMBTI();
+  @override
+  void initState() {
+    super.initState();
+    getAll();
+  }
+
+  void getAll() async {
+    getList mbtiCalculator = getList(friendid: widget.friendid);
+    await mbtiCalculator.getProfile();
+    await mbtiCalculator.processList();
+    await mbtiCalculator.finalMBTI();
+
+    Evalue = mbtiCalculator.E / 100;
+    Ivalue = mbtiCalculator.I / 100;
+    Nvalue = mbtiCalculator.N / 100;
+    Svalue = mbtiCalculator.S / 100;
+    Fvalue = mbtiCalculator.F / 100;
+    Tvalue = mbtiCalculator.T / 100;
+    Jvalue = mbtiCalculator.J / 100;
+    Pvalue = mbtiCalculator.P / 100;
+    MBTI = await mbtiCalculator.getMBTI();
   }
 
 
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     getAll();
     return Column(
       children: [
@@ -63,7 +121,7 @@ class _SliderWidgetState extends State<SliderWidget>{
             Container(
             width: 300,
               child: Slider(
-                value: Evalue,
+                value: Evalue == 0? 1-Ivalue : Evalue,
                 onChanged: null,
               ),
             ),
@@ -88,7 +146,7 @@ class _SliderWidgetState extends State<SliderWidget>{
             Container(
               width: 300,
               child: Slider(
-                value: Nvalue,
+                value: Nvalue == 0? 1-Svalue : Nvalue,
                 onChanged: null,
               ),
             ),
@@ -113,7 +171,7 @@ class _SliderWidgetState extends State<SliderWidget>{
             Container(
               width: 300,
               child: Slider(
-                value: Fvalue,
+                value: Fvalue == 0? 1-Tvalue : Fvalue,
                 onChanged: null,
               ),
             ),
@@ -138,7 +196,7 @@ class _SliderWidgetState extends State<SliderWidget>{
             Container(
               width: 300,
               child: Slider(
-                value: Jvalue,
+                value: Jvalue == 0? 1-Pvalue : Jvalue,
                 onChanged: null,
               ),
             ),
@@ -147,9 +205,14 @@ class _SliderWidgetState extends State<SliderWidget>{
               fontWeight: FontWeight.bold,
               color: Colors.deepPurple,
             ),),
-            Text("$MBTI"),
+
           ],
         ),
+        Text(MBTI,
+        style: TextStyle(
+          color:Colors.deepPurple,
+          fontSize: 40,
+        ),),
       ],
     );
   }

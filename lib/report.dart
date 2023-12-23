@@ -3,22 +3,52 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 import 'package:swap_life/report_when_finish.dart';
+import 'report_when_finish.dart';
 
 class Mbti_report extends StatefulWidget {
+  final String friendid;
+
+  Mbti_report({
+    required this.friendid,
+  });
+
   @override
   State<Mbti_report> createState() => _Mbti_report();
 }
 
 class _Mbti_report extends State<Mbti_report> {
-  kakao.User? user;
-  final profile = FirebaseFirestore.instance;
-  String? MBTI;
-
-  Future<void> getProfile() async {
-    user = await kakao.UserApi.instance.me();
-    DocumentSnapshot getprof =
-    await profile.collection('MyProfile').doc(user!.id.toString()).get();
-  }
+  //kakao.User? user;
+  //final profile = FirebaseFirestore.instance;
+  // List<String> mbti = [];
+  // List<int> intMBTI = [];
+  //
+  // Future<void> getProfile() async {
+  //   user = await kakao.UserApi.instance.me();
+  //
+  //   if (user != null) {
+  //     DocumentSnapshot getprof = await profile
+  //         .collection('checklist')
+  //         .doc(user!.id.toString())
+  //         .collection('friends')
+  //         .doc('${widget.friendid}')
+  //         .get();
+  //
+  //     var data = getprof.data() as Map<String, dynamic>;
+  //
+  //     if (data != null) {
+  //       if (data.containsKey('mbti')) {
+  //         var mbtiList = data['mbti'] as List<dynamic>;
+  //         mbti = mbtiList.map((dynamic item) => item.toString()).toList();
+  //       }
+  //
+  //       if (data.containsKey('intMBIT')) {
+  //         var intMBITList = data['intMBIT'] as List<dynamic>;
+  //         intMBTI =
+  //             intMBITList.map((dynamic item) => int.parse(item.toString())).toList();
+  //       }
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +66,7 @@ class _Mbti_report extends State<Mbti_report> {
       body:
       Container(
         child: SingleChildScrollView(
-        child: FutureBuilder(
-          future: getProfile(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Center(
+              child :Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,18 +90,19 @@ class _Mbti_report extends State<Mbti_report> {
                         fontSize: 30,
                       ),
                     ),
-                    SliderWidget(),
+                    SliderWidget(friendid: widget.friendid),
+
+                    ElevatedButton(
+                        onPressed:() {
+                          Navigator.pushNamed(context, '/myHome');
+                        },
+                        child: Text("나가기."),
+                    )
                   ],
                 ),
-              );
-            } else {
-              // Show a loading indicator while waiting for data
-              return Center(child: CircularProgressIndicator());
-            }
-          },
+              ),
         ),
         ),
-      ),
     );
   }
 }

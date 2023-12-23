@@ -11,7 +11,7 @@ List<TodoItem> todoList = [];
 
 //Todo list에 들어갈 항목,mbti,완료상태
 class TodoItem {
-  String title;
+  final String title;
   bool isCompleted; //기본값 false -> 항목을 완료하지 않음
   String mbti;
   TodoItem({required this.title, required this.mbti, this.isCompleted = false});

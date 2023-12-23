@@ -4,6 +4,8 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:swap_life/friends/AlertFriendDialog.dart';
 import 'package:swap_life/kakao_login/firebase_options.dart';
 import 'package:swap_life/kakao_login/myhompage.dart';
+import 'package:swap_life/report.dart';
+import 'package:swap_life/report_when_finish.dart';
 import 'dart:core';
 import 'MyProfile.dart';
 import 'TodoScreen.dart';
@@ -11,11 +13,8 @@ import 'firestore/service.dart';
 import 'shared/shared.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/friends/dynamicLink.dart';
-import 'package:swap_life/FriendScreen.dart';
 import 'package:swap_life/Body/friendBody.dart';
-import 'package:swap_life/Body/homeBody.dart';
-import 'package:swap_life/friends/FriendProfile.dart';
-import 'friends/AlertFriendDialog.dart';
+
 
 void main() async{
   var services = HttpServices();
@@ -50,6 +49,8 @@ class MyApp extends StatelessWidget {
         '/todoScreen': (context) => TodoScreen(controller: controller),
         '/alert_dialog': (context) => AlertFriendDialog(),
         //'/friendScreen': (context) => FriendPage(friendChecklist: friendChecklist),
+
+
       },
       debugShowCheckedModeBanner: false,
     );

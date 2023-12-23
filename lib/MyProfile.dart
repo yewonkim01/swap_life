@@ -240,10 +240,8 @@ class _MyProfileState extends State<MyProfile> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.deepPurple[50],
         ),
-      onPressed: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Mbti_report()),
-      ),
+      onPressed: () {},
+
       child: Row(
         children: [
           Icon(Icons.favorite,color: Colors.deepPurple,),

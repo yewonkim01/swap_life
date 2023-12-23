@@ -1,37 +1,54 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
-
 class getList {
+  final String friendid;
+
+  getList({
+    required this.friendid
+  });
+
   kakao.User? user;
   final profile = FirebaseFirestore.instance;
-  List MBTI = [];
   List<String> MBTIList = [];
-  List<int> EmoticonList = [];
-  double E=0,I=0,F=0,T=0,S=0,N=0,P=0,J=0;
-  int E_num=0 ,I_num=0, F_num=0,T_num=0 ,S_num=0, N_num=0,P_num=0 ,J_num=0;
+  List<double> EmoticonList = [];
+  List<String> MBTI = [];
+  double E = 0, I = 0, S = 0, N = 0, T = 0, F = 0, P = 0, J = 0;
+  double E_num = 0, I_num = 0, S_num = 0, N_num = 0, T_num = 0, F_num = 0, P_num = 0, J_num = 0;
 
   Future<void> getProfile() async {
+    print("여기가 getProfile");
     user = await kakao.UserApi.instance.me();
-    DocumentSnapshot getprof =
-    await profile.collection('checklist').doc(user!.id.toString()).get();
+    if (user != null) {
+      DocumentSnapshot getprof = await profile
+          .collection('checklist')
+          .doc(user!.id.toString())
+          .collection('friends')
+          .doc(friendid)
+          .get();
 
-    //여기다가 친구의 체크리스트 추가 하면 댐.
-    List<Map<String, dynamic>>? userChecklistList =
-    List<Map<String, dynamic>>.from(getprof['user_checklist']);
-    if (userChecklistList != null) {
-      for (var userChecklist in userChecklistList) {
-        if (userChecklist['MBTI'] != null && userChecklist['emoticon'] != null) {
-          MBTIList.add(userChecklist['MBTI']);
-          if (userChecklist['emoticon'] is List<int>) {
-            EmoticonList.add(List<int>.from(userChecklist['emoticon']) as int);
+      var data = getprof.data() as Map<String, dynamic>;
+      for (int i = 0; i < data.length; i++) {
+        var itemKey = 'item_$i';
+        if (data.containsKey(itemKey)) {
+          var itemData = data[itemKey] as Map<String, dynamic>;
+          if (itemData.containsKey('MBTI')) {
+            var mbtiValue = itemData['MBTI'] as String;
+            MBTIList.add(mbtiValue);
+          }
+          if (itemData.containsKey('intMBTI')) {
+            var intMBITValue = itemData['intMBTI'] as int;
+            EmoticonList.add(intMBITValue.toDouble());
           }
         }
       }
     }
   }
 
-  void processList() {
+  processList() async {
+    print("여기가 process이고 현재 MBTI 와 EMOTICONLIST");
+    print(MBTIList);
+    print(EmoticonList);
     for (int i = 0; i < MBTIList.length; i++) {
       switch (MBTIList[i]) {
         case 'E':
@@ -67,46 +84,53 @@ class getList {
           J_num++;
           break;
       }
+      E = (E_num != 0) ? (E / E_num).toDouble() : 0;
+      I = (I_num != 0) ? (I / I_num).toDouble() : 0;
+      N = (N_num != 0) ? (N / N_num).toDouble() : 0;
+      S = (S_num != 0) ? (S / S_num).toDouble() : 0;
+      F = (F_num != 0) ? (F / F_num).toDouble() : 0;
+      T = (T_num != 0) ? (T / T_num).toDouble() : 0;
+      P = (P_num != 0) ? (P / P_num).toDouble() : 0;
+      J = (J_num != 0) ? (J / J_num).toDouble() : 0;
     }
   }
 
-  finalMBTI() {
+  finalMBTI() async {
+    MBTI = [];
+    print("여기가 finalMBTI");
     if (E > I) {
-      E >75 ? MBTI[0] = 'E' : MBTI[0]= 'e';
+      if(E > 75){
+        MBTI.add('E');
+      }
+      else
+        MBTI.add('e');
     }
     if (I > E) {
-      I >75 ? MBTI[0] = 'I' : MBTI[0]= 'i';
-    }
-    if (F > T) {
-      F >75 ? MBTI[0] = 'F' : MBTI[0]= 'f';
-    }
-    if (T > F) {
-      T >75 ? MBTI[0] = 'T' : MBTI[0]= 't';
+      I > 75 ? MBTI.add('I') : MBTI.add('i');
     }
     if (S > N) {
-      S >75 ? MBTI[0] = 'S' : MBTI[0]= 's';
+      S > 75 ? MBTI.add('s') : MBTI.add('S');
     }
     if (N > S) {
-      N >75 ? MBTI[0] = 'N' : MBTI[0]= 'n';
+      N > 75 ? MBTI.add('N') : MBTI.add('n');
+    }
+    if (F > T) {
+      F > 75 ? MBTI.add('F') : MBTI.add('f');
+    }
+    if (T > F) {
+      T > 75 ? MBTI.add('T') : MBTI.add('t');
     }
     if (P > J) {
-      P >75 ? MBTI[0] = 'P' : MBTI[0]= 'p';
+      P > 75 ? MBTI.add('P') : MBTI.add('p');
     }
     if (J > P) {
-      J >75 ? MBTI[0] = 'J' : MBTI[0]= 'j';
+      J > 75 ? MBTI.add('J') : MBTI.add('j');
     }
-    E = (E_num != 0) ? (E / E_num).toDouble() : 0;
-    I = (I_num != 0) ? (I / I_num).toDouble() : 0;
-    N = (N_num != 0) ? (N / N_num).toDouble() : 0;
-    S = (S_num != 0) ? (S / S_num).toDouble() : 0;
-    F = (F_num != 0) ? (F / F_num).toDouble() : 0;
-    T = (T_num != 0) ? (T / T_num).toDouble() : 0;
-    P = (P_num != 0) ? (P / P_num).toDouble() : 0;
-    J = (J_num != 0) ? (J / J_num).toDouble() : 0;
   }
 
-  String? getMBTI(){
-    String result = MBTIList.join(',');
+  getMBTI() async {
+    String result = MBTI.join();
+    print("여기가 getMBTI");
     print(result);
     return result;
   }

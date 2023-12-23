@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swap_life/friends/deleteFriendDialog.dart';
 import 'package:swap_life/FriendScreen.dart';
-
+import 'package:swap_life/shared/todo_controller.dart';
 
 class FriendProfile extends StatefulWidget {
   late String? imageUrl;
@@ -16,6 +16,7 @@ class FriendProfile extends StatefulWidget {
   late List? friendlist;
   late List? myfriendlist;
   late List<String>? friendChecklist;
+  final TodoController controller;
 
   FriendProfile({
     Key? key,
@@ -29,6 +30,7 @@ class FriendProfile extends StatefulWidget {
     this.NickName,
     this.MBTI,
     this.intro,
+    required this.controller
   }) : super(key: key);
 
   @override
@@ -36,6 +38,7 @@ class FriendProfile extends StatefulWidget {
 }
 class _FriendProfile extends State<FriendProfile> {
   List<String>? friendChecklist;
+  List<String>? MBTI;
 
   @override
   void initState() {
@@ -119,6 +122,8 @@ class _FriendProfile extends State<FriendProfile> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => FriendPage(
+                      friendid: widget.friendid!,
+                      controller : widget.controller,
                       friendChecklist: friendChecklist,
                       friendName: widget.NickName,
                     ),
@@ -156,6 +161,9 @@ class _FriendProfile extends State<FriendProfile> {
   }
 
   List<Widget> showList() {
+    if (friendChecklist == null) {
+      return [];
+    }
     List<Widget> lists = [];
     for (int i = 0; i < friendChecklist!.length; i++) {
       lists.add(Row(
