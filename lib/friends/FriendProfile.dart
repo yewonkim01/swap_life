@@ -129,6 +129,7 @@ class _FriendProfile extends State<FriendProfile> {
               padding: const EdgeInsets.symmetric(horizontal: 23.0),
               child: ElevatedButton(
                 onPressed: () async {
+                  //버튼 누르면 새로운 Main 페이지로 이동
                   friendChecklist = await getFriendChecklist(widget.friendid!);
                   Navigator.push(
                     context,
@@ -137,7 +138,6 @@ class _FriendProfile extends State<FriendProfile> {
                         controller: widget.controller,
                         friendChecklist: friendChecklist!,
                         friendName: widget.NickName!,
-                        exist: 1,
                       ),
                     ),
                   );

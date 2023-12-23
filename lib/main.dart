@@ -95,7 +95,7 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     Widget bodyWidget;
     if(_selectedIndex==0) {
       //추후 친구 chech list받아오는 함수 연결
-      bodyWidget = friendBody(controller:widget.controller,friendChecklist: [], friendName: '', exist: 0,);
+      bodyWidget = friendBody(controller:widget.controller,friendChecklist: [], friendName: '', );
       //bodyWidget = FriendPage(friendChecklist: [], friendName: '');
       } else if(_selectedIndex == 1) {
       bodyWidget = TodoScreen(controller: widget.controller);

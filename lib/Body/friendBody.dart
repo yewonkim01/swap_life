@@ -7,8 +7,7 @@ class friendBody extends StatefulWidget {
   final TodoController controller;
   final List<String> friendChecklist;
   final String? friendName;
-  final int? exist;
-  friendBody({ required this.controller,required this.friendChecklist, required this.friendName, required this.exist});
+  friendBody({ required this.controller,required this.friendChecklist, required this.friendName,});
 
   @override
   friendBodyState createState() => friendBodyState();
@@ -27,7 +26,6 @@ class friendBodyState extends State<friendBody> {
               controller: widget.controller,
               friendChecklist: widget.friendChecklist,
               friendName: widget.friendName,
-              exist: widget.exist,
             ),
           ),
           /*exist == 0
@@ -50,12 +48,12 @@ class friendBodyState extends State<friendBody> {
   }
 }
 
+//친구 checklist가져왔을때의 Main화면 구성 -> 종료 버튼 누르면 원래 화면으로 돌아감
 class FriendMain extends StatefulWidget {
   final TodoController controller;
   final List<String> friendChecklist;
   final String? friendName;
-  final int? exist;
-  FriendMain({required this.controller,required this.friendChecklist, required this.friendName, required this.exist});
+  FriendMain({required this.controller,required this.friendChecklist, required this.friendName, });
   @override
   _FriendMainState createState() => _FriendMainState();
 }
@@ -81,7 +79,7 @@ class _FriendMainState extends State<FriendMain> with SingleTickerProviderStateM
       body: friendBody(controller: widget.controller,
         friendChecklist: widget.friendChecklist,
         friendName: widget.friendName,
-        exist: 1,),
+        ),
     );
   }
 }

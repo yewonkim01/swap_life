@@ -8,8 +8,7 @@ class FriendPage extends StatefulWidget {
   final TodoController controller;
   final List<String>? friendChecklist;
   final String? friendName;
-  final int? exist;
-  FriendPage({ required this.controller,required this.friendChecklist, required this.friendName, required this.exist});
+  FriendPage({ required this.controller,required this.friendChecklist, required this.friendName,});
   @override
   State<FriendPage> createState() => FriendPageState();
 }
