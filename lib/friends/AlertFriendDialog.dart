@@ -47,7 +47,12 @@ class AlertFriendDialog extends StatelessWidget {
               radius: 25,
               backgroundImage: NetworkImage(ImageUrl!),
             ),
-            title: Text('${friendName}님이 나를 친구 추가했습니다.'),
+            title: Row(
+              children: [
+                Text('${friendName}', style: TextStyle(fontWeight: FontWeight.bold),),
+                Text('님이 나를 친구로 추가했습니다.')
+              ],
+            ),
             subtitle: Text('${timestamp.substring(0,10)}'),
           ), SizedBox()]));
     }
