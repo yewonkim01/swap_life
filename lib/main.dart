@@ -37,7 +37,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DynamicLink(controller, context).initDynamicLink(context);
+    DynamicLink(controller, context);
+    //DynamicLink(controller, context).initDynamicLink(context);
     return MaterialApp(
       title: 'Swap Life',
       theme: ThemeData(primaryColor: Colors.blueGrey[200]),
