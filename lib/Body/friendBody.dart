@@ -68,7 +68,7 @@ class _FriendMainState extends State<FriendMain> with SingleTickerProviderStateM
           onPressed: () {
             Navigator.pushNamed(context, '/alert_dialog');
           },
-          icon: Icon(Icons.cloud_outlined),
+          icon: Icon(Icons.add_alert, color: Colors.black,),
         ),
         iconTheme: IconThemeData(color: Colors.deepPurple),
         title: Text("Swap Life"),
