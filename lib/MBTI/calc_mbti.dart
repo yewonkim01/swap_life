@@ -124,6 +124,7 @@ class getList {
         T = (T_num != 0) ? (T / T_num).toDouble() : 0;
         P = (P_num != 0) ? (P / P_num).toDouble() : 0;
         J = (J_num != 0) ? (J / J_num).toDouble() : 0;
+        print("E: $E, I: $I , N: $N, S:$S, F:$F , T:$T, P:$P , J:$J");
       }
     }
 

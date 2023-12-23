@@ -28,7 +28,5 @@ class myMBTIreportState extends State<myMBTIreport> {
     user = await kakao.UserApi.instance.me();
     await profile.collection('checklist').doc(user!.id.toString())
         .collection('mychecklist').doc('allchecklist').get();
-
-
   }
 }
