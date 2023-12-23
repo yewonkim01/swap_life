@@ -138,6 +138,7 @@ class _FriendProfile extends State<FriendProfile> {
                         controller: widget.controller,
                         friendChecklist: friendChecklist!,
                         friendName: widget.NickName!,
+                        friendid: widget.friendid!,
                       ),
                     ),
                   );
