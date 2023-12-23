@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:swap_life/report_when_finish.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
+import 'package:swap_life/MBTI/report_when_finish.dart';
+import 'report_when_finish.dart';
 
 class Mbti_report extends StatefulWidget {
   final String friendid;
@@ -14,13 +17,12 @@ class Mbti_report extends StatefulWidget {
 }
 
 class _Mbti_report extends State<Mbti_report> {
-
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MBTI report!'),
+        title: const Text('MBTI report'),
         centerTitle: true,
         titleTextStyle: const TextStyle(
           color: Colors.black,
@@ -61,7 +63,7 @@ class _Mbti_report extends State<Mbti_report> {
                         onPressed:() {
                           Navigator.pushNamed(context, '/myHome');
                         },
-                        child: Text("나가기."),
+                        child: Text("나가기"),
                     )
                   ],
                 ),
