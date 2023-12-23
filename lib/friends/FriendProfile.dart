@@ -100,11 +100,13 @@ class _FriendProfile extends State<FriendProfile> {
             SizedBox(height: 5),
             Container(
               padding: EdgeInsets.all(20),
-              child: Column(
-                children: showList(),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: showList(),
+                ),
               ),
             ),
-            SizedBox(height: 200),
+            SizedBox(height: 100),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 23.0),
               child: ElevatedButton(
@@ -144,7 +146,7 @@ class _FriendProfile extends State<FriendProfile> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            friendBody(
+                            FriendMain(
                               controller: widget.controller,
                               friendChecklist: friendChecklist!,
                               friendName: widget.NickName!,

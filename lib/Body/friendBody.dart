@@ -3,6 +3,8 @@ import 'package:swap_life/FriendScreen.dart';
 import 'package:swap_life/friends/friendList.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/main.dart';
+import 'package:swap_life/MyProfile.dart';
+import 'package:swap_life/TodoScreen.dart';
 
 class friendBody extends StatefulWidget {
   final TodoController controller;
@@ -49,12 +51,15 @@ class FriendMain extends StatefulWidget {
 }
 
 class _FriendMainState extends State<FriendMain> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  TabController? _tabController;
+  int _selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,15 +77,22 @@ class _FriendMainState extends State<FriendMain> with SingleTickerProviderStateM
         foregroundColor: Colors.black,
         elevation: 0.0,
       ),
-      body: friendBody(controller: widget.controller,
-        friendChecklist: widget.friendChecklist,
-        friendName: widget.friendName,
-        friendid: widget.friendid,
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          friendBody(controller: widget.controller, friendChecklist: widget.friendChecklist, friendName: widget.friendName, friendid: widget.friendid),
+          TodoScreen(controller: widget.controller),
+          MyProfile(),
+        ],
       ),
       bottomNavigationBar: BottomNavBar(
-        tabController: _tabController,
-        selectedIndex: 0,
+        tabController: _tabController!,
+        selectedIndex: _selectedIndex,
         onTabTapped: (index) {
+          setState(() {
+            _selectedIndex = index;
+            _tabController!.index = index;
+          });
         },
       ),
     );

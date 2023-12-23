@@ -49,8 +49,6 @@ class MyApp extends StatelessWidget {
         '/alert_dialog': (context) => AlertFriendDialog(),
         '/myMBTIreport' : (context) => myMBTIreport(),
         //'/friendScreen': (context) => FriendPage(friendChecklist: friendChecklist),
-
-
       },
       debugShowCheckedModeBanner: false,
     );
@@ -135,13 +133,11 @@ class BottomNavBar extends StatelessWidget {
   final TabController tabController;
   final int selectedIndex;
   final Function(int) onTabTapped;
-
   BottomNavBar({
     required this.tabController,
     required this.selectedIndex,
     required this.onTabTapped,
   });
-
   @override
   Widget build(BuildContext context) {
     return TabBar(
