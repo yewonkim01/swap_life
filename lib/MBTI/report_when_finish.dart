@@ -1,10 +1,7 @@
 //김진영 작성
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:swap_life/MBTI/calc_mbti.dart';
-import 'report.dart' as report;
 
 class calc_mbti extends StatefulWidget{
   final String friendid;

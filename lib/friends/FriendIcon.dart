@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:swap_life/friends/FriendProfile.dart';
 
 class FriendIcon extends StatelessWidget {
   final String? imageUrl;
