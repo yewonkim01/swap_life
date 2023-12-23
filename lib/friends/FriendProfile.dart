@@ -120,12 +120,6 @@ class _FriendProfile extends State<FriendProfile> {
                         actions: [
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("NO", style: TextStyle(fontWeight: FontWeight.bold),),
-                          ),
-                          TextButton(
-                            onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -139,6 +133,11 @@ class _FriendProfile extends State<FriendProfile> {
                               );
                             }, //YES 선택하면 친구의 현재 List push
                             child: Text("YES", style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("NO", style: TextStyle(fontWeight: FontWeight.bold),),
                           ),],);});
                   }else { //친구의 List 개수가 4개 이상이면 정상적으로 push진행
                     Navigator.push(

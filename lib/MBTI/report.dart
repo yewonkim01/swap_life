@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
-import 'package:swap_life/report_when_finish.dart';
+import 'package:swap_life/MBTI/report_when_finish.dart';
 import 'report_when_finish.dart';
 
 class Mbti_report extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
-import 'package:swap_life/report.dart';
+import 'package:swap_life/MBTI/report.dart';
 import 'dart:core';
 import 'package:swap_life/shared/todo_controller.dart';
 
@@ -37,6 +37,7 @@ class FriendPageState extends State<FriendPage> {
           Text("<${widget.friendName} checkList>",
               style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold)),
           Text("친구의 일상을 경험하고, 완료사항을 체크해보세요"),
+          SizedBox(height: 25,),
           Expanded(
             child: ListView.builder(
               itemCount: todoList.length,
@@ -95,9 +96,9 @@ class FriendPageState extends State<FriendPage> {
                   children: [
                     Icon(Icons.smart_toy_sharp),
                     SizedBox(
-                      width: 45,
+                      width: 40,
                     ),
-                    Text('Finish',
+                    Text('FINISH',
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold)),
                   ],
