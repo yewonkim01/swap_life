@@ -12,9 +12,8 @@ import 'shared/shared.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/friends/dynamicLink.dart';
 import 'package:swap_life/Body/friendBody.dart';
-import 'package:swap_life/Body/homeBody.dart';
-import 'package:swap_life/friends/FriendProfile.dart';
-import 'friends/AlertFriendDialog.dart';
+import 'package:swap_life/MBTI/myMBTIreport.dart';
+
 
 void main() async{
   var services = HttpServices();
@@ -37,8 +36,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DynamicLink(controller, context);
-    //DynamicLink(controller, context).initDynamicLink(context);
+    DynamicLink(controller, context).initDynamicLink(context);
     return MaterialApp(
       title: 'Swap Life',
       theme: ThemeData(primaryColor: Colors.blueGrey[200]),
@@ -48,8 +46,11 @@ class MyApp extends StatelessWidget {
         '/myHome': (context) => MyHome(controller: controller),
         '/myProfile' : (context) => MyProfile(),
         '/todoScreen': (context) => TodoScreen(controller: controller),
-        '/alert_dialog': (context) => AlertFriendDialog()
+        '/alert_dialog': (context) => AlertFriendDialog(),
+        '/myMBTIreport' : (context) => myMBTIreport(),
         //'/friendScreen': (context) => FriendPage(friendChecklist: friendChecklist),
+
+
       },
       debugShowCheckedModeBanner: false,
     );
@@ -72,14 +73,16 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
     //앱 초기 실행시 프로필로 바꿨을 때 tabcontroller도 바꿔줌(예원)
-    _tabController!.index = 2;
-    _tabController!.addListener(() {
-      setState(() {
-        _selectedIndex = _tabController!.index;
+    if (widget.controller != null) {
+      _tabController = TabController(length: 3, vsync: this);
+      _tabController!.index = 2;
+      _tabController!.addListener(() {
+        setState(() {
+          _selectedIndex = _tabController!.index;
+        });
       });
-    });
+    }
   }
 
   @override
@@ -93,9 +96,9 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     Widget bodyWidget;
     if(_selectedIndex==0) {
       //추후 친구 chech list받아오는 함수 연결
-      //bodyWidget = tabContainer(context, Colors.white, "Friend's List");
-      bodyWidget = friendBody(controller: widget.controller, friendChecklist: []);
-      } else if(_selectedIndex == 1) {
+      bodyWidget = friendBody(controller:widget.controller,friendChecklist: [], friendName: '', friendid: '',);
+      //bodyWidget = FriendPage(friendChecklist: [], friendName: '');
+    } else if(_selectedIndex == 1) {
       bodyWidget = TodoScreen(controller: widget.controller);
     } else {
       bodyWidget = MyProfile();

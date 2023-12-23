@@ -5,44 +5,70 @@ import 'package:swap_life/shared/todo_controller.dart';
 
 class friendBody extends StatefulWidget {
   final TodoController controller;
-  final List<Map<String, dynamic>> friendChecklist;
-  friendBody({required this.controller, required this.friendChecklist});
+  final List<String> friendChecklist;
+  final String? friendName;
+  final String friendid;
+  friendBody({ required this.controller,required this.friendChecklist, required this.friendName,required this.friendid,});
 
   @override
-  _friendBody createState() => _friendBody();
+  friendBodyState createState() => friendBodyState();
 }
 
-class _friendBody extends State<friendBody> {
+class friendBodyState extends State<friendBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(height: 10),
+          FriendList(widget.controller, context),
+          SizedBox(height: 25,),
           Expanded(
-            child: ListView(
-              children: [
-                FriendList(widget.controller, context),
-                (widget.friendChecklist == null || widget.friendChecklist.isEmpty)
-                    ? SizedBox(
-                  height: 500,
-                  child: Center(
-                    child: Text(
-                      "Friend's List",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ),
-                )
-                    : FriendPage(
-                  friendChecklist: widget.friendChecklist,
-                ),
-              ],
+            child: FriendPage(
+              controller: widget.controller,
+              friendChecklist: widget.friendChecklist,
+              friendName: widget.friendName,
+              friendid: widget.friendid,
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+//친구 checklist가져왔을때의 Main화면 구성 -> 종료 버튼 누르면 원래 화면으로 돌아감
+class FriendMain extends StatefulWidget {
+  final TodoController controller;
+  final List<String> friendChecklist;
+  final String? friendName;
+  final String friendid;
+  FriendMain({required this.controller,required this.friendChecklist, required this.friendName,required this.friendid,});
+  @override
+  _FriendMainState createState() => _FriendMainState();
+}
+
+class _FriendMainState extends State<FriendMain> with SingleTickerProviderStateMixin {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/alert_dialog');
+          },
+          icon: Icon(Icons.cloud_outlined),
+        ),
+        iconTheme: IconThemeData(color: Colors.deepPurple),
+        title: Text("Swap Life"),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0.0,
+      ),
+      body: friendBody(controller: widget.controller,
+        friendChecklist: widget.friendChecklist,
+        friendName: widget.friendName,
+        friendid: widget.friendid,
       ),
     );
   }

@@ -25,6 +25,7 @@ class AlertFriendDialog extends StatelessWidget {
     Map<String, dynamic>? Alarm = Alarm_db.data() as Map<String, dynamic>?;
 
     List AlarmList = Alarm!['userID'];
+    String timestamp = Alarm!['timestamp'].toDate().toString();
     for(int i = 0; i<AlarmList.length; i++){
       String alarmid = AlarmList[i];
       DocumentSnapshot alarmdata = await db.collection('MyProfile')
@@ -46,9 +47,9 @@ class AlertFriendDialog extends StatelessWidget {
               radius: 25,
               backgroundImage: NetworkImage(ImageUrl!),
             ),
-            title: Text('${friendName}님이 나를 친구 추가했습니다.')
+            title: Text('${friendName}님이 나를 친구 추가했습니다.'),
+            subtitle: Text('${timestamp.substring(0,10)}'),
           ), SizedBox()]));
-
     }
     return alarm_ListTileitem;
   }
@@ -72,7 +73,6 @@ class AlertFriendDialog extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting){
             return CircularProgressIndicator();
           }else if(snapshot.data == null){
-
             return Container();
           } else{
             final alarm_itemlist = snapshot.data;

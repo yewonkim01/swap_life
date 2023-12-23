@@ -12,9 +12,11 @@ import 'package:swap_life/main.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 
 void main() {
+  final TodoController controller;
+
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(MyApp(controller: controller));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

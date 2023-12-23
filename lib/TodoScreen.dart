@@ -6,12 +6,11 @@ import 'package:swap_life/friends/friendList.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
 //모든 class 예선 작성
-
 List<TodoItem> todoList = [];
 
 //Todo list에 들어갈 항목,mbti,완료상태
 class TodoItem {
-  String title;
+  final String title;
   bool isCompleted; //기본값 false -> 항목을 완료하지 않음
   String mbti;
   TodoItem({required this.title, required this.mbti, this.isCompleted = false});
@@ -40,105 +39,14 @@ class _TodoScreenState extends State<TodoScreen> {
   List<String> dropdownList = ['E','I','S','N','T','F','J','P'];
   String selectedItem = 'E'; //기본값=null 상황을 방지하기 위한 초기값
 
-  //초기에 사용자ID=null 상황을 방지하기 위해 userId받아오는 함수
-  Future<String> getOrCreateDefaultUserId() async {
-    kakao.User? user = await kakao.UserApi.instance.me();
-    String userId = user?.id.toString() ?? 'defaultUserID';
-    // Firestore에서 해당 사용자 ID가 있는지 확인
-    DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
-    DocumentSnapshot userSnapshot = await userRef.get();
-
-    if (!userSnapshot.exists) {
-      // 사용자 ID가 Firestore에 없으면 새로운 ID 생성
-      await userRef.set({'createdAt': FieldValue.serverTimestamp()});
-    }
-    return userId;
-  }
-
-  //firestore에 유저 checkList 저장하는 함수
-  Future<void> saveList() async {
-    try {
-      final checkList = firestore;
-      String userId = user?.id.toString() ?? await getOrCreateDefaultUserId();
-      DocumentReference Ref = checkList.collection('checklist').doc(userId);
-
-      List<Map<String, dynamic>> existingItems = [];
-      DocumentSnapshot snapshot = await Ref.get();
-
-      if (snapshot.exists) {
-        dynamic data = snapshot.data();
-        if (data != null && data['user_checklist'] != null) {
-          existingItems = List<Map<String, dynamic>>.from(
-            (data['user_checklist'] as List<dynamic>)
-                .map((item) => Map<String, dynamic>.from(item)),
-          );
-        }
-      }
-      existingItems.add({
-        'title': todoList.last.title,
-        'mbti': todoList.last.mbti,
-      });
-      await Ref.set({'user_checklist': existingItems});
-    } catch (e) {
-      print("Error saving list: $e");
-    }
-  }
-
-  //에뮬레이터 화면 상에 삭제된 checkList를 firestore상에서도 삭제하는 함수
-  Future<void> deleteList(int index) async {
-    final checkList = firestore;
-    String userId =user?.id.toString() ?? await getOrCreateDefaultUserId();
-    DocumentReference Ref = checkList.collection('checklist').doc(userId);
-    DocumentSnapshot snapshot = await Ref.get();
-
-    if (snapshot.exists) {
-      dynamic data = snapshot.data();
-      if (data != null && data['user_checklist'] != null) {
-        List<Map<String, dynamic>> existingItems = List<Map<String, dynamic>>.from(
-          (data['user_checklist'] as List<dynamic>)
-              .map((item) => Map<String, dynamic>.from(item)),
-        );
-
-        if (index >= 0 && index < existingItems.length) {
-          existingItems.removeAt(index);
-          await Ref.update({'user_checklist': existingItems});
-        }
-      }
-    }
-  }
-
   @override
   void initState() {
     getList();
     super.initState();
   }
-  //화면 전환 및 종료시에도 checkList 유지
-  Future<void> getList() async {
-      final checkList = firestore;
-      String userId = user?.id.toString() ?? await getOrCreateDefaultUserId();
-      user = await kakao.UserApi.instance.me();
-
-      if(userId != null) {
-        DocumentSnapshot snapshot = await checkList.collection('checklist').doc(userId).get();
-        Map<String, dynamic>? data = snapshot.data() as Map<String,dynamic>?;
-        if (data != null) {
-          setState(() {
-            todoList = List<TodoItem>.from(data['user_checklist'].map(
-                  (item) => TodoItem(
-                title: item['title'],
-                mbti: item['mbti'],
-               // isCompleted: item['isCompleted'],
-              ),
-            ));
-          });
-        }
-      }
-  }
-
 
   @override
   Widget build(BuildContext context) {
-    FriendList old_FriendList = FriendList(widget.controller, context);
     return Scaffold(
       body: Column(
         children: [
@@ -146,7 +54,8 @@ class _TodoScreenState extends State<TodoScreen> {
           FriendList(widget.controller, context),
           SizedBox(height: 25),
           //checkList
-          Text("My checkList", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold),),
+          Text("< My CheckList >", style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold),),
+          Text("자신의 MBTI에 해당하는 CheckList를 모두 작성해보세요!",),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -251,8 +160,6 @@ class _TodoScreenState extends State<TodoScreen> {
       ),
     );
   }
-
-
   void addTodoItem(String title, String mbti) {
     setState(() {
       //공백 상태로 checkList 추가 불가
@@ -261,21 +168,109 @@ class _TodoScreenState extends State<TodoScreen> {
       } else{
         isnull = 1; // input text=null이면, isnull=1로 지정해 add버튼 실행 시 saveList(),clear 작업 생략
         showDialog<void>(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              content: const Text('Add a text',style: TextStyle(fontSize: 20),),
-              actions: [
-                TextButton(
-                  child: const Text('OK', ),
-                  onPressed: () => Navigator.pop(context),
-                )
-              ],
-            );
-          }
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: const Text('Add a text',style: TextStyle(fontSize: 20),),
+                actions: [
+                  TextButton(
+                    child: const Text('OK', ),
+                    onPressed: () => Navigator.pop(context),
+                  )
+                ],
+              );
+            }
         );
       }
     });
+  }
+  //초기에 사용자ID=null 상황을 방지하기 위해 userId받아오는 함수
+  Future<String> getOrCreateDefaultUserId() async {
+    kakao.User? user = await kakao.UserApi.instance.me();
+    String userId = user?.id.toString() ?? 'defaultUserID';
+    // Firestore에서 해당 사용자 ID가 있는지 확인
+    DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+    DocumentSnapshot userSnapshot = await userRef.get();
+
+    if (!userSnapshot.exists) {
+      // 사용자 ID가 Firestore에 없으면 새로운 ID 생성
+      await userRef.set({'createdAt': FieldValue.serverTimestamp()});
+    }
+    return userId;
+  }
+
+  //firestore에 유저 checkList 저장하는 함수
+  Future<void> saveList() async {
+    try {
+      final checkList = firestore;
+      String userId = user?.id.toString() ?? await getOrCreateDefaultUserId();
+      DocumentReference Ref = checkList.collection('checklist').doc(userId);
+
+      List<Map<String, dynamic>> existingItems = [];
+      DocumentSnapshot snapshot = await Ref.get();
+
+      if (snapshot.exists) {
+        dynamic data = snapshot.data();
+        if (data != null && data['user_checklist'] != null) {
+          existingItems = List<Map<String, dynamic>>.from(
+            (data['user_checklist'] as List<dynamic>)
+                .map((item) => Map<String, dynamic>.from(item)),
+          );
+        }
+      }
+      existingItems.add({
+        'title': todoList.last.title,
+        'mbti': todoList.last.mbti,
+      });
+      await Ref.set({'user_checklist': existingItems});
+    } catch (e) {
+      print("Error saving list: $e");
+    }
+  }
+
+  //에뮬레이터 화면 상에 삭제된 checkList를 firestore상에서도 삭제하는 함수
+  Future<void> deleteList(int index) async {
+    final checkList = firestore;
+    String userId =user?.id.toString() ?? await getOrCreateDefaultUserId();
+    DocumentReference Ref = checkList.collection('checklist').doc(userId);
+    DocumentSnapshot snapshot = await Ref.get();
+
+    if (snapshot.exists) {
+      dynamic data = snapshot.data();
+      if (data != null && data['user_checklist'] != null) {
+        List<Map<String, dynamic>> existingItems = List<Map<String, dynamic>>.from(
+          (data['user_checklist'] as List<dynamic>)
+              .map((item) => Map<String, dynamic>.from(item)),
+        );
+
+        if (index >= 0 && index < existingItems.length) {
+          existingItems.removeAt(index);
+          await Ref.update({'user_checklist': existingItems});
+        }
+      }
+    }
+  }
+  //화면 전환 및 종료시에도 checkList 유지
+  Future<void> getList() async {
+    final checkList = firestore;
+    String userId = user?.id.toString() ?? await getOrCreateDefaultUserId();
+    user = await kakao.UserApi.instance.me();
+
+    if(userId != null) {
+      DocumentSnapshot snapshot = await checkList.collection('checklist').doc(userId).get();
+      Map<String, dynamic>? data = snapshot.data() as Map<String,dynamic>?;
+      if (data != null) {
+        setState(() {
+          todoList = List<TodoItem>.from(data['user_checklist'].map(
+                (item) => TodoItem(
+              title: item['title'],
+              mbti: item['mbti'],
+              // isCompleted: item['isCompleted'],
+            ),
+          ));
+        });
+      }
+    }
   }
 
   void deleteTodoItem(int index) {
@@ -305,18 +300,17 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-    value: selectedItem,
-    items: MBTIList.map<
-        DropdownMenuItem<String>>((String i) {
-      return DropdownMenuItem<String>(
-        value: i,
-        child: Text(i),
-      );
-    }).toList(),
-    onChanged: (String? newValue){setState((){
-      selectedItem = newValue!;
-    });
-    });
+        value: selectedItem,
+        items: MBTIList.map<
+            DropdownMenuItem<String>>((String i) {
+          return DropdownMenuItem<String>(
+            value: i,
+            child: Text(i),
+          );
+        }).toList(),
+        onChanged: (String? newValue){setState((){
+          selectedItem = newValue!;
+        });
+        });
   }
 }
-

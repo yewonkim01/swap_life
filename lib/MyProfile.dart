@@ -5,7 +5,7 @@ import 'package:flutter/src/painting/image_provider.dart';
 import 'dart:io';
 import 'dart:core';
 import 'package:swap_life/kakao_login/mainview.dart';
-import 'package:swap_life/report.dart';
+import 'package:swap_life/MBTI/report.dart';
 import 'kakao_login/login.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 import 'package:firebase_storage/firebase_storage.dart';
@@ -19,7 +19,6 @@ class MyProfile extends StatefulWidget {
 
 //예선 작성//
 class _MyProfileState extends State<MyProfile> {
-
   String? _selectedMBTI; //User MBTI
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _introController = TextEditingController();
@@ -40,32 +39,6 @@ class _MyProfileState extends State<MyProfile> {
   void dispose() {
     super.dispose();
   }
-
-
-  //firebase 연동 - 진영//
-  Future <void> saveProfile() async {
-    user = await kakao.UserApi.instance.me();
-    await profile.collection('MyProfile').doc(user!.id.toString()).set(
-        {
-          "profileID": _nameController.text,
-          "Introduction": _introController.text,
-          "MBTI": _selectedMBTI,
-          "ImageUrl" : _imageUrl
-        }
-    );
-  }
-
-  Future<void> getProfile() async {
-    user = await kakao.UserApi.instance.me();
-    DocumentSnapshot getprof =
-    await profile.collection('MyProfile').doc(user!.id.toString()).get();
-    _nameController.text = getprof['profileID'];
-    _introController.text = getprof['Introduction'];
-    _selectedMBTI = getprof['MBTI'];
-    _imageUrl = getprof['ImageUrl'];
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +162,7 @@ class _MyProfileState extends State<MyProfile> {
   Widget introduction() {
     return TextFormField(
       controller: _introController,
-      maxLength: 30,
+      maxLength: 20,
       decoration: InputDecoration(
         hintText: 'introduction',
       ),
@@ -220,7 +193,8 @@ class _MyProfileState extends State<MyProfile> {
       child: Row(
         children: [
           Icon(Icons.edit,color: Colors.deepPurple,),
-          Text('                                    MBTI',style: TextStyle(color: Colors.deepPurple),),
+          SizedBox(width: 125,),
+          Text('MBTI',style: TextStyle(color: Colors.deepPurple),),
         ],
       ),
     );
@@ -240,14 +214,14 @@ class _MyProfileState extends State<MyProfile> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.deepPurple[50],
         ),
-      onPressed: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Mbti_report()),
-      ),
+      onPressed: () {
+          Navigator.pushNamed(context, '/myMBTIreport');
+      },
       child: Row(
         children: [
           Icon(Icons.favorite,color: Colors.deepPurple,),
-          Text('                           My MBTI Report',style: TextStyle(color: Colors.deepPurple),),
+          SizedBox(width: 90,),
+          Text('My MBTI Report',style: TextStyle(color: Colors.deepPurple),),
         ],
       ),
     );
@@ -260,7 +234,7 @@ class _MyProfileState extends State<MyProfile> {
     return TextButton(
       onPressed: () => viewModel.logout(),
       child: Text("Logout",
-        style: TextStyle(color: Colors.deepPurple),
+        style: TextStyle(color: Colors.deepPurple, decoration: TextDecoration.underline),
       ),
     );
   }
@@ -309,6 +283,28 @@ class _MyProfileState extends State<MyProfile> {
           ],
         )
     );
+  }
+  //firebase 연동 - 진영//
+  Future <void> saveProfile() async {
+    user = await kakao.UserApi.instance.me();
+    await profile.collection('MyProfile').doc(user!.id.toString()).set(
+        {
+          "profileID": _nameController.text,
+          "Introduction": _introController.text,
+          "MBTI": _selectedMBTI,
+          "ImageUrl" : _imageUrl
+        }
+    );
+  }
+
+  Future<void> getProfile() async {
+    user = await kakao.UserApi.instance.me();
+    DocumentSnapshot getprof =
+    await profile.collection('MyProfile').doc(user!.id.toString()).get();
+    _nameController.text = getprof['profileID'];
+    _introController.text = getprof['Introduction'];
+    _selectedMBTI = getprof['MBTI'];
+    _imageUrl = getprof['ImageUrl'];
   }
 
   Future<void> takePhoto(ImageSource source) async {

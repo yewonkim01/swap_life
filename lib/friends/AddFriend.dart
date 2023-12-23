@@ -45,6 +45,7 @@ class FriendListManager {
 
       Map<String, dynamic>? friendsdata = friends.data() as Map<String, dynamic>?;
       List<dynamic> userid_friends = friendsdata!['FriendID'];
+
       if (userid_friends.contains(friendid)) {
         print('이미 추가된 친구입니다.');
         return;
@@ -53,7 +54,6 @@ class FriendListManager {
         await Ref.set({
           "FriendID": userid_friends
         }).then((value) {
-          print('update 완료');
           addAlarm('userid', db, userid, friendid);
         });}}
 
@@ -72,7 +72,6 @@ class FriendListManager {
         "FriendID": friends_userid
       }).then((value) {
         addAlarm('friendid', db, userid, friendid);
-        print('update 완료');
       });
     }
   }
