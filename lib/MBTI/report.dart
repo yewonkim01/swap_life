@@ -1,9 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 import 'package:swap_life/MBTI/report_when_finish.dart';
-import 'report_when_finish.dart';
 
 class Mbti_report extends StatefulWidget {
   final String friendid;
@@ -41,7 +38,7 @@ class _Mbti_report extends State<Mbti_report> {
                   children: [
                     SizedBox(height: 30),
                     Text(
-                      "${widget.friendName}'s list",
+                      "Finish ${widget.friendName}'s list",
                       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
@@ -50,7 +47,7 @@ class _Mbti_report extends State<Mbti_report> {
                       style: TextStyle(fontSize: 13),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 100),
+                    SizedBox(height: 80),
                     Text(
                       '오늘 나의 MBTI는',
                       textAlign: TextAlign.center,
@@ -59,7 +56,7 @@ class _Mbti_report extends State<Mbti_report> {
                       ),
                     ),
                     SliderWidget(friendid: widget.friendid),
-
+                    SizedBox(height: 30,),
                     ElevatedButton(
                         onPressed:() {
                           Navigator.pushNamed(context, '/myHome');

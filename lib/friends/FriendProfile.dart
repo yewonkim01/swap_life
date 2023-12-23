@@ -140,7 +140,7 @@ class _FriendProfile extends State<FriendProfile> {
                             child: Text("NO", style: TextStyle(fontWeight: FontWeight.bold),),
                           ),],);});
                   }else { //친구의 List 개수가 4개 이상이면 정상적으로 push진행
-                    Navigator.pop(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>

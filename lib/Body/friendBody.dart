@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swap_life/FriendScreen.dart';
 import 'package:swap_life/friends/friendList.dart';
 import 'package:swap_life/shared/todo_controller.dart';
+import 'package:swap_life/main.dart';
 
 class friendBody extends StatefulWidget {
   final TodoController controller;
@@ -48,6 +49,12 @@ class FriendMain extends StatefulWidget {
 }
 
 class _FriendMainState extends State<FriendMain> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +77,12 @@ class _FriendMainState extends State<FriendMain> with SingleTickerProviderStateM
         friendName: widget.friendName,
         friendid: widget.friendid,
       ),
+      bottomNavigationBar: BottomNavBar(
+        tabController: _tabController,
+        selectedIndex: 0,
+        onTabTapped: (index) {
+        },
+      ),,
     );
   }
 }
