@@ -82,7 +82,7 @@ class _FriendMainState extends State<FriendMain> with SingleTickerProviderStateM
         selectedIndex: 0,
         onTabTapped: (index) {
         },
-      ),,
+      ),
     );
   }
 }
