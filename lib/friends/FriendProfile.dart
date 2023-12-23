@@ -3,8 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swap_life/friends/deleteFriendDialog.dart';
 import 'package:swap_life/shared/todo_controller.dart';
 import 'package:swap_life/Body/friendBody.dart';
-import 'package:swap_life/FriendScreen.dart';
-
 
 class FriendProfile extends StatefulWidget {
   late String? imageUrl;
@@ -56,24 +54,6 @@ class _FriendProfile extends State<FriendProfile> {
     setState(() {});
   }
 
-  Future<List<String>> getFriendChecklist(String friendid) async {
-    try {
-      // Firestore 쿼리: friendid를 사용하여 해당 친구의 체크리스트 가져오기
-      DocumentSnapshot checklistSnapshot = await FirebaseFirestore.instance
-          .collection('checklist').doc(friendid).get();
-      // 가져온 데이터를 friendChecklist에 추가
-      Map<String, dynamic> datas = checklistSnapshot.data() as Map<String, dynamic>;
-      List<String> titles = [];
-      for (int i = 0; i < datas['user_checklist'].length; i++) {
-        titles.add(datas['user_checklist'][i]['title']);
-      }
-      return titles;
-    } catch (e) {
-      print('Error fetching friend checklist: $e');
-      return [];
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +99,7 @@ class _FriendProfile extends State<FriendProfile> {
             Text("< ${widget.NickName}'s List >", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
             SizedBox(height: 5),
             Container(
-              padding: EdgeInsets.all(30),
+              padding: EdgeInsets.all(20),
               child: Column(
                 children: showList(),
               ),
@@ -131,18 +111,46 @@ class _FriendProfile extends State<FriendProfile> {
                 onPressed: () async {
                   //버튼 누르면 새로운 Main 페이지로 이동
                   friendChecklist = await getFriendChecklist(widget.friendid!);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FriendMain(
-                        controller: widget.controller,
-                        friendChecklist: friendChecklist!,
-                        friendName: widget.NickName!,
-                        friendid: widget.friendid!,
-                      ),
-                    ),
-                  );
-                },
+                  if(friendChecklist!.length<4) { //친구의 List개수가 4개 이하면 경고창 띄우기
+                    showDialog(context: context,
+                        builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('⚠ Warning', style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                        content: Text("${widget.NickName}'s checklist가 4항목 이하입니다. 계속 진행하시겠습니까? (정확한 MBTI 진단 불가)"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("NO", style: TextStyle(fontWeight: FontWeight.bold),),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FriendMain(
+                                    controller: widget.controller,
+                                    friendChecklist: friendChecklist!,
+                                    friendName: widget.NickName!,
+                                    friendid: widget.friendid!,
+                                  ),
+                                ),
+                              );
+                            }, //YES 선택하면 친구의 현재 List push
+                            child: Text("YES", style: TextStyle(fontWeight: FontWeight.bold)),
+                          ),],);});
+                  }else { //친구의 List 개수가 4개 이상이면 정상적으로 push진행
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            FriendMain(
+                              controller: widget.controller,
+                              friendChecklist: friendChecklist!,
+                              friendName: widget.NickName!,
+                              friendid: widget.friendid!,
+                            ),),);}},
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 23.0), // 좌우 여백 조절
                   child: Row(
@@ -174,19 +182,37 @@ class _FriendProfile extends State<FriendProfile> {
     );
   }
 
+  Future<List<String>> getFriendChecklist(String friendid) async {
+    try {
+      // Firestore 쿼리: friendid를 사용하여 해당 친구의 체크리스트 가져오기
+      DocumentSnapshot checklistSnapshot = await FirebaseFirestore.instance
+          .collection('checklist').doc(friendid).get();
+      // 가져온 데이터를 friendChecklist에 추가
+      Map<String, dynamic> datas = checklistSnapshot.data() as Map<String, dynamic>;
+      List<String> titles = [];
+      for (int i = 0; i < datas['user_checklist'].length; i++) {
+        titles.add(datas['user_checklist'][i]['title']);
+      }
+      return titles;
+    } catch (e) {
+      print('Error fetching friend checklist: $e');
+      return [];
+    }
+  }
+
   List<Widget> showList() {
     if (friendChecklist == null) {
       return []; // friendChecklist이 null인 경우 처리
     }
-
     List<Widget> lists = [];
+    //friendChecklist 개수만큼 리스트 추가
     for (int i = 0; i < friendChecklist!.length; i++) {
       lists.add(Row(
         children: [
-          SizedBox(width: 40),
-          Icon(Icons.check),
-          SizedBox(width: 10),
-          Text(friendChecklist![i], style: TextStyle(fontSize: 17),),
+          SizedBox(width: 30),
+          Icon(Icons.circle_outlined, size: 13,),
+          SizedBox(width: 13),
+          Text(friendChecklist![i], style: TextStyle(fontSize: 20),),
         ],
       ));
     }

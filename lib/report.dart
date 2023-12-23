@@ -17,45 +17,12 @@ class Mbti_report extends StatefulWidget {
 }
 
 class _Mbti_report extends State<Mbti_report> {
-  //kakao.User? user;
-  //final profile = FirebaseFirestore.instance;
-  // List<String> mbti = [];
-  // List<int> intMBTI = [];
-  //
-  // Future<void> getProfile() async {
-  //   user = await kakao.UserApi.instance.me();
-  //
-  //   if (user != null) {
-  //     DocumentSnapshot getprof = await profile
-  //         .collection('checklist')
-  //         .doc(user!.id.toString())
-  //         .collection('friends')
-  //         .doc('${widget.friendid}')
-  //         .get();
-  //
-  //     var data = getprof.data() as Map<String, dynamic>;
-  //
-  //     if (data != null) {
-  //       if (data.containsKey('mbti')) {
-  //         var mbtiList = data['mbti'] as List<dynamic>;
-  //         mbti = mbtiList.map((dynamic item) => item.toString()).toList();
-  //       }
-  //
-  //       if (data.containsKey('intMBIT')) {
-  //         var intMBITList = data['intMBIT'] as List<dynamic>;
-  //         intMBTI =
-  //             intMBITList.map((dynamic item) => int.parse(item.toString())).toList();
-  //       }
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MBTI report!'),
+        title: const Text('MBTI report'),
         centerTitle: true,
         titleTextStyle: const TextStyle(
           color: Colors.black,
@@ -96,7 +63,7 @@ class _Mbti_report extends State<Mbti_report> {
                         onPressed:() {
                           Navigator.pushNamed(context, '/myHome');
                         },
-                        child: Text("나가기."),
+                        child: Text("나가기"),
                     )
                   ],
                 ),

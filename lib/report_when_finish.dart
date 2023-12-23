@@ -18,38 +18,6 @@ class calc_mbti extends StatefulWidget{
 }
 
 class _calc_mbit extends State<calc_mbti>{
-  // kakao.User? user;
-  // final profile = FirebaseFirestore.instance;
-  // List<String> mbti = [];
-  // List<int> intMBTI = [];
-  //
-  // Future<void> getProfile() async {
-  //   user = await kakao.UserApi.instance.me();
-  //
-  //   if (user != null) {
-  //     DocumentSnapshot getprof = await profile
-  //         .collection('checklist')
-  //         .doc(user!.id.toString())
-  //         .collection('friends')
-  //         .doc('${widget.friendid}')
-  //         .get();
-  //
-  //     var data = getprof.data() as Map<String, dynamic>;
-  //
-  //     if (data != null) {
-  //       if (data.containsKey('mbti')) {
-  //         var mbtiList = data['mbti'] as List<dynamic>;
-  //         mbti = mbtiList.map((dynamic item) => item.toString()).toList();
-  //       }
-  //
-  //       if (data.containsKey('intMBIT')) {
-  //         var intMBITList = data['intMBIT'] as List<dynamic>;
-  //         intMBTI =
-  //             intMBITList.map((dynamic item) => int.parse(item.toString())).toList();
-  //       }
-  //     }
-  //   }
-  // }
   @override
   Widget build(BuildContext context) {
     return Container(
