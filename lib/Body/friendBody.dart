@@ -41,7 +41,7 @@ class friendBodyState extends State<friendBody> {
                 )
                     : FriendPage(
                   friendChecklist: widget.friendChecklist,
-                    friendName: widget.friendName
+                    friendName: widget.friendName,
                 ),
               ],
             ),
