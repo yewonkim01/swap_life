@@ -100,11 +100,13 @@ class _FriendProfile extends State<FriendProfile> {
             SizedBox(height: 5),
             Container(
               padding: EdgeInsets.all(20),
-              child: Column(
-                children: showList(),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: showList(),
+                ),
               ),
             ),
-            SizedBox(height: 200),
+            SizedBox(height: 100),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 23.0),
               child: ElevatedButton(
@@ -140,11 +142,11 @@ class _FriendProfile extends State<FriendProfile> {
                             child: Text("NO", style: TextStyle(fontWeight: FontWeight.bold),),
                           ),],);});
                   }else { //친구의 List 개수가 4개 이상이면 정상적으로 push진행
-                    Navigator.pop(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            friendBody(
+                            FriendMain(
                               controller: widget.controller,
                               friendChecklist: friendChecklist!,
                               friendName: widget.NickName!,

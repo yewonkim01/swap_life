@@ -49,8 +49,6 @@ class MyApp extends StatelessWidget {
         '/alert_dialog': (context) => AlertFriendDialog(),
         '/myMBTIreport' : (context) => myMBTIreport(),
         //'/friendScreen': (context) => FriendPage(friendChecklist: friendChecklist),
-
-
       },
       debugShowCheckedModeBanner: false,
     );
@@ -117,36 +115,61 @@ class _MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
         elevation: 0.0,
       ),
       body: bodyWidget,
-      bottomNavigationBar: TabBar(
-        indicatorColor: Colors.deepPurple,
-        labelColor: Colors.black,
-        overlayColor: MaterialStatePropertyAll(Colors.white70),
-        controller: _tabController,
-        tabs: <Tab>[
-          Tab(
-            icon: Icon(
-              //해당 bar가 선택되면 Icon바꿔 표시
-              _selectedIndex == 0 ? Icons.swap_horizontal_circle : Icons.swap_horizontal_circle_outlined,
-              color: Colors.deepPurple,
-            ),
-            text: "Friend",
-          ),
-          Tab(
-            icon: Icon(
-              _selectedIndex == 1 ? Icons.home : Icons.home_outlined,
-              color: Colors.deepPurple,
-            ),
-            text: "Home",
-          ),
-          Tab(
-            icon: Icon(
-              _selectedIndex == 2 ? Icons.person : Icons.person_outline,
-              color: Colors.deepPurple,
-            ),
-            text: "Profile",
-          ),
-        ],
+      bottomNavigationBar: BottomNavBar(
+        tabController: _tabController!,
+        selectedIndex: _selectedIndex,
+        onTabTapped: (index) {
+          setState(() {
+            _selectedIndex = index;
+            _tabController!.index = index;
+          });
+        },
       ),
+    );
+  }
+}
+
+class BottomNavBar extends StatelessWidget {
+  final TabController tabController;
+  final int selectedIndex;
+  final Function(int) onTabTapped;
+  BottomNavBar({
+    required this.tabController,
+    required this.selectedIndex,
+    required this.onTabTapped,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return TabBar(
+      indicatorColor: Colors.deepPurple,
+      labelColor: Colors.black,
+      overlayColor: MaterialStatePropertyAll(Colors.white70),
+      controller: tabController,
+      tabs: <Tab>[
+        Tab(
+          icon: Icon(
+            selectedIndex == 0
+                ? Icons.swap_horizontal_circle
+                : Icons.swap_horizontal_circle_outlined,
+            color: Colors.deepPurple,
+          ),
+          text: "Friend",
+        ),
+        Tab(
+          icon: Icon(
+            selectedIndex == 1 ? Icons.home : Icons.home_outlined,
+            color: Colors.deepPurple,
+          ),
+          text: "Home",
+        ),
+        Tab(
+          icon: Icon(
+            selectedIndex == 2 ? Icons.person : Icons.person_outline,
+            color: Colors.deepPurple,
+          ),
+          text: "Profile",
+        ),
+      ],
     );
   }
 }
